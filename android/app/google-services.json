@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "829565281639",
+    "project_id": "woomul-b600d",
+    "storage_bucket": "woomul-b600d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829565281639:android:65e797117cc7c59189fbc2",
+        "android_client_info": {
+          "package_name": "com.example.woomul"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "829565281639-gtgfbub0su120uv5bsvrc7cca832sqkk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZroBM5WsuK4b_n9y3XsQuubtAlq7o5aM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "829565281639-gtgfbub0su120uv5bsvrc7cca832sqkk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

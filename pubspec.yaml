@@ -9,6 +9,12 @@ environment:
   sdk: ">=2.16.2 <3.0.0"
 
 dependencies:
+
+  #백앤드 개발 패키지
+  cloud_firestore: ^4.0.3
+  firebase_core: ^2.1.1
+  provider: ^6.0.4
+
   flutter:
     sdk: flutter
 
