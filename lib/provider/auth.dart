@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/http_excetion.dart';
 
+
 class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
@@ -95,8 +96,10 @@ class Auth with ChangeNotifier {
       return false;
     }
     final userData = prefs.getString('userData');
+    //userData! 에서 ! 는 이 값이 어렵기 때문에 null 값일 때 처리를 해줄 필요가 있다.
+    //추후 '' 이런 방식으로 제시를 주는 것이 필요!
     final extractedUserData =
-    json.decode(userData) as Map<String, Object>;
+    json.decode(userData!) as Map<String, Object>;
     final expiryDate =
     DateTime.parse(extractedUserData['expiryDate'] as String);
 
