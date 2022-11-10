@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:woomul/ui/auth/sign_in_page.dart';
 
 class Routes {
   Routes._(); //this is to prevent anyone from instantiate this object

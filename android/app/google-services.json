@@ -29,6 +29,13 @@
             {
               "client_id": "829565281639-gtgfbub0su120uv5bsvrc7cca832sqkk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "829565281639-etg61sgr3jm7ijmfuvmi937mjc0uopg2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.woomul"
+              }
             }
           ]
         }
