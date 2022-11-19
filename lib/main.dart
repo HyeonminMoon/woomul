@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
+import 'package:woomul/ui/auth/sign_up_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SignUpScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
