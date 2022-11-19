@@ -132,7 +132,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     Container(
                       child: TextButton(
-                        onPressed: (){},
+                        onPressed: (){
+                          //비밀번호 찾기 기능 추가
+                        },
                         child: Text(
                           '비밀번호를 잊으셨나요?'
                         ),
