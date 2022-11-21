@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
+import 'package:woomul/ui/auth/sign_up_page.dart';
 
 import '../../routes.dart';
 
@@ -89,6 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       //회원가입 페이지로 이동
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              SignUpScreen())
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
