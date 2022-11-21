@@ -156,6 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             setState(() {
               //index 가 2보다 작을 동안만 되도록 바꾸기
               //3이 되면 회원 가입 완료 페이지로 넘어가도록
+              //인증 완료 및 입력값이 다 들어갔을 경우에 색이 바뀌고, 페이지 바뀌도록 하는 기능
               index ++;
             });
           },
