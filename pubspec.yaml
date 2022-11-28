@@ -25,6 +25,8 @@ dependencies:
   #splash 화면 만들기
   flutter_native_splash: 2.0.5
 
+  percent_indicator: ^4.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

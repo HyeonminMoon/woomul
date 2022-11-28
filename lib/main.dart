@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
+import 'package:woomul/ui/auth/mbti_test_page.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MBTITestScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
