@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../provider/auth_service.dart';
 
 import '../../routes.dart';
 
@@ -15,12 +17,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController _emailController;
   late TextEditingController _nameController;
   late TextEditingController _birthController;
+  late TextEditingController _passwordController;
+
   var errorCheck;
+
+  var tmpPW = 'tmeppassword1';
+  var tmpSEX = 'man';
 
   bool mbti1 = false;
   bool mbti2 = false;
   bool mbti3 = false;
   bool mbti4 = false;
+
+  bool emailChecked = false;
+  bool nameChecked = false;
+  bool birthChecked = false;
 
   bool isChecked = false;
 
@@ -52,130 +63,178 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+    return Consumer<AuthService>(builder: (context, authService, child) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            automaticallyImplyLeading: true,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                setState(() {
+                  if (index > 0){
+                    index--;
+                  }
+                });
+                print(index);
+              },
+            ),
           ),
-          onPressed: () {
-            setState(() {
-              index--;
-            });
-            print(index);
-          },
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: Color(0xffEDEFEF),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: Color(0xffEDEFEF),
-                      )
-                    ),
-                    child: Text(
-                      '1',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xff8E9191),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600
-                      ),
-                    )
-                  ),
-                  Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                          color: Color(0xffEDEFEF),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: index == 0 ? Colors.blue : Color(0xffEDEFEF),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
                             color: Color(0xffEDEFEF),
                           )
-                      ),
-                      child: Text(
-                        '2',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
+                        ),
+                        child: Text(
+                          '1',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
                             color: Color(0xff8E9191),
                             fontSize: 16,
                             fontWeight: FontWeight.w600
-                        ),
-                      )
-                  ),
-                  Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                          color: Color(0xffEDEFEF),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Color(0xffEDEFEF),
+                          ),
+                        )
+                      ),
+                      Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                              color: index == 1 ? Colors.blue : Color(0xffEDEFEF),
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: Color(0xffEDEFEF),
+                              )
+                          ),
+                          child: Text(
+                            '2',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(0xff8E9191),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600
+                            ),
                           )
                       ),
-                      child: Text(
-                        '3',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Color(0xff8E9191),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600
-                        ),
-                      )
+                      Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                              color: index == 2 ? Colors.blue : Color(0xffEDEFEF),
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: Color(0xffEDEFEF),
+                              )
+                          ),
+                          child: Text(
+                            '3',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Color(0xff8E9191),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600
+                            ),
+                          )
+                      ),
+                    ],
                   ),
+
+                  index == 0 ? _buildForm1(context)
+                  : index == 1 ? _buildForm2(context)
+                  : _buildForm3(context),
                 ],
               ),
-
-              index == 0 ? _buildForm1(context)
-              : index == 1 ? _buildForm2(context)
-              : _buildForm3(context),
-            ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Material(
-        color: const Color(0xffD0D3E5),//1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              //index 가 2보다 작을 동안만 되도록 바꾸기
-              //3이 되면 회원 가입 완료 페이지로 넘어가도록
-              //인증 완료 및 입력값이 다 들어갔을 경우에 색이 바뀌고, 페이지 바뀌도록 하는 기능
-              index ++;
-            });
-          },
-          child: const SizedBox(
-            height: kToolbarHeight,
-            width: double.infinity,
-            child: Center(
-              child: Text(
-                '다음',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
+          bottomNavigationBar: Material(
+            color: (index == 0 && emailChecked == true) ? Colors.blue : const Color(0xffD0D3E5),//1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  //index 가 2보다 작을 동안만 되도록 바꾸기
+                  //3이 되면 회원 가입 완료 페이지로 넘어가도록
+                  //인증 완료 및 입력값이 다 들어갔을 경우에 색이 바뀌고, 페이지 바뀌도록 하는 기능
+
+
+
+                  if (index < 2){
+                    index ++;
+                    print(index);
+                  } else if (index == 2){
+
+                    //mbti 계산 로직직
+
+                    String mbti = '';
+                    String mbtiWord1 = 'E';
+                    String mbtiWord2 = 'S';
+                    String mbtiWord3 = 'T';
+                    String mbtiWord4 = 'J';
+
+                    mbti1 == false ? mbtiWord1 ='E' : mbtiWord1 ='I';
+                    mbti2 == false ? mbtiWord2 ='S' : mbtiWord2 ='N';
+                    mbti3 == false ? mbtiWord3 ='T' : mbtiWord3 ='F';
+                    mbti4 == false ? mbtiWord4 ='J' : mbtiWord4 ='P';
+
+                    mbti = mbtiWord1 + mbtiWord2 + mbtiWord3 + mbtiWord4;
+                    print('mbti: $mbti');
+
+                    authService.signUp(
+                        email: _emailController.text,
+                        password: tmpPW,
+                        name: _nameController.text,
+                        birth: _birthController.text,
+                        mbti: mbti,
+                        sex: tmpSEX,
+                        onSuccess: (){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("회원가입 성공"),
+                          ));
+                        },
+                        onError: (err){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(err),
+                          ));
+                        }
+                    );
+                  }
+                });
+              },
+              child: const SizedBox(
+                height: kToolbarHeight,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    '다음',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
 
+        );
+      }
     );
 
   }
@@ -208,7 +267,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 textFieldForm(
-                    _emailController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false),
+                    _emailController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false, emailChecked),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -268,7 +327,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 textFieldForm(
-                    _nameController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false),
+                    _nameController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false, nameChecked),
 
                 SizedBox(height: phoneSize.height * 0.03),
 
@@ -277,7 +336,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 textFieldForm(
-                    _birthController, "생년월일을 입력해주세요.", "생년월일을 확인해주세요", false),
+                    _birthController, "생년월일을 입력해주세요.", "생년월일을 확인해주세요", false, birthChecked),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -290,17 +349,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 75,
                           child: ElevatedButton(
                             onPressed: () {
+                              setState(() {
+                                mbti1 = false;
+                              });
                               //색 바뀌게 하고, 해당 정보 값 저장하기
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti1 == false ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'E',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti1 == false ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -313,17 +375,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           height: 75,
                           child: ElevatedButton(
                             onPressed: () {
+                              setState(() {
+                                mbti1 = true;
+                              });
                               //색 바뀌게 하고, 해당 정보 값 저장하기
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti1 == true ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'I',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti1 == true ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -342,16 +407,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               //색 바뀌게 하고, 해당 정보 값 저장하기
+                              setState(() {
+                                mbti2 = false;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti2 == false ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'S',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti2 == false ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -365,16 +433,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               //색 바뀌게 하고, 해당 정보 값 저장하기
+                              setState(() {
+                                mbti2 = true;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti2 == true ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'N',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti2 == true ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -393,16 +464,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               //색 바뀌게 하고, 해당 정보 값 저장하기
+                              setState(() {
+                                mbti3 = false;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti3 == false ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'T',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti3 == false ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -416,16 +490,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               //색 바뀌게 하고, 해당 정보 값 저장하기
+                              setState(() {
+                                mbti3 = true;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti3 == true ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'F',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti3 == true ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -444,16 +521,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               //색 바뀌게 하고, 해당 정보 값 저장하기
+                              setState(() {
+                                mbti4 = false;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti4 == false ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'J',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti4 == false ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -467,16 +547,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               //색 바뀌게 하고, 해당 정보 값 저장하기
+                              setState(() {
+                                mbti4 = true;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: mbti4 == true ? Colors.blue : Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               'P',
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: mbti4 == true ? Colors.white : Colors.blue
                               ),
                             ),
                           ),
@@ -577,7 +660,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure) {
+      String errorText, bool obscure, bool checked) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
@@ -591,6 +674,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: TextFormField(
           obscureText: obscure,
           controller: controller,
+          onChanged: (data){
+            if (data == ''){
+              checked = false;
+            }else{
+              checked = true;
+            }
+          },
           style: Theme.of(context)
               .textTheme
               .titleSmall
