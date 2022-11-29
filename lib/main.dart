@@ -3,6 +3,7 @@ import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/auth/mbti_test_page.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
+import 'package:woomul/ui/board/main_board_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: MBTITestScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
