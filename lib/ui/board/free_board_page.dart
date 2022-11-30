@@ -155,8 +155,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                         children: [
                           IconButton(
                               onPressed: (){
-                                //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                //횟수 증가 되도록
+
                               },
                               icon: Icon(Icons.forum_outlined)
                           ),

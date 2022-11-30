@@ -3,6 +3,7 @@ import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/auth/mbti_test_page.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
+import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/free_board_page.dart';
 import 'package:woomul/ui/board/main_board_page.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: FreeBoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: DetailBoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
