@@ -21,7 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   var errorCheck;
 
-  var tmpPW = 'tmeppassword1';
+  var tmpPW = 'testpassword1';
   var tmpSEX = 'man';
 
   bool mbti1 = false;
