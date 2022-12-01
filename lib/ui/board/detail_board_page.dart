@@ -80,10 +80,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                     color: Colors.white,
                     child: Row(
                       children: [
-                        /*Expanded(
-                          child: textFieldForm(
-                              _commentController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
-                        ),*/
                         Container(
                           width:phoneSize.width*0.5,
                           child: textFieldForm(
