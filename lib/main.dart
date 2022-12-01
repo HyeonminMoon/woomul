@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: EditBoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SignUpScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

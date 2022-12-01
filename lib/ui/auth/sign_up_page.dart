@@ -70,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
         ),
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(24.0),
           child: Column(
@@ -482,6 +482,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ],
+                    ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        //mbti 테스트 하러 가기
+                      },
+                      child: Text(
+                          '내 MBTI 를 모르겠어요'
+                      ),
+
                     ),
                   ],
                 )
