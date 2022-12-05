@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/auth_service.dart';
+import 'mbti_test_page.dart';
 
 import '../../routes.dart';
 
@@ -85,14 +86,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               },
             ),
           ),
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+          body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+
+
+                mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
                         width: 32,
@@ -565,6 +568,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ],
+                    ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                MBTITestScreen())
+                        );
+                      },
+                      child: Text(
+                          '내 MBTI 를 모르겠어요'
+                      ),
+
                     ),
                   ],
                 )

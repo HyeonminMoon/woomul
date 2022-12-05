@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 import '../../routes.dart';
 
 List<String> board = <String>['자유게시판', '연애게시판', '고민게시판', '비밀게시판'];
@@ -19,7 +18,8 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
   List<String> age = ['10대 중반', '10대 후반', '20대', '30대', '전연령'];
 
   var errorCheck;
-  late TextEditingController _ContentController = TextEditingController(text: "");
+  late TextEditingController _ContentController =
+      TextEditingController(text: "");
   late TextEditingController _TitleController = TextEditingController(text: "");
 
   //List<String> board = <String>['자유게시판', '연애게시판', '고민게시판', '비밀게시판'];
@@ -33,7 +33,6 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     _ContentController = TextEditingController(text: "");
     _TitleController = TextEditingController(text: "");
     errorCheck = false;
-
   }
 
   @override
@@ -42,12 +41,12 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     _ContentController.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -64,47 +63,57 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             Icons.arrow_back,
             color: Colors.black,
           ),
-          onPressed: () {
-
-          },
+          onPressed: () {},
         ),
         actions: [
           TextButton(
             onPressed: () {
               //내용 fb 에 저장 및 업로드
             },
-            child: Text(
-              '업로드'
-            ),
-
+            child: Text('업로드'),
           )
         ],
       ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //얘를 여러 개 불러오도록 하면 됨
-              _board0(context),
-              SizedBox(height: phoneSize.height*0.04,),
-              _board1(context),
-            ],
+          child: Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //얘를 여러 개 불러오도록 하면 됨
+                _board0(context),
+                SizedBox(
+                  height: phoneSize.height * 0.04,
+                ),
+                _board1(context),
+              ],
+            ),
           ),
         ),
       ),
-
-
     );
-
   }
 
-  Widget _board0(BuildContext context){
-    List<String> mbtiList = ['ISTJ', 'ISFJ', 'INFJ', 'INTJ',
-                              'ISTP', 'ISFP', 'INFP', 'INTP',
-                              'ESTJ', 'ESFJ', 'ENFJ', 'ENTJ',
-                              'ESTP', 'ESFP', 'ENFP', 'ENTP'];
+  Widget _board0(BuildContext context) {
+    List<String> mbtiList = [
+      'ISTJ',
+      'ISFJ',
+      'INFJ',
+      'INTJ',
+      'ISTP',
+      'ISFP',
+      'INFP',
+      'INTP',
+      'ESTJ',
+      'ESFJ',
+      'ENFJ',
+      'ENTJ',
+      'ESTP',
+      'ESFP',
+      'ENFP',
+      'ENTP'
+    ];
     var phoneSize = MediaQuery.of(context).size;
     return ExpansionTile(
       title: Text('게시물 노출 필터'),
@@ -115,7 +124,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                '연령대',
+              '연령대',
             ),
             Slider(
               value: _currentSliderValue,
@@ -129,44 +138,37 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             ),
             Row(
               children: [
-                Text(
-                  '10대 중반'
+                Text('10대 중반'),
+                SizedBox(
+                  width: phoneSize.width * 0.03,
                 ),
-                SizedBox(width: phoneSize.width*0.03,),
-                Text(
-                  '10대 후반'
+                Text('10대 후반'),
+                SizedBox(
+                  width: phoneSize.width * 0.09,
                 ),
-                SizedBox(width: phoneSize.width*0.09,),
-                Text(
-                  '20대'
+                Text('20대'),
+                SizedBox(
+                  width: phoneSize.width * 0.13,
                 ),
-                SizedBox(width: phoneSize.width*0.13,),
-                Text(
-                  '30대'
+                Text('30대'),
+                SizedBox(
+                  width: phoneSize.width * 0.08,
                 ),
-                SizedBox(width: phoneSize.width*0.08,),
-                Text(
-                  '전연령'
-                )
+                Text('전연령')
               ],
             ),
-
-            SizedBox(height: phoneSize.height*0.06,),
-            Text(
-              'MBTI'
+            SizedBox(
+              height: phoneSize.height * 0.06,
             ),
-
+            Text('MBTI'),
             _MBTI2(context, mbtiList),
-
-
-
           ],
         )
       ],
     );
   }
 
-  Widget _MBTI(BuildContext context, List mbti){
+  Widget _MBTI(BuildContext context, List mbti) {
     return Container(
       width: 71,
       height: 48,
@@ -177,23 +179,21 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
         style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
             elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            side: BorderSide(color: Color(0xffB1C7FF))
-        ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            side: BorderSide(color: Color(0xffB1C7FF))),
         child: Text(
           'MBTI',
-          style: TextStyle(
-              color: Colors.blue
-          ),
+          style: TextStyle(color: Colors.blue),
         ),
       ),
     );
   }
 
-  Widget _MBTI2(BuildContext context, List mbti){
+  Widget _MBTI2(BuildContext context, List mbti) {
     var phoneSize = MediaQuery.of(context).size;
     return SizedBox(
-      height: phoneSize.height*0.3,
+      height: phoneSize.height * 0.3,
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
@@ -206,33 +206,29 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
         itemBuilder: (context, index) => Container(
           width: 71,
           height: 48,
-            child: ElevatedButton(
-              onPressed: () {
-                //색 바뀌게 하고, 해당 정보 값 저장하기
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  side: BorderSide(color: Color(0xffB1C7FF))
-              ),
-              child: Text(
-                '${mbti[index]}',
-                style: TextStyle(
-                    color: Colors.blue
-                ),
-              ),
+          child: ElevatedButton(
+            onPressed: () {
+              //색 바뀌게 하고, 해당 정보 값 저장하기
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                side: BorderSide(color: Color(0xffB1C7FF))),
+            child: Text(
+              '${mbti[index]}',
+              style: TextStyle(color: Colors.blue),
             ),
+          ),
         ),
       ),
     );
   }
 
-
-
   //글쓰는 위치
   //값 저장해서 fb 로 보내기~
-  Widget _board1(BuildContext context){
+  Widget _board1(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: Column(
@@ -268,19 +264,16 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
 
                   //title
                   Container(
-                    width: phoneSize.width*0.8,
-                    child: textFieldForm(
-                        _TitleController, "", "", false),
+                    width: phoneSize.width * 0.8,
+                    child: textFieldForm(_TitleController, "", "", false),
                   ),
 
                   Container(
-                    width:phoneSize.width*0.8,
-                    child: textFieldForm(
-                        _ContentController, "", "", false),
+                    width: phoneSize.width * 0.8,
+                    child: textFieldForm(_ContentController, "", "", false),
                   ),
                 ],
-              )
-          )
+              ))
         ],
       ),
     );
@@ -311,11 +304,12 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
           }
         },
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
             labelText: labelText,
             labelStyle: TextStyle(
-                color: Color(0xFF0000)//Theme.of(context).colorScheme.primary,
-            ),
+                color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+                ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
               borderSide: BorderSide(
@@ -324,20 +318,12 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             ),
             filled: true,
             fillColor: Color(0xffFCFCFC),
-            focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFEFF0F7))),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFEFF0F7))),
             errorBorder: OutlineInputBorder(
                 borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.error))),
+                    BorderSide(color: Theme.of(context).colorScheme.error))),
       ),
     );
   }
-  
-  
-
-
-
-
 }
-
-
