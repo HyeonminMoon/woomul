@@ -2,24 +2,25 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:woomul/ui/board/main_board_page.dart';
+import 'package:woomul/ui/setting/main_setting_page.dart';
 
 
 import '../../routes.dart';
 
-class MainBoardScreen extends StatefulWidget {
+class BoardScreen extends StatefulWidget {
   @override
-  _MainBoardScreenState createState() => _MainBoardScreenState();
+  _BoardScreenState createState() => _BoardScreenState();
 }
 
-class _MainBoardScreenState extends State<MainBoardScreen> {
+class _BoardScreenState extends State<BoardScreen> {
 
-  var errorCheck;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    errorCheck = false;
 
   }
 
@@ -28,12 +29,25 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
     super.dispose();
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
-
+    final List<Widget> _widgetOptions = <Widget>[
+      _board2(context),
+      //_board1(context),
+      //_board3(context),
+      Expanded(child: MainBoardScreen()),
+      Expanded(child: SettingScreen()),
+    ];
     return Scaffold(
+      /*
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -54,28 +68,39 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
 
           },
         ),
-      ),
+      ),*/
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24.0),
-          child: Stack(
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _board1(context),
-                  ],
-                ),
-              ]
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _widgetOptions.elementAt(_selectedIndex),
+            //_board1(context),
+            //_board2(context),
+          ],
         ),
       ),
-
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '홈',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: '게시판',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '설정',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
 
     );
 
   }
-
 
   Widget _board1(BuildContext context){
     var phoneSize = MediaQuery.of(context).size;
@@ -99,7 +124,7 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                      'HOT 게시판'
+                    'HOT 게시판'
                   ),
                   Container(
                     width: 32,
@@ -282,8 +307,30 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
     );
   }
 
+  Widget _board2(BuildContext context){
+    var phoneSize = MediaQuery.of(context).size;
+    return Expanded(
+      child: Column(
+        children: [
+          Container(),
+          Container(),
+          Container(),
+          Container(),
+        ],
+      ),
+    );
+  }
 
-
+  Widget _board3(BuildContext context){
+    var phoneSize = MediaQuery.of(context).size;
+    return Expanded(
+      child: Column(
+        children: [
+          SettingScreen()
+        ],
+      ),
+    );
+  }
 
 
 

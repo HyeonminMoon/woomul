@@ -6,7 +6,8 @@ import 'package:woomul/ui/auth/sign_up_page.dart';
 import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/edit_board_page.dart';
 import 'package:woomul/ui/board/free_board_page.dart';
-import 'package:woomul/ui/board/main_board_page.dart';
+import 'package:woomul/ui/board/bottombar_page.dart';
+import 'package:woomul/ui/setting/main_setting_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: SignUpScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
