@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:core';
 
 class AuthService extends ChangeNotifier {
+  final bucketCollection = FirebaseFirestore.instance.collection('user');
+
   User? currentUser() {
     return FirebaseAuth.instance.currentUser;
     // 현재 유저(로그인 되지 않은 경우 null 반환)
@@ -11,10 +14,6 @@ class AuthService extends ChangeNotifier {
   void signUp({
     required String email, // 이메일
     required String password, // 비밀번호
-    required String name,
-    required String birth,
-    required String mbti,
-    required String sex,
     required Function onSuccess, // 가입 성공시 호출되는 함수
     required Function(String err) onError, // 에러 발생시 호출되는 함수
   }) async {
@@ -55,7 +54,6 @@ class AuthService extends ChangeNotifier {
     required Function onSuccess, // 로그인 성공시 호출되는 함수
     required Function(String err) onError, // 에러 발생시 호출되는 함수
   }) async {
-
     if (email.isEmpty) {
       onError('이메일을 입력해주세요.');
       return;
@@ -80,15 +78,53 @@ class AuthService extends ChangeNotifier {
       // Firebase auth 이외의 에러 발생
       onError(e.toString());
     }
-
     // 로그인
+  }
+
+  void createUserData(
+      {required String uid,
+      required String email,
+      required String name,
+      required String sex,
+      required int birth,
+      required String mbti,
+      required DateTime signupDate,
+      required DateTime? deleteDate}) async {
+    await bucketCollection.add({
+      'uid': uid,
+      'email': email,
+      'name': name,
+      'sex': sex,
+      'birth': birth,
+      'mbti': mbti,
+      'signupDate': signupDate,
+      'deleteDate': deleteDate
+    });
+
+    notifyListeners();
+  }
+
+  Future<QuerySnapshot> getUserDate(String uid) async {
+    return bucketCollection.where('uid', isEqualTo: uid).get();
+  }
+
+  Future<bool> checkID(String email) async {
+    // 체크 하는 부분 확인해야함!
+
+    print(email);
+
+    if (bucketCollection.where('email', isEqualTo: email).get() != null) {
+      print(true);
+      return true;
+    }
+    print(false);
+    return false;
   }
 
   void signOut() async {
     // 로그아웃
   }
 }
-
 
 class MbtiService extends ChangeNotifier {
   final bucketCollection = FirebaseFirestore.instance.collection('etcDB');
@@ -108,5 +144,32 @@ class MbtiService extends ChangeNotifier {
 
   void delete(String docId) async {
     // bucket 삭제
+  }
+}
+
+class UserData extends ChangeNotifier {
+  final bucketCollection = FirebaseFirestore.instance.collection('user');
+
+  var userUid;
+  var email;
+  var name;
+  var sex;
+  var birth;
+  var mbti;
+  var signupDate;
+  var deleteDate;
+
+  Future<void> getUserData(String uid) async {
+    var data = await bucketCollection.where('uid', isEqualTo: uid).get();
+
+    this.userUid = uid;
+    this.email = data.docs[0].data()['email'];
+    this.name = data.docs[0].data()['name'];
+    this.sex = data.docs[0].data()['sex'];
+    this.birth = data.docs[0].data()['birth'];
+    this.mbti = data.docs[0].data()['mbti'];
+    this.signupDate = data.docs[0].data()['signupDate'];
+    this.deleteDate = data.docs[0].data()['deleteDate'];
+
   }
 }

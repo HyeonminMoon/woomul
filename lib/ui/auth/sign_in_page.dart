@@ -241,11 +241,10 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget circularButton(String image, Future<void> Function() function) {
     var size = MediaQuery.of(context).size.width * 0.12;
     return InkWell(
+        onTap: function,
         child: Container(
           width: size,
           height: size,
-          child: Center(
-              child: Image.asset(image, width: size * 0.7, height: size * 0.7)),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: Theme.of(context).colorScheme.background,
@@ -258,8 +257,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ],
           ),
-        ),
-        onTap: function);
+          child: Center(
+              child: Image.asset(image, width: size * 0.7, height: size * 0.7)),
+        ));
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,

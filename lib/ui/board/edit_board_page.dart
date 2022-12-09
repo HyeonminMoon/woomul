@@ -1,8 +1,12 @@
-import 'dart:io';
+import 'dart:core';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:woomul/provider/auth_service.dart';
 
+import '../../provider/board_service.dart';
 import '../../routes.dart';
 
 List<String> board = <String>['자유게시판', '연애게시판', '고민게시판', '비밀게시판'];
@@ -14,7 +18,7 @@ class EditBoardScreen extends StatefulWidget {
 
 class _EditBoardScreenState extends State<EditBoardScreen> {
   bool _customTileExpanded = false;
-  double _currentSliderValue = 20;
+  double _currentSliderValue = 25;
   List<String> age = ['10대 중반', '10대 후반', '20대', '30대', '전연령'];
 
   var errorCheck;
@@ -25,6 +29,51 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
   //List<String> board = <String>['자유게시판', '연애게시판', '고민게시판', '비밀게시판'];
 
   String dropdownValue = board.first;
+
+  String _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+  List<String> mbtiList = [
+    'ISTJ',
+    'ISFJ',
+    'INFJ',
+    'INTJ',
+    'ISTP',
+    'ISFP',
+    'INFP',
+    'INTP',
+    'ESTJ',
+    'ESFJ',
+    'ENFJ',
+    'ENTJ',
+    'ESTP',
+    'ESFP',
+    'ENFP',
+    'ENTP'
+  ];
+
+  List<bool> mbtiValue = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
 
   @override
   void initState() {
@@ -44,76 +93,88 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
   @override
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
+    final userData = context.read<UserData>();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: Text(
-          '게시물 작성',
-          style: TextStyle(
-            color: Colors.black,
+    return Consumer<BoardService>(builder: (context, boardService, child) {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          automaticallyImplyLeading: true,
+          centerTitle: true,
+          title: Text(
+            '게시물 작성',
+            style: TextStyle(
+              color: Colors.black,
+            ),
           ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
-        actions: [
-          TextButton(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
             onPressed: () {
-              //내용 fb 에 저장 및 업로드
+              Navigator.pop(context);
             },
-            child: Text('업로드'),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24.0),
-          child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //얘를 여러 개 불러오도록 하면 됨
-                _board0(context),
-                SizedBox(
-                  height: phoneSize.height * 0.04,
-                ),
-                _board1(context),
-              ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                //내용 fb 에 저장 및 업로드
+                String key = getRandomString(16);
+
+                List<String> selectedList = selectedMbti(mbtiList, mbtiValue);
+
+                if (user != null)
+                  // 유저가 여러명일 때 체크 해 봐야함!
+                  // 그리고 Provider 저장은 로그인할때로 넘겨야함!
+                  userData.getUserData(user.uid);
+
+                boardService.create(
+                    key: key,
+                    userUid: user!.uid,
+                    name: userData.name,
+                    firstPicUrl: null,
+                    ageNum: _currentSliderValue,
+                    ageRange: age[(_currentSliderValue / 25).round()],
+                    mbti: selectedList,
+                    boardType: dropdownValue,
+                    createDate: DateTime.now(),
+                    title: _TitleController.text,
+                    content: _ContentController.text,
+                    commentNum: 20,
+                    likeNum: 20);
+              },
+              child: Text('업로드'),
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
+            child: Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //얘를 여러 개 불러오도록 하면 됨
+                  _board0(context, boardService, userData),
+                  SizedBox(
+                    height: phoneSize.height * 0.04,
+                  ),
+                  _board1(context),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget _board0(BuildContext context) {
-    List<String> mbtiList = [
-      'ISTJ',
-      'ISFJ',
-      'INFJ',
-      'INTJ',
-      'ISTP',
-      'ISFP',
-      'INFP',
-      'INTP',
-      'ESTJ',
-      'ESFJ',
-      'ENFJ',
-      'ENTJ',
-      'ESTP',
-      'ESFP',
-      'ENFP',
-      'ENTP'
-    ];
+  Widget _board0(BuildContext context, boardService, UserData userData) {
     var phoneSize = MediaQuery.of(context).size;
     return ExpansionTile(
       title: Text('게시물 노출 필터'),
@@ -161,7 +222,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
               height: phoneSize.height * 0.06,
             ),
             Text('MBTI'),
-            _MBTI2(context, mbtiList),
+            _MBTI2(context, userData),
           ],
         )
       ],
@@ -190,7 +251,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     );
   }
 
-  Widget _MBTI2(BuildContext context, List mbti) {
+  Widget _MBTI2(BuildContext context, UserData userData) {
     var phoneSize = MediaQuery.of(context).size;
     return SizedBox(
       height: phoneSize.height * 0.3,
@@ -202,23 +263,37 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
           childAspectRatio: 2 / 1,
         ),
         shrinkWrap: true,
-        itemCount: mbti.length,
+        itemCount: mbtiList.length,
         itemBuilder: (context, index) => Container(
           width: 71,
           height: 48,
           child: ElevatedButton(
             onPressed: () {
               //색 바뀌게 하고, 해당 정보 값 저장하기
+              setState(() {
+                print(userData.mbti);
+
+                if (mbtiList[index] != userData.mbti) {
+                  if (mbtiValue[index] == false) {
+                    mbtiValue[index] = true;
+                  } else {
+                    mbtiValue[index] = false;
+                  }
+                }
+              });
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
+                backgroundColor:
+                    mbtiValue[index] == false ? Colors.white : Colors.blue,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 side: BorderSide(color: Color(0xffB1C7FF))),
             child: Text(
-              '${mbti[index]}',
-              style: TextStyle(color: Colors.blue),
+              '${mbtiList[index]}',
+              style: TextStyle(
+                  color:
+                      mbtiValue[index] == false ? Colors.blue : Colors.white),
             ),
           ),
         ),
@@ -325,5 +400,19 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                     BorderSide(color: Theme.of(context).colorScheme.error))),
       ),
     );
+  }
+
+  List<String> selectedMbti(List<String> data, List<bool> value) {
+    List<String> result = [];
+
+    for (int i = 0; i < 16; i++) {
+      if (value[i] == true) {
+        result.add(data[i]);
+      }
+    }
+
+    print(result);
+
+    return result;
   }
 }

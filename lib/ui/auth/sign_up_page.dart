@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
 
-                  index == 0 ? _buildForm1(context)
+                  index == 0 ? _buildForm1(context, authService)
                   : index == 1 ? _buildForm2(context)
                   : _buildForm3(context),
                 ],
@@ -197,19 +197,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     mbti4 == false ? mbtiWord4 ='J' : mbtiWord4 ='P';
 
                     mbti = mbtiWord1 + mbtiWord2 + mbtiWord3 + mbtiWord4;
-                    print('mbti: $mbti');
+
 
                     authService.signUp(
                         email: _emailController.text,
                         password: tmpPW,
-                        name: _nameController.text,
-                        birth: _birthController.text,
-                        mbti: mbti,
-                        sex: tmpSEX,
                         onSuccess: (){
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("회원가입 성공"),
                           ));
+
+                          authService.signIn(
+                              email: _emailController.text,
+                              password: tmpPW,
+                              onSuccess: () {
+                                // 로그인 성공
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text("로그인 성공"),
+                                ));
+
+                                final user = authService.currentUser();
+
+                                if (user != null)
+                                  authService.createUserData(
+                                      uid: user.uid,
+                                      email: _emailController.text,
+                                      name: _nameController.text,
+                                      sex: tmpSEX,
+                                      birth: int.parse(_birthController.text),
+                                      mbti: mbti,
+                                      signupDate: DateTime.now(),
+                                      deleteDate: null
+                                  );
+                              },
+                              onError: (err) {
+                                // 에러 발생
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(err),
+                                ));
+                              }
+                          );
+
+
                         },
                         onError: (err){
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -217,6 +246,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ));
                         }
                     );
+
+
                   }
                 });
               },
@@ -242,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   }
 
-  Widget _buildForm1(BuildContext context) {
+  Widget _buildForm1(BuildContext context, authService) {
     var phoneSize = MediaQuery.of(context).size;
     return Form(
         child: SingleChildScrollView(
@@ -270,7 +301,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 textFieldForm(
-                    _emailController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false, emailChecked),
+                    _emailController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false, emailChecked, false),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -279,6 +310,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onPressed: () {
                         //이메일 인증 요청 팝업
                         //인증 메일 전송 기능
+
+                        authService.checkID(_emailController.text);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffECF1FF),
@@ -286,7 +319,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       ),
                       child: Text(
-                          '인증요청',
+                          '중복확인',
                         style: TextStyle(
                           color: Colors.blue
                         ),
@@ -330,7 +363,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 textFieldForm(
-                    _nameController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false, nameChecked),
+                    _nameController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false, nameChecked, false),
 
                 SizedBox(height: phoneSize.height * 0.03),
 
@@ -339,7 +372,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 textFieldForm(
-                    _birthController, "생년월일을 입력해주세요.", "생년월일을 확인해주세요", false, birthChecked),
+                    _birthController, "생년월일을 입력해주세요.", "생년월일을 확인해주세요", false, birthChecked, true),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -681,7 +714,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure, bool checked) {
+      String errorText, bool obscure, bool checked, bool keyboardType) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
@@ -693,6 +726,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ]
         ),
         child: TextFormField(
+          keyboardType: keyboardType == true ? TextInputType.number : TextInputType.text,
           obscureText: obscure,
           controller: controller,
           onChanged: (data){
