@@ -162,14 +162,14 @@ class UserData extends ChangeNotifier {
   Future<void> getUserData(String uid) async {
     var data = await bucketCollection.where('uid', isEqualTo: uid).get();
 
-    this.userUid = uid;
-    this.email = data.docs[0].data()['email'];
-    this.name = data.docs[0].data()['name'];
-    this.sex = data.docs[0].data()['sex'];
-    this.birth = data.docs[0].data()['birth'];
-    this.mbti = data.docs[0].data()['mbti'];
-    this.signupDate = data.docs[0].data()['signupDate'];
-    this.deleteDate = data.docs[0].data()['deleteDate'];
+    userUid = uid;
+    email = await data.docs[0].data()['email'];
+    name = await data.docs[0].data()['name'];
+    sex = await data.docs[0].data()['sex'];
+    birth = await data.docs[0].data()['birth'];
+    mbti = await data.docs[0].data()['mbti'];
+    signupDate = await data.docs[0].data()['signupDate'];
+    deleteDate = await data.docs[0].data()['deleteDate'];
 
   }
 }

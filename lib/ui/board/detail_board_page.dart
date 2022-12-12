@@ -11,7 +11,6 @@ import '../../provider/board_service.dart';
 import '../../routes.dart';
 
 class DetailBoardScreen extends StatefulWidget {
-
   final String name;
   final String contentKey;
 
@@ -22,15 +21,15 @@ class DetailBoardScreen extends StatefulWidget {
 }
 
 class _DetailBoardScreenState extends State<DetailBoardScreen> {
-
-  late TextEditingController _commentController = TextEditingController(text: "");
+  late TextEditingController _commentController =
+      TextEditingController(text: "");
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var errorCheck;
 
-  String _chars =
+  final String _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  Random _rnd = Random();
+  final Random _rnd = Random();
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
@@ -41,7 +40,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     super.initState();
     _commentController = TextEditingController(text: "");
     errorCheck = false;
-
   }
 
   @override
@@ -49,7 +47,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     super.dispose();
     _commentController.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +56,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     final user = authService.currentUser();
     final userData = context.read<UserData>();
     final boardService = context.read<BoardService>();
-    final likeService = context.read<LikeService>();
 
-    return Consumer2<CommentService, LikeService>(builder: (context, commentService, likeService ,child) {
+    return Consumer2<CommentService, LikeService>(
+        builder: (context, commentService, likeService, child) {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -87,332 +84,275 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(24.0),
-            child: Stack(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _board1(context, boardService, likeService, userData),
-                      _commentPart(context, commentService),
-                    ],
-                  ),
+            child: Stack(children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _board1(
+                      context, boardService, likeService, userData, user!.uid),
+                  _commentPart(context, commentService),
+                ],
+              ),
+              Positioned(
+                  bottom: 0,
+                  child: Container(
+                      width: phoneSize.width,
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: phoneSize.width * 0.5,
+                            child: textFieldForm(
+                                _commentController, "", "", false),
+                          ),
+                          SizedBox(
+                            width: phoneSize.width * 0.2,
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                String key = getRandomString(16);
 
-                  Positioned(
-                      bottom: 0,
-                      child: Container(
-                          width: phoneSize.width,
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: phoneSize.width * 0.5,
-                                child: textFieldForm(
-                                    _commentController, "", "", false),
-                              ),
-                              SizedBox(width: phoneSize.width * 0.2,),
-                              TextButton(
-                                  onPressed: () {
-                                    String key = getRandomString(16);
+                                userData.getUserData(user.uid);
 
-                                    if(user != null)
-                                    userData.getUserData(user.uid);
-
-                                    //댓글 내용 fb 에 전송해서 저장
-                                    if (_commentController.text.isNotEmpty) {
-                                      if(user != null) {
-                                        commentService.create(
-                                            uid: user.uid,
-                                            name: userData.name,
-                                            mbti: userData.mbti,
-                                            comment: _commentController.text,
-                                            contentKey: widget.contentKey,
-                                            commentKey: key,
-                                            createDate: DateTime.now(),
-                                            likeNum: 2
-                                        );
-                                      }
-                                    }
-                                  },
-                                  child: Text(
-                                      '저장'
-                                  )
-
-                              )
-                            ],
-                          )
-                      )
-                  ),
-                ]
-            ),
+                                //댓글 내용 fb 에 전송해서 저장
+                                if (_commentController.text.isNotEmpty) {
+                                  commentService.create(
+                                      uid: user.uid,
+                                      name: userData.name,
+                                      mbti: userData.mbti,
+                                      comment: _commentController.text,
+                                      contentKey: widget.contentKey,
+                                      commentKey: key,
+                                      createDate: DateTime.now(),
+                                      likeNum: 2);
+                                }
+                              },
+                              child: Text('저장'))
+                        ],
+                      ))),
+            ]),
           ),
         ),
-
-
       );
     });
-
   }
 
   //게시글 detail UI
-  Widget _board1(BuildContext context, BoardService boardService, LikeService likeService, UserData userData){
+  Widget _board1(BuildContext context, BoardService boardService,
+      LikeService likeService, UserData userData, String uid) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: FutureBuilder<List<QuerySnapshot>>(
-        future: Future.wait([
-          boardService.readOne(widget.contentKey),
-          likeService.read(userData.name, widget.contentKey)
-        ]),
-        builder: (context, snapshot) {
-          final docs = snapshot.data![0]?.docs ?? [];
-          final docs2 = snapshot.data![1]?.docs ?? [];
-          bool likeBool = false;
+          future: Future.wait([
+            boardService.readOne(widget.contentKey),
+            likeService.readOne(uid, widget.contentKey),
+            likeService.read(widget.contentKey)
+          ]),
+          builder: (context, snapshot) {
+            final docs = snapshot.data![0].docs ?? [];
+            final docs2 = snapshot.data![1].docs ?? [];
+            final docs3 = snapshot.data![2].docs ?? [];
+            bool likeBool = false;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                //height: phoneSize.height*0.25,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
-                        SizedBox(width: phoneSize.width *0.03),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  docs[0].get('name')
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                    '개인MBTI'
-                                ),
-                                SizedBox(width:10),
-                                Text(
-                                    '뜻'
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                        SizedBox(width: phoneSize.width * 0.48),
-                        Row(
-                          children: [
-                            IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                onPressed: (){
-                                  if(docs2 == []) {
-                                    likeService.create(
-                                        name: userData.name,
-                                        userUid: userData.userUid,
-                                        contentKey: widget.contentKey,
-                                        like: false
-                                    );
-                                  };
-                                },
-                                icon: Icon(likeBool == false ? Icons.favorite_border : Icons.favorite)
-                            ),
-                            Icon(Icons.bookmark_border_outlined)
-                          ],
-                        )
-                      ],
-                    ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  //height: phoneSize.height*0.25,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Placeholder(
+                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                          SizedBox(width: phoneSize.width * 0.03),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [Text(docs[0].get('name'))],
+                              ),
+                              Row(
+                                children: [
+                                  Text('개인MBTI'),
+                                  SizedBox(width: 10),
+                                  Text('뜻')
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(width: phoneSize.width * 0.48),
+                          Row(
+                            children: [
+                              IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  onPressed: () {
+                                    userData.getUserData(uid);
 
-                    Text(
-                      docs[0].get('title'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600
+                                    if (docs2.isEmpty == true) {
+                                      likeService.create(
+                                          name: userData.name,
+                                          userUid: userData.userUid,
+                                          contentKey: widget.contentKey,
+                                          createDate: DateTime.now());
+                                    } else {
+                                      print('여기는 들어옵니다');
+                                      likeService.delete(docs2[0].id);
+                                    }
+                                  },
+                                  icon: Icon(docs2.isEmpty == true
+                                      ? Icons.favorite_border
+                                      : Icons.favorite)),
+                              Icon(Icons.bookmark_border_outlined)
+                            ],
+                          )
+                        ],
                       ),
-                    ),
-
-                    SizedBox(height: phoneSize.height*0.02),
-
-                    Text(
-                        docs[0].get('content')
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                    docs[0].get('likeNum').toString()
-                                )
-                              ],
-                            ),
-
-                            Row(
-                              children: [
-                                Text(
-                                    '대표 닉네임 님 외 n인이 좋아합니다.'
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          );
-        }
-      ),
+                      Text(
+                        docs[0].get('title'),
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(height: phoneSize.height * 0.02),
+                      Text(docs[0].get('content')),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [Text(docs3.length.toString())],
+                              ),
+                              Row(
+                                children: [Text('대표 닉네임 님 외 n인이 좋아합니다.')],
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );
+          }),
     );
   }
 
-  Widget _commentPart(BuildContext context, CommentService commentService){
+  Widget _commentPart(BuildContext context, CommentService commentService) {
     return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '댓글 전체보기 '//댓글 수 받아오기
-              ),
-              Text(
-                  '(댓글수)',
-                style: TextStyle(
-                  color: Colors.blue
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text('댓글 전체보기 ' //댓글 수 받아오기
                 ),
-              )
-            ],
-          ),
+            Text(
+              '(댓글수)',
+              style: TextStyle(color: Colors.blue),
+            )
+          ],
+        ),
 
-          SizedBox(height: 10),
+        SizedBox(height: 10),
 
-          //댓글 불러오기
-          _comment(commentService),
-        ],
-      )
-    );
+        //댓글 불러오기
+        _comment(commentService),
+      ],
+    ));
   }
 
   //댓글 하나하나
-  Widget _comment(CommentService commentService){
+  Widget _comment(CommentService commentService) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
-      child: FutureBuilder<QuerySnapshot>(
-        future: commentService.read(widget.contentKey),
-        builder: (context, snapshot) {
-          final docs = snapshot.data?.docs ?? [];
-          return ListView.builder(
-            itemCount: docs.length,
-            itemBuilder: (context, index) {
-              final doc = docs[index];
-              String name = doc.get('name');
-              String mbti = doc.get('mbti');
-              DateTime createDate = doc.get('createDate').toDate();
-              String comment = doc.get('comment');
-              int likeNum = doc.get('likeNum');
-              return Column(
-                children: [
-                  Container(
-                    width: phoneSize.width,
-                    height: phoneSize.height*0.19,
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        child: FutureBuilder<QuerySnapshot>(
+            future: commentService.read(widget.contentKey),
+            builder: (context, snapshot) {
+              final docs = snapshot.data?.docs ?? [];
+              return ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final doc = docs[index];
+                    String name = doc.get('name');
+                    String mbti = doc.get('mbti');
+                    DateTime createDate = doc.get('createDate').toDate();
+                    String comment = doc.get('comment');
+                    int likeNum = doc.get('likeNum');
+                    return Column(
                       children: [
-                        Row(
-                          children: [
-                            Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
-                            SizedBox(width: phoneSize.width *0.03),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                        name
-                                    ),
-                                    Text(
-                                      ' . '
-                                    ),
-                                    Text(
-                                      mbti
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: phoneSize.height*0.02),
-                              ],
-                            ),
-                            SizedBox(width: phoneSize.width * 0.45),
-                            Text(
-                              createDate.toString()
-                            )
-                          ],
+                        Container(
+                          width: phoneSize.width,
+                          height: phoneSize.height * 0.19,
+                          color: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Placeholder(
+                                      fallbackHeight: 15,
+                                      fallbackWidth: 15), //프로필 사진
+                                  SizedBox(width: phoneSize.width * 0.03),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(name),
+                                          Text(' . '),
+                                          Text(mbti)
+                                        ],
+                                      ),
+                                      SizedBox(height: phoneSize.height * 0.02),
+                                    ],
+                                  ),
+                                  SizedBox(width: phoneSize.width * 0.45),
+                                  Text(createDate.toString())
+                                ],
+                              ),
+                              Text(comment),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
+                                            //횟수 증가 되도록
+                                          },
+                                          icon: Icon(Icons.favorite_border)),
+                                      Text(likeNum.toString())
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.forum_outlined)),
+                                      Text('댓글 수')
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                        Text(
-                          comment
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: (){
-                                      //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                      //횟수 증가 되도록
-                                    },
-                                    icon: Icon(Icons.favorite_border)
-                                ),
-                                Text(
-                                    likeNum.toString()
-                                )
-                              ],
-                            ),
-
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: (){
-
-                                    },
-                                    icon: Icon(Icons.forum_outlined)
-                                ),
-                                Text(
-                                    '댓글 수'
-                                )
-                              ],
-                            )
-                          ],
-                        )
-
                       ],
-                    ),
-                  ),
-                ],
-              );
-            }
-          );
-        }
-      )
-    );
+                    );
+                  });
+            }));
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,
@@ -440,11 +380,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
           }
         },
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
             labelText: labelText,
             labelStyle: TextStyle(
-                color: Color(0xFF0000)//Theme.of(context).colorScheme.primary,
-            ),
+                color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+                ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
               borderSide: BorderSide(
@@ -453,21 +394,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             ),
             filled: true,
             fillColor: Color(0xffFCFCFC),
-            focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFEFF0F7))),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFEFF0F7))),
             errorBorder: OutlineInputBorder(
                 borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.error))),
+                    BorderSide(color: Theme.of(context).colorScheme.error))),
       ),
     );
   }
-
-
-
-
-
-
-
 }
-
-

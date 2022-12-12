@@ -52,21 +52,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthService>(builder: (context, authService, child) {
+    return Consumer2<AuthService, UserData>(builder: (context, authService, userData, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           key: _scaffoldKey,
           body: Align(
             alignment: Alignment.center,
-            child: _buildForm(context, authService),
+            child: _buildForm(context, authService, userData),
           ),
         );
       }
     );
   }
 
-  Widget _buildForm(BuildContext context, authService) {
+  Widget _buildForm(BuildContext context, AuthService authService, UserData userData) {
     var phoneSize = MediaQuery.of(context).size;
+    final user = authService.currentUser();
+    final userData2 = context.read<UserData>();
+
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -143,12 +146,17 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: TextButton(
                         onPressed: (){
                           //비밀번호 찾기 기능 추가
+                          print(userData2.name);
+                          print(userData2.mbti);
+                          if (user != null) {
+                            print(user.uid);
+                          }
                         },
-                        child: Text(
-                          '비밀번호를 잊으셨나요?'
-                        ),
                         style: TextButton.styleFrom(
                           //foregroundColor: Colors.black,
+                        ),
+                        child: Text(
+                          '비밀번호를 잊으셨나요?'
                         ),
                       )
                     ),
@@ -186,11 +194,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       );
 
-                      final user = authService.currentUser();
+
+
                       if(user == null) {
                         print("유저 정보가 없습니다");
                       }else{
                         print("안녕하세요. ${user.email}님");
+                        print(userData.getUserData(user.uid));
                       }
 
                    },

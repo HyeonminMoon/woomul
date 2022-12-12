@@ -8,6 +8,7 @@ import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/edit_board_page.dart';
 import 'package:woomul/ui/board/main_board_page.dart';
 
+import '../../provider/auth_service.dart';
 import '../../provider/board_service.dart';
 import '../../routes.dart';
 

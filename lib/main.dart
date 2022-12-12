@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:woomul/provider/auth_service.dart';
 import 'package:woomul/provider/board_service.dart';
 import 'package:woomul/provider/comment_service.dart';
+import 'package:woomul/provider/like_service.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/auth/mbti_test_page.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
@@ -24,7 +25,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => BoardService()),
         ChangeNotifierProvider(create: (context) => UserData()),
         ChangeNotifierProvider(create: (context) => MbtiService()),
-        ChangeNotifierProvider(create: (context) => CommentService())
+        ChangeNotifierProvider(create: (context) => CommentService()),
+        ChangeNotifierProvider(create: (context) => LikeService())
       ],
       child: const MyApp(),
     ),

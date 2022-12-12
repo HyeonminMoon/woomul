@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 class LikeService extends ChangeNotifier {
   final bucketCollection = FirebaseFirestore.instance.collection('board_like');
 
-  Future<QuerySnapshot> read(String userUid, contentKey) async {
+  Future<QuerySnapshot> read(contentKey) async {
+    // 내 bucketList 가져오기
+    return bucketCollection.where('contentKey', isEqualTo: contentKey).get();// return 값 미구현 에러
+  }
+
+  Future<QuerySnapshot> readOne(String userUid, contentKey) async {
     // 내 bucketList 가져오기
     return bucketCollection.where('userUid', isEqualTo: userUid).where('contentKey', isEqualTo: contentKey).get();// return 값 미구현 에러
   }
@@ -13,14 +18,16 @@ class LikeService extends ChangeNotifier {
     required String name,
     required String userUid,
     required String contentKey,
-    required bool like
+    required DateTime createDate
   }) async {
     await bucketCollection.add({
       'name': name,
       'userUid': userUid,
       'contentKey': contentKey,
-      'like': like
+      'createDate': createDate
     });
+
+    notifyListeners();
 
   }
 
@@ -28,7 +35,9 @@ class LikeService extends ChangeNotifier {
     // bucket isDone 업데이트
   }
 
-  void delete(String docId) async {
+  void delete(String docID) async {
     // bucket 삭제
+    await bucketCollection.doc(docID).delete();
+    notifyListeners();
   }
 }

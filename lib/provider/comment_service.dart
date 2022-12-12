@@ -6,7 +6,7 @@ class CommentService extends ChangeNotifier {
 
   Future<QuerySnapshot> read(String contentKey) async {
     // 내 bucketList 가져오기
-    return bucketCollection.where('contentKey', isEqualTo: contentKey).get(); // return 값 미구현 에러
+    return bucketCollection.where('contentKey', isEqualTo: contentKey).get();// return 값 미구현 에러
   }
 
   void create({
@@ -31,6 +31,8 @@ class CommentService extends ChangeNotifier {
       'createDate': createDate,
       'likeNum': likeNum,
     });
+
+    notifyListeners();
   }
 
   void update(String docId, bool isDone) async {
