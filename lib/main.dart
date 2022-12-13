@@ -7,7 +7,11 @@ import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/edit_board_page.dart';
 import 'package:woomul/ui/board/free_board_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
+import 'package:woomul/ui/setting/board_setting_page.dart';
 import 'package:woomul/ui/setting/main_setting_page.dart';
+import 'package:woomul/ui/setting/my_activity_page.dart';
+import 'package:woomul/ui/setting/my_information_edit_page.dart';
+import 'package:woomul/ui/setting/my_information_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +29,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: BoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyActivityScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

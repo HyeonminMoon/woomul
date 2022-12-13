@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 
 import '../../routes.dart';
 
-class MyPageScreen extends StatefulWidget {
+class MyPageEditScreen extends StatefulWidget {
   @override
-  _MyPageScreenState createState() => _MyPageScreenState();
+  _MyPageEditScreenState createState() => _MyPageEditScreenState();
 }
 
-class _MyPageScreenState extends State<MyPageScreen> {
+class _MyPageEditScreenState extends State<MyPageEditScreen> {
   late TextEditingController _nameController;
   late TextEditingController _mbtiController;
   late TextEditingController _emailController;
@@ -57,36 +57,36 @@ class _MyPageScreenState extends State<MyPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: Text(
-          '내 정보',
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              //수정하기 page 로 이동
-            },
-            child: Text(
-                '수정하기'
+          backgroundColor: Colors.white,
+          elevation: 0,
+          automaticallyImplyLeading: true,
+          centerTitle: true,
+          title: Text(
+            '내 정보',
+            style: TextStyle(
+              color: Colors.black,
             ),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
 
-          )
-        ],
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                //내용 fb 에 저장 및 업로드
+              },
+              child: Text(
+                  '저장하기'
+              ),
+  
+            )
+          ],
       ),
       key: _scaffoldKey,
       body: Align(
@@ -115,7 +115,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       '닉네임',
                     ),
                     Container(
-                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
@@ -123,10 +122,19 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(
-                            '닉네임파이어베이스에서가져오기',
+                          Expanded(
+                            child: textFieldForm(
+                                _nameController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
                           ),
 
+                          //솔직히 이거 편집 아이콘 없어도 될 거 같긴한데...
+                          Container(
+                            padding: EdgeInsets.only(right : 16.0),
+                            child: Icon(
+                              Icons.edit_outlined,
+                              color: Colors.blue,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -142,7 +150,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       'MBTI',
                     ),
                     Container(
-                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
@@ -150,10 +157,17 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(
-                            'MBTI파이어베이스에서가져오기',
+                          Expanded(
+                            child: textFieldForm(
+                                _mbtiController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
                           ),
-
+                          Container(
+                            padding: EdgeInsets.only(right : 16.0),
+                            child: Icon(
+                              Icons.edit_outlined,
+                              color: Colors.blue,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -169,7 +183,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       '이메일',
                     ),
                     Container(
-                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
@@ -177,8 +190,16 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(
-                            '이메일파이어베이스에서가져오기'
+                          Expanded(
+                            child: textFieldForm(
+                                _emailController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right : 16.0),
+                            child: Icon(
+                              Icons.edit_outlined,
+                              color: Colors.blue,
+                            ),
                           ),
                         ],
                       ),
@@ -195,7 +216,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       '비밀번호',
                     ),
                     Container(
-                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
@@ -203,9 +223,17 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       ),
                       child: Row(
                         children: [
-                          Text(
-                            '비밀번호파이어베이스에서가져오기'
-                          )
+                          Expanded(
+                            child: textFieldForm(
+                                _passwordController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(right : 16.0),
+                            child: Icon(
+                              Icons.edit_outlined,
+                              color: Colors.blue,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -218,7 +246,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
@@ -230,7 +257,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             padding: EdgeInsets.only(right : 16.0),
                             child: Icon(
                               Icons.shield,
-                              color: Colors.grey,
+                              color: Colors.blue,
                             ),
                           ),
                           Text(
@@ -240,7 +267,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             value: isSwitched,
                             onChanged: (value) {
                               setState(() {
-                                isSwitched = false; //firebase 에서 값 가져와서 고정하기! 지금은 임의로 무조건 false 로 해놨음
+                                isSwitched = value; //firebase 에서 값 가져오면 될듯
                               });
                             },
                             activeTrackColor: Colors.blue,
@@ -259,10 +286,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                   children: [
                     GestureDetector(
                       onTap: (){
-                        //여기선 그냥 터치 안 되도록
+                        //회원 정보 삭제
                       },
                       child: Container(
-                        height: phoneSize.height * 0.08,
                         padding: EdgeInsets.only(left:10.0, right:10.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
@@ -274,7 +300,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                               padding: EdgeInsets.only(right : 16.0),
                               child: Icon(
                                 Icons.mood_bad,
-                                color: Colors.grey,
+                                color: Colors.blue,
                               ),
                             ),
                             Text(
@@ -288,7 +314,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 ),
 
                 SizedBox(height: phoneSize.height * 0.04),
-
 
 
               ],
