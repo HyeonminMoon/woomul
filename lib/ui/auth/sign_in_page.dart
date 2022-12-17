@@ -1,9 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../provider/auth_service.dart';
 import '../../routes.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -47,17 +52,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Align(
-        alignment: Alignment.center,
-        child: _buildForm(context),
-      ),
+    return Consumer2<AuthService, UserData>(builder: (context, authService, userData, child) {
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          key: _scaffoldKey,
+          body: Align(
+            alignment: Alignment.center,
+            child: _buildForm(context, authService, userData),
+          ),
+        );
+      }
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, AuthService authService, UserData userData) {
     var phoneSize = MediaQuery.of(context).size;
+    final user = authService.currentUser();
+    final userData2 = context.read<UserData>();
+
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -134,12 +146,17 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: TextButton(
                         onPressed: (){
                           //비밀번호 찾기 기능 추가
+                          print(userData2.name);
+                          print(userData2.mbti);
+                          if (user != null) {
+                            print(user.uid);
+                          }
                         },
+                        style: TextButton.styleFrom(
+                          //foregroundColor: Colors.black,
+                        ),
                         child: Text(
                           '비밀번호를 잊으셨나요?'
-                        ),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.black,
                         ),
                       )
                     ),
@@ -158,6 +175,34 @@ class _SignInScreenState extends State<SignInScreen> {
                       //해당 계정이 있는지 확인하기 기능
                       //계정 및 비밀번호가 제대로 입력되었는지 확인하기 기능
                       //로그인 되도록 코드 추가하시면 됩니다!
+
+                      // 로그인
+                      authService.signIn(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        onSuccess: () {
+                          // 로그인 성공
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("로그인 성공"),
+                          ));
+                        },
+                        onError: (err) {
+                          // 에러 발생
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(err),
+                          ));
+                        },
+                      );
+
+
+
+                      if(user == null) {
+                        print("유저 정보가 없습니다");
+                      }else{
+                        print("안녕하세요. ${user.email}님");
+                        print(userData.getUserData(user.uid));
+                      }
+
                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
@@ -206,11 +251,10 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget circularButton(String image, Future<void> Function() function) {
     var size = MediaQuery.of(context).size.width * 0.12;
     return InkWell(
+        onTap: function,
         child: Container(
           width: size,
           height: size,
-          child: Center(
-              child: Image.asset(image, width: size * 0.7, height: size * 0.7)),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: Theme.of(context).colorScheme.background,
@@ -223,8 +267,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ],
           ),
-        ),
-        onTap: function);
+          child: Center(
+              child: Image.asset(image, width: size * 0.7, height: size * 0.7)),
+        ));
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,

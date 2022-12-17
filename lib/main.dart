@@ -1,4 +1,11 @@
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:woomul/provider/auth_service.dart';
+import 'package:woomul/provider/board_service.dart';
+import 'package:woomul/provider/comment_service.dart';
+import 'package:woomul/provider/like_service.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/auth/mbti_test_page.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
@@ -13,8 +20,22 @@ import 'package:woomul/ui/setting/my_activity_page.dart';
 import 'package:woomul/ui/setting/my_information_edit_page.dart';
 import 'package:woomul/ui/setting/my_information_page.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => BoardService()),
+        ChangeNotifierProvider(create: (context) => UserData()),
+        ChangeNotifierProvider(create: (context) => MbtiService()),
+        ChangeNotifierProvider(create: (context) => CommentService()),
+        ChangeNotifierProvider(create: (context) => LikeService())
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -34,49 +55,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}

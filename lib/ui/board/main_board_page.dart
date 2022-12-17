@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:woomul/ui/board/free_board_page.dart';
 
 import '../../routes.dart';
 
@@ -11,14 +11,18 @@ class MainBoardScreen extends StatefulWidget {
   _MainBoardScreenState createState() => _MainBoardScreenState();
 }
 
+
 class _MainBoardScreenState extends State<MainBoardScreen> {
 
   var errorCheck;
+  int _selectedIndex = 0;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     errorCheck = false;
 
   }
@@ -26,6 +30,13 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
 
@@ -50,9 +61,7 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
             Icons.arrow_back,
             color: Colors.black,
           ),
-          onPressed: () {
-
-          },
+          onPressed: () {},
         ),
       ),
       body: SafeArea(
@@ -71,13 +80,29 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
         ),
       ),
 
-
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '홈',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: '게시판',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '설정',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
-
   }
 
 
-  Widget _board1(BuildContext context){
+  Widget _board1(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: Column(
@@ -86,12 +111,18 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
           GestureDetector(
             onTap: () {
               //HOT 게시판 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FreeBoardScreen('HOT 게시판')));
             },
             child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
+              width: phoneSize.width * 0.8,
+              height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
                 color: Colors.white,
               ),
               child: Row(
@@ -110,7 +141,6 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                       size: 11,
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -118,21 +148,25 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
           GestureDetector(
             onTap: () {
               //BEST 게시판 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FreeBoardScreen('BEST 게시판')));
             },
             child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
+              width: phoneSize.width * 0.8,
+              height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
                 color: Colors.white,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      'BEST 게시판'
-                  ),
+                  Text('BEST 게시판'),
                   Container(
                     width: 32,
                     height: 32,
@@ -142,32 +176,33 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                       size: 11,
                     ),
                   ),
-
                 ],
               ),
             ),
           ),
-
-          SizedBox(height: phoneSize.height*0.04),
-
+          SizedBox(height: phoneSize.height * 0.04),
           GestureDetector(
             onTap: () {
               //자유 게시판 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FreeBoardScreen('자유게시판')));
             },
             child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
+              width: phoneSize.width * 0.8,
+              height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)),
                 color: Colors.white,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '자유 게시판'
-                  ),
+                  Text('자유 게시판'),
                   Container(
                     width: 32,
                     height: 32,
@@ -177,27 +212,27 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                       size: 11,
                     ),
                   ),
-
                 ],
               ),
             ),
           ),
-
           GestureDetector(
             onTap: () {
               //연애 게시판 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FreeBoardScreen('연애게시판')));
             },
             child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
+              width: phoneSize.width * 0.8,
+              height: phoneSize.height * 0.1,
               color: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '연애 게시판'
-                  ),
+                  Text('연애 게시판'),
                   Container(
                     width: 32,
                     height: 32,
@@ -207,27 +242,27 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                       size: 11,
                     ),
                   ),
-
                 ],
               ),
             ),
           ),
-
           GestureDetector(
             onTap: () {
               //고민 게시판 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FreeBoardScreen('고민게시판')));
             },
             child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
+              width: phoneSize.width * 0.8,
+              height: phoneSize.height * 0.1,
               color: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '고민 게시판'
-                  ),
+                  Text('고민 게시판'),
                   Container(
                     width: 32,
                     height: 32,
@@ -237,30 +272,32 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                       size: 11,
                     ),
                   ),
-
                 ],
               ),
             ),
           ),
-
           GestureDetector(
             onTap: () {
               //비밀 게시판 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FreeBoardScreen('비밀게시판')));
             },
             child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
+              width: phoneSize.width * 0.8,
+              height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
                 color: Colors.white,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '비밀 게시판'
-                  ),
+                  Text('비밀 게시판'),
                   Container(
                     width: 32,
                     height: 32,
@@ -270,25 +307,41 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                       size: 11,
                     ),
                   ),
-
                 ],
               ),
             ),
           ),
-
-
         ],
       ),
     );
   }
 
 
+  Widget _board2(BuildContext context) {
+    var phoneSize = MediaQuery.of(context).size;
+    return Expanded(
+      child: Column(
+        children: [
+          Container(),
+          Container(),
+          Container(),
+          Container(),
+        ],
+      ),
+    );
+  }
 
-
-
-
-
-
+  Widget _board3(BuildContext context) {
+    var phoneSize = MediaQuery.of(context).size;
+    return Expanded(
+      child: Column(
+        children: [
+          Container(),
+          Container(),
+          Container(),
+          Container(),
+        ],
+      ),
+    );
+  }
 }
-
-
