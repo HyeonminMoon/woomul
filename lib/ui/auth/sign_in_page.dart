@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/ui/board/bottombar_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -185,6 +186,13 @@ class _SignInScreenState extends State<SignInScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("로그인 성공"),
                           ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      BoardScreen()));
+
+
                         },
                         onError: (err) {
                           // 에러 발생

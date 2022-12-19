@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:woomul/ui/setting/my_information_edit_page.dart';
 
+import '../../provider/auth_service.dart';
 import '../../routes.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -73,13 +76,15 @@ class _MyPageScreenState extends State<MyPageScreen> {
             color: Colors.black,
           ),
           onPressed: () {
-
+            Navigator.pop(context);
           },
         ),
         actions: [
           TextButton(
             onPressed: () {
               //수정하기 page 로 이동
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyPageEditScreen()));
             },
             child: Text(
                 '수정하기'
@@ -98,203 +103,213 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   Widget _buildForm(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
-    return Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: <Widget>[
-                Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기
-                SizedBox(height: phoneSize.height * 0.01),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '닉네임',
-                    ),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            '닉네임파이어베이스에서가져오기',
-                          ),
 
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+    final authService = context.read<AuthService>();
+    final userData = context.read<UserData>();
+    final user = authService.currentUser();
 
-                SizedBox(height: phoneSize.height * 0.04),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'MBTI',
-                    ),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'MBTI파이어베이스에서가져오기',
-                          ),
-
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: phoneSize.height * 0.04),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '이메일',
-                    ),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            '이메일파이어베이스에서가져오기'
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: phoneSize.height * 0.04),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '비밀번호',
-                    ),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            '비밀번호파이어베이스에서가져오기'
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: phoneSize.height * 0.04),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(right : 16.0),
-                            child: Icon(
-                              Icons.shield,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            '정보 동의 설정',
-                          ),
-                          Switch(
-                            value: isSwitched,
-                            onChanged: (value) {
-                              setState(() {
-                                isSwitched = false; //firebase 에서 값 가져와서 고정하기! 지금은 임의로 무조건 false 로 해놨음
-                              });
-                            },
-                            activeTrackColor: Colors.blue,
-                            activeColor: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: phoneSize.height * 0.02),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        //여기선 그냥 터치 안 되도록
-                      },
-                      child: Container(
-                        height: phoneSize.height * 0.08,
-                        padding: EdgeInsets.only(left:10.0, right:10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                          color: Colors.white,
+    return FutureBuilder<void>(
+      future: userData.getUserData(user!.uid),
+      builder: (context, snapshot) {
+        return Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              // physics: NeverScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: <Widget>[
+                    Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기
+                    SizedBox(height: phoneSize.height * 0.01),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '닉네임',
                         ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.only(right : 16.0),
-                              child: Icon(
-                                Icons.mood_bad,
-                                color: Colors.grey,
+                        Container(
+                          height: phoneSize.height * 0.08,
+                          padding: EdgeInsets.only(left:10.0, right:10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                userData.name,
                               ),
-                            ),
-                            Text(
-                              '탈퇴하기',
-                            ),
-                          ],
+
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+
+                    SizedBox(height: phoneSize.height * 0.04),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'MBTI',
+                        ),
+                        Container(
+                          height: phoneSize.height * 0.08,
+                          padding: EdgeInsets.only(left:10.0, right:10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                userData.mbti,
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: phoneSize.height * 0.04),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '이메일',
+                        ),
+                        Container(
+                          height: phoneSize.height * 0.08,
+                          padding: EdgeInsets.only(left:10.0, right:10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                userData.email
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: phoneSize.height * 0.04),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '비밀번호',
+                        ),
+                        Container(
+                          height: phoneSize.height * 0.08,
+                          padding: EdgeInsets.only(left:10.0, right:10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                '비밀번호파이어베이스에서가져오기'
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: phoneSize.height * 0.04),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: phoneSize.height * 0.08,
+                          padding: EdgeInsets.only(left:10.0, right:10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(right : 16.0),
+                                child: Icon(
+                                  Icons.shield,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Text(
+                                '정보 동의 설정',
+                              ),
+                              Switch(
+                                value: isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSwitched = false; //firebase 에서 값 가져와서 고정하기! 지금은 임의로 무조건 false 로 해놨음
+                                  });
+                                },
+                                activeTrackColor: Colors.blue,
+                                activeColor: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: phoneSize.height * 0.02),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            //여기선 그냥 터치 안 되도록
+                          },
+                          child: Container(
+                            height: phoneSize.height * 0.08,
+                            padding: EdgeInsets.only(left:10.0, right:10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(right : 16.0),
+                                  child: Icon(
+                                    Icons.mood_bad,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  '탈퇴하기',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: phoneSize.height * 0.04),
+
+
+
                   ],
                 ),
-
-                SizedBox(height: phoneSize.height * 0.04),
-
-
-
-              ],
-            ),
-          ),
-        ));
+              ),
+            ));
+      }
+    );
   }
 
 

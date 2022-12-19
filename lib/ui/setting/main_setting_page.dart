@@ -1,9 +1,15 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:woomul/ui/auth/login_home_page.dart';
+import 'package:woomul/ui/setting/my_activity_page.dart';
+import 'package:woomul/ui/setting/my_information_page.dart';
 
 
+import '../../provider/auth_service.dart';
 import '../../routes.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -33,6 +39,9 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
+
+    final authService = context.read<AuthService>();
+    final userData = context.read<UserData>();
 
     return Scaffold(
       appBar: AppBar(
@@ -64,7 +73,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _profile(context),
+                    _profile(context, userData, authService),
                     _board1(context),
                   ],
                 ),
@@ -79,41 +88,47 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   //user 기본 프로필
-  Widget _profile(BuildContext context){
+  Widget _profile(BuildContext context, UserData userData, AuthService authService){
     var phoneSize = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Row(
+    final user = authService.currentUser();
+    return FutureBuilder<void>(
+      future: userData.getUserData(user!.uid),
+      builder: (context, snapshot) {
+        return Column(
           children: [
-            Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
-            SizedBox(width: phoneSize.width *0.03),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Row(
+                Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
+                SizedBox(width: phoneSize.width *0.03),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        '닉네임'
+                    Row(
+                      children: [
+                        Text(
+                            userData.name
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                            userData.mbti
+                        ),
+                        SizedBox(width:10),
+                        Text(
+                            'mbti 뜻'
+                        )
+                      ],
                     )
                   ],
                 ),
-                Row(
-                  children: [
-                    Text(
-                        'mbti'
-                    ),
-                    SizedBox(width:10),
-                    Text(
-                        'mbti 뜻'
-                    )
-                  ],
-                )
               ],
             ),
           ],
-        ),
-      ],
+        );
+      }
     );
   }
 
@@ -130,6 +145,8 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //내 정보 이동
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyPageScreen()));
             },
             child: Container(
               width: phoneSize.width*0.8,
@@ -163,6 +180,8 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //내 활동 이동
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyActivityScreen()));
             },
             child: Container(
               width: phoneSize.width*0.8,
@@ -256,6 +275,13 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //로그아웃 이동
+              context.read<AuthService>().signOut();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LoginScreen()));
+
             },
             child: Container(
               width: phoneSize.width*0.8,

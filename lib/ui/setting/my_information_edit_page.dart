@@ -73,7 +73,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
               color: Colors.black,
             ),
             onPressed: () {
-
+              Navigator.pop(context);
             },
           ),
           actions: [

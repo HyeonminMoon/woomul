@@ -1,8 +1,14 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:woomul/provider/board_service.dart';
+import 'package:woomul/provider/comment_service.dart';
+import 'package:woomul/ui/board/edit_board_page.dart';
 
+import '../../provider/auth_service.dart';
 import '../../routes.dart';
 
 class MyActivityScreen extends StatefulWidget {
@@ -39,207 +45,322 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          toolbarHeight: 230,
-          elevation: 0,
-          automaticallyImplyLeading: true,
-          centerTitle: true,
-          title: Column(
-            children: [
-              Text(
-                '내 활동',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              Placeholder(fallbackHeight: 120), //프로필 사진 가져오기
-              Text(
-                '닉네임',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                'MBTI | 엠비티아이닉',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              )
-            ],
-          ),
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(
-                child: Text(
-                    '내 게시글',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                //icon: Icon(Icons.cloud_outlined),
-              ),
-              Tab(
-                child: Text(
-                  '내 댓글',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  '저장 게시물',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  '좋아요',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
 
-            },
+    final authService = context.read<AuthService>();
+    final userData = context.read<UserData>();
+    final user = authService.currentUser();
+    final boardService = context.read<BoardService>();
+    final commentService = context.read<CommentService>();
+
+    return FutureBuilder<dynamic>(
+      future: Future.wait([
+        boardService.readAll(user!.uid),
+        commentService.readAll(user!.uid),
+        userData.getUserData(user!.uid),
+      ]),
+      builder: (context, snapshot) {
+        final docsBoard = snapshot.data[0]?.docs ?? [];
+        final docsComment = snapshot.data[1]?.docs ?? [];
+        final docsUser = snapshot.data[2]?.docs ?? [];
+
+        return DefaultTabController(
+          initialIndex: 0,
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              toolbarHeight: 230,
+              elevation: 0,
+              automaticallyImplyLeading: true,
+              centerTitle: true,
+              title: Column(
+                children: [
+                  Text(
+                    '내 활동',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Placeholder(fallbackHeight: 120), //프로필 사진 가져오기
+                  Text(
+                    userData.name,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    userData.mbti + ' | ' + 'mbti닉',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  )
+                ],
+              ),
+              bottom: TabBar(
+                tabs: <Widget>[
+                  Tab(
+                    child: Text(
+                        '내 게시글',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    //icon: Icon(Icons.cloud_outlined),
+                  ),
+                  Tab(
+                    child: Text(
+                      '내 댓글',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            key: _scaffoldKey,
+            body:
+              TabBarView(
+                children: <Widget>[
+                  Center(
+                    child: _buildBoardForm(context, docsBoard),
+                  ),
+                  Center(
+                    child: _buildCommentForm(context, docsComment),
+                  ),
+                ],
+              ),/*Align(
+              alignment: Alignment.center,
+              child: _buildForm(context),
+            ),*/
           ),
-        ),
-        key: _scaffoldKey,
-        body:
-          TabBarView(
-            children: <Widget>[
-              Center(
-                child: _buildForm(context),
-              ),
-              Center(
-                child: _buildForm(context),
-              ),
-              Center(
-                child: _buildForm(context),
-              ),
-              Center(
-                child: _buildForm(context),
-              ),
-            ],
-          ),/*Align(
-          alignment: Alignment.center,
-          child: _buildForm(context),
-        ),*/
-      ),
+        );
+      }
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildBoardForm(BuildContext context, docs) {
     var phoneSize = MediaQuery.of(context).size;
-    return Form(
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  //해당 게시글로 이동될려나?
-                },
-                child: Container(
-                  //height: phoneSize.height*0.25,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+    return ListView.builder(
+      itemCount: docs.length,
+      itemBuilder: (context, index) {
+
+        final doc = docs[index];
+        String boardType = doc.get("boardType");
+        String name = doc.get("name");
+        DateTime createDate = doc.get("createDate").toDate();
+        String content = doc.get("content");
+
+        return Form(
+            child: SingleChildScrollView(
+              // physics: NeverScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      //해당 게시글로 이동될려나?
+                    },
+                    child: Container(
+                      //height: phoneSize.height*0.25,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
-                          SizedBox(width: phoneSize.width *0.03),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(
-                                  '제목'
-                              ),
-                              Row(
+                              Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
+                              SizedBox(width: phoneSize.width *0.03),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '닉네임'
+                                      boardType
                                   ),
-                                  SizedBox(width:10),
+                                  Row(
+                                    children: [
+                                      Text(
+                                          name
+                                      ),
+                                      SizedBox(width:10),
+                                      Text(
+                                          createDate.toString()
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(width: phoneSize.width * 0.48),
+                              Icon(Icons.more_horiz)
+                            ],
+                          ),
+
+                          Text(
+                              content
+                          ),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){
+                                        //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
+                                        //횟수 증가 되도록
+                                      },
+                                      icon: Icon(Icons.favorite_border)
+                                  ),
                                   Text(
-                                      '올린 시간'
+                                      '좋아요 수'
+                                  )
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){
+
+                                      },
+                                      icon: Icon(Icons.forum_outlined)
+                                  ),
+                                  Text(
+                                      '댓글 수'
                                   )
                                 ],
                               )
                             ],
-                          ),
-                          SizedBox(width: phoneSize.width * 0.48),
-                          Icon(Icons.more_horiz)
+                          )
                         ],
                       ),
+                    ),
+                  )
+                ],
+              ),
+            ));
+      }
+    );
+  }
 
-                      Text(
-                          '게시글 내용 살짝 보이게 어쩌고저쩌고\n'
-                              'mbti 가 어쩌고 저쩌고 해서 했는데\n'
-                              '사실 내 mbti 는 이건데 걔는 이거고'
+  Widget _buildCommentForm(BuildContext context, docs) {
+    var phoneSize = MediaQuery.of(context).size;
+    return ListView.builder(
+      itemCount: docs.length,
+      itemBuilder: (context, index) {
+
+        final doc = docs[index];
+        String comment = doc.get("comment");
+        String name = doc.get("name");
+        DateTime createDate = doc.get("createDate").toDate();
+
+        return Form(
+            child: SingleChildScrollView(
+              // physics: NeverScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      //해당 게시글로 이동될려나?
+                    },
+                    child: Container(
+                      //height: phoneSize.height*0.25,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white
                       ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              IconButton(
-                                  onPressed: (){
-                                    //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                    //횟수 증가 되도록
-                                  },
-                                  icon: Icon(Icons.favorite_border)
+                              Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
+                              SizedBox(width: phoneSize.width *0.03),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      '댓글'
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                          name
+                                      ),
+                                      SizedBox(width:10),
+                                      Text(
+                                          createDate.toString()
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
-                              Text(
-                                  '좋아요 수'
-                              )
+                              SizedBox(width: phoneSize.width * 0.48),
+                              Icon(Icons.more_horiz)
                             ],
                           ),
 
-                          Row(
-                            children: [
-                              IconButton(
-                                  onPressed: (){
+                          Text(
+                              comment
+                          ),
 
-                                  },
-                                  icon: Icon(Icons.forum_outlined)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){
+                                        //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
+                                        //횟수 증가 되도록
+                                      },
+                                      icon: Icon(Icons.favorite_border)
+                                  ),
+                                  Text(
+                                      '좋아요 수'
+                                  )
+                                ],
                               ),
-                              Text(
-                                  '댓글 수'
+
+                              Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: (){
+
+                                      },
+                                      icon: Icon(Icons.forum_outlined)
+                                  ),
+                                  Text(
+                                      '댓글 수'
+                                  )
+                                ],
                               )
                             ],
                           )
                         ],
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ));
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ));
+      }
+    );
   }
 
 

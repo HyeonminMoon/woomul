@@ -18,6 +18,10 @@ class BoardService extends ChangeNotifier {
         .get(); // return 값 미구현 에러
   }
 
+  Future<QuerySnapshot> readAll(uid) async {
+    return bucketCollection.where('userUid', isEqualTo: uid).get();
+  }
+
   void create(
       {required String key,
       required String userUid,

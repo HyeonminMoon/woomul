@@ -8,6 +8,10 @@ class CommentService extends ChangeNotifier {
     // 내 bucketList 가져오기
     return bucketCollection.where('contentKey', isEqualTo: contentKey).get();// return 값 미구현 에러
   }
+  
+  Future<QuerySnapshot> readAll(String uid) async {
+    return bucketCollection.where('uid', isEqualTo: uid).get();
+  }
 
   void create({
     required String uid,
