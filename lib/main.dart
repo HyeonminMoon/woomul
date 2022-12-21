@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: user == null ? LoginScreen() : BoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: /*user == null ? LoginScreen() : */BoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
