@@ -59,7 +59,7 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
             color: Colors.black,
           ),
           onPressed: () {
-
+            Navigator.pop(context);
           },
         ),
       ),
