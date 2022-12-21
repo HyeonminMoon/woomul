@@ -152,7 +152,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(width: phoneSize.width * 0.48),
+                                  SizedBox(width: phoneSize.width * 0.2),
                                   Icon(Icons.more_horiz)
                                 ],
                               ),
