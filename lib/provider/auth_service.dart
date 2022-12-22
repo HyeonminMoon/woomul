@@ -104,22 +104,28 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteUser({
+    required String uid, // 이메일
+  }) async {
+    await currentUser()!.delete();
+  }
+
+  Future<bool> doubleCheck(String email) async {
+    bool data = false;
+    await bucketCollection.where('email', isEqualTo: email).get().then((value){
+      if (value.docs.isEmpty){
+        data = false;
+      } else {
+        data = true;
+      }
+    });
+    return data;
+  }
+
   Future<QuerySnapshot> getUserDate(String uid) async {
     return bucketCollection.where('uid', isEqualTo: uid).get();
   }
 
-  Future<bool> checkID(String email) async {
-    // 체크 하는 부분 확인해야함!
-
-    print(email);
-
-    if (bucketCollection.where('email', isEqualTo: email).get() != null) {
-      print(true);
-      return true;
-    }
-    print(false);
-    return false;
-  }
 
   void signOut() async {
     await FirebaseAuth.instance.signOut();

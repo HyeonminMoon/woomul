@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/ui/board/bottombar_page.dart';
 import '../../provider/auth_service.dart';
 import 'mbti_test_page.dart';
 
@@ -31,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool mbti4 = false;
 
   bool emailChecked = false;
+  bool emailDoubleChecked = false;
   bool nameChecked = false;
   bool birthChecked = false;
 
@@ -77,9 +79,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             onPressed: () {
               setState(() {
+                if (index == 0) {
+                  Navigator.pop(context);
+                }
                 if (index > 0) {
                   index--;
                 }
+
               });
               print(index);
             },
@@ -157,10 +163,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         bottomNavigationBar: Material(
-          color: (index == 0 && emailChecked == true)
+          color: (index == 0 && _emailController.text != '' && emailDoubleChecked == true) || (index == 1 && _nameController.text != '' && _birthController.text != '') || (index == 2)
               ? Colors.blue
               : const Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
-          child: InkWell(
+          child: (index == 0 && _emailController.text != '') || (index == 1 && _nameController.text != '' && _birthController.text != '') || (index == 2)
+          ? InkWell(
             onTap: () {
               setState(() {
                 //index 가 2보다 작을 동안만 되도록 바꾸기
@@ -217,6 +224,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     signupDate: DateTime.now(),
                                     deleteDate: null);
                               }
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BoardScreen()));
+
                             },
                             onError: (err) {
                               // 에러 발생
@@ -245,13 +258,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
             ),
-          ),
+          ) : SizedBox(
+            height: kToolbarHeight,
+            width: double.infinity,
+            child: Center(
+              child: Text(
+                '다음',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+          )
         ),
       );
     });
   }
 
-  Widget _buildForm1(BuildContext context, authService) {
+  Widget _buildForm1(BuildContext context, AuthService authService) {
     var phoneSize = MediaQuery.of(context).size;
     return Form(
         child: SingleChildScrollView(
@@ -274,16 +297,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: phoneSize.height * 0.08),
             Text('이메일'),
             textFieldForm(_emailController, "이메일을 입력해주세요.", "이메일을 확인해주세요",
-                false, emailChecked, false),
+                false, false, 1),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    //이메일 인증 요청 팝업
-                    //인증 메일 전송 기능
+                  onPressed: () async {
 
-                    authService.checkID(_emailController.text);
+                    if (await authService.doubleCheck(_emailController.text) == true){
+                      emailDoubleChecked = false;
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("이미 있는 아이디입니다"),
+                      ));
+                    } else {
+                      emailDoubleChecked = true;
+                    }
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffECF1FF),
@@ -325,12 +354,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: phoneSize.height * 0.08),
             Text('닉네임'),
-            textFieldForm(_nameController, "이메일을 입력해주세요.", "이메일을 확인해주세요", false,
-                nameChecked, false),
+            textFieldForm(_nameController, "닉네임을 입력해주세요.", "닉네임을 확인해주세요", false, false, 2),
             SizedBox(height: phoneSize.height * 0.03),
             Text('생년월일'),
             textFieldForm(_birthController, "생년월일을 입력해주세요.", "생년월일을 확인해주세요",
-                false, birthChecked, true),
+                false, true, 3),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -655,7 +683,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure, bool checked, bool keyboardType) {
+      String errorText, bool obscure, bool keyboardType, int textForm) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
@@ -667,11 +695,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           obscureText: obscure,
           controller: controller,
           onChanged: (data) {
-            if (data == '') {
-              checked = false;
-            } else {
-              checked = true;
-            }
           },
           style: Theme.of(context)
               .textTheme

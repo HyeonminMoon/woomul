@@ -273,6 +273,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         GestureDetector(
                           onTap: (){
                             //여기선 그냥 터치 안 되도록
+                            authService.deleteUser(uid: user!.uid);
                           },
                           child: Container(
                             height: phoneSize.height * 0.08,

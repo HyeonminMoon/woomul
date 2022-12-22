@@ -301,7 +301,17 @@ class _MBTITestScreenState extends State<MBTITestScreen> {
   Widget _buildForm2(BuildContext context) {
     return Container(
       child: Column(
-        children: [Text('안녕하세요 당신의 mbti는 $mbti 입니다')],
+        children: [
+          Text('안녕하세요 당신의 mbti는 $mbti 입니다'),
+          Container(
+            child: InkWell(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child: Text('돌아가기'),
+            ),
+          )
+        ],
       ),
     );
   }

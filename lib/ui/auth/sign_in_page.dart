@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/ui/auth/sign_up_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 
 import '../../provider/auth_service.dart';
@@ -238,7 +239,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.register);
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                SignUpScreen())
+                        );
                       },
                       child: Text(
                         "회원 가입하러 가기",
