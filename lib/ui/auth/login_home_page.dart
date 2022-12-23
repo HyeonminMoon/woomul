@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:woomul/ui/auth/sign_in_page.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../routes.dart';
 
@@ -41,12 +42,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Text(
                   'WOOMUL',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                  ),
                 ),
                 SizedBox(height: phoneSize.height * 0.01),
                 Text(
                   '우리들의 MBTI 로 소통하는 공간',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xff6E7191)
+                  ),
                 ),
 
                 SizedBox(height: phoneSize.height * 0.08),
@@ -73,7 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                         '로그인',
                       style: TextStyle(
-                        color: Colors.blueAccent
+                        color: Color(0xff466fff),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16
                       ),
                     ),
                   ),
@@ -84,8 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   width: phoneSize.width *0.7,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.blueAccent, Colors.lightBlueAccent]),
-                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)]),
+                    borderRadius: BorderRadius.circular(54),
                   ),
                   child: ElevatedButton(
                     onPressed: () {
@@ -102,7 +112,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                     child: Text(
-                        '회원가입'
+                        '회원가입',
+                      style: TextStyle(
+                        color: Color(0xffFCFCFC),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16
+                      ),
                     ),
                   ),
                 ),

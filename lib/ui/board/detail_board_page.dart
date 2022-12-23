@@ -100,6 +100,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       color: Colors.white,
                       child: Row(
                         children: [
+                          //댓글칸 조정하기
                           Container(
                             width: phoneSize.width * 0.5,
                             child: textFieldForm(
