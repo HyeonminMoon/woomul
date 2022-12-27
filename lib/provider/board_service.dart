@@ -8,7 +8,7 @@ class BoardService extends ChangeNotifier {
     // 내 bucketList 가져오기
     return bucketCollection
         .where('boardType', isEqualTo: boardName)
-        .get(); // return 값 미구현 에러
+        .get();
   }
 
   Future<QuerySnapshot> readOne(boardKey) async {
@@ -16,6 +16,10 @@ class BoardService extends ChangeNotifier {
     return bucketCollection
         .where('key', isEqualTo: boardKey)
         .get(); // return 값 미구현 에러
+  }
+
+  Future<QuerySnapshot> readGood(data) async {
+    return bucketCollection.orderBy('$data', descending: true).get();
   }
 
   Future<QuerySnapshot> readAll(uid) async {

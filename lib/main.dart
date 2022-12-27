@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.poppins().fontFamily,
         primarySwatch: Colors.blue,
       ),
-      home: /*user == null ? LoginScreen() : */LoginScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: user == null ? LoginScreen() : BoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

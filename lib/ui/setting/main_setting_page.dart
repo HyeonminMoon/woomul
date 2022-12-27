@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
+import 'package:woomul/ui/setting/board_setting_page.dart';
 import 'package:woomul/ui/setting/my_activity_page.dart';
 import 'package:woomul/ui/setting/my_information_page.dart';
 
@@ -212,6 +213,11 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //게시판 설정 이동
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          BoardSettingScreen()));
             },
             child: Container(
               width: phoneSize.width*0.8,
