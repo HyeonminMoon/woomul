@@ -9,6 +9,8 @@ import 'mbti_test_page.dart';
 
 import '../../routes.dart';
 
+List<String> list = <String>['선택', '여', '남'];
+
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -20,11 +22,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController _nameController;
   late TextEditingController _birthController;
   late TextEditingController _passwordController;
+  late TextEditingController _passwordCheckController;
 
   var errorCheck;
 
   var tmpPW = 'testpassword1';
   var tmpSEX = 'man';
+
+  String dropdownValue = list.first;
 
   bool mbti1 = false;
   bool mbti2 = false;
@@ -46,6 +51,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController = TextEditingController(text: "");
     _nameController = TextEditingController(text: "");
     _birthController = TextEditingController(text: "");
+    _passwordController = TextEditingController(text: "");
+    _passwordCheckController = TextEditingController(text: "");
     errorCheck = false;
     mbti1 = false;
     mbti2 = false;
@@ -59,6 +66,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
     _nameController.dispose();
     _birthController.dispose();
+    _passwordController.dispose();
+    _passwordCheckController.dispose();
     index.dispose();
     super.dispose();
   }
@@ -97,6 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                index != 3 ?
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -104,60 +114,84 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                            color: index == 0 ? Colors.blue : Color(0xffEDEFEF),
+                            color: index == 0 ? Color.fromRGBO(77, 100, 243, 0.1) : Color(0xffEDEFEF),
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
-                              color: Color(0xffEDEFEF),
+                              color: index == 0 ? Color(0xff4D64F3) : Color(0xffEDEFEF),
                             )),
-                        child: Text(
-                          '1',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xff8E9191),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '1',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: index == 0 ? Color(0xff4D64F3) : Color(0xff8E9191),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         )),
+
+                    SizedBox(width: 7),
+
                     Container(
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                            color: index == 1 ? Colors.blue : Color(0xffEDEFEF),
+                            color: index == 1 ? Color.fromRGBO(77, 100, 243, 0.1) : Color(0xffEDEFEF),
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
-                              color: Color(0xffEDEFEF),
+                              color: index == 1 ? Color(0xff4D64F3) : Color(0xffEDEFEF),
                             )),
-                        child: Text(
-                          '2',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xff8E9191),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '2',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(0xff8E9191),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         )),
+
+                    SizedBox(width: 7),
+
                     Container(
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                            color: index == 2 ? Colors.blue : Color(0xffEDEFEF),
+                            color: index == 2 ? Color.fromRGBO(77, 100, 243, 0.1) : Color(0xffEDEFEF),
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
-                              color: Color(0xffEDEFEF),
+                              color: index == 2 ? Color(0xff4D64F3) : Color(0xffEDEFEF),
                             )),
-                        child: Text(
-                          '3',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Color(0xff8E9191),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '3',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Color(0xff8E9191),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         )),
                   ],
-                ),
+                ) : Container(),
                 index == 0
                     ? _buildForm1(context, authService)
                     : index == 1
                         ? _buildForm2(context)
-                        : _buildForm3(context),
+                        : index == 2
+                          ? _buildForm3(context)
+                          : _buildForm4(context),
               ],
             ),
           ),
@@ -174,7 +208,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 //3이 되면 회원 가입 완료 페이지로 넘어가도록
                 //인증 완료 및 입력값이 다 들어갔을 경우에 색이 바뀌고, 페이지 바뀌도록 하는 기능
 
-                if (index < 2) {
+                if (index < 3) {
                   index++;
                   print(index);
                 } else if (index == 2) {
@@ -247,12 +281,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 }
               });
             },
-            child: const SizedBox(
+            child: SizedBox(
               height: kToolbarHeight,
               width: double.infinity,
               child: Center(
-                child: Text(
-                  '다음',
+                child:
+                Text(
+                  index != 3 ? '다음' : 'WOOMUL 시작하기',
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.white),
                 ),
@@ -287,17 +322,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: <Widget>[
             Text(
               '이메일 입력',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 24,
+                color: Color(0xff14142B)
+              ),
             ),
             SizedBox(height: phoneSize.height * 0.01),
             Text(
               '안녕하세요!\n'
               '이메일(아이디) 인증 후 회원가입을 진행해주세요.',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff4E4B66)
+              ),
             ),
+
+            SizedBox(height: phoneSize.height * 0.07),
+
+            Text(
+              '이메일',
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Color(0xff4E4B66)
+              ),
+            ),
+
             SizedBox(height: phoneSize.height * 0.08),
             Text('이메일'),
-            textFieldForm(_emailController, "이메일을 입력해주세요.", "이메일을 확인해주세요",
+            textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요",
                 false, false, 1),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -318,15 +375,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     backgroundColor: Color(0xffECF1FF),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(54)),
                   ),
                   child: Text(
-                    '중복확인',
-                    style: TextStyle(color: Colors.blue),
+                    '중복 확인',
+                    style: TextStyle(
+                        color: Color(0xff466FFF),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600
+                    ),
                   ),
                 ),
               ],
-            )
+            ),
+
+            //중복 이메일 체크 기능 추가하시면 여기 확인 해주세여!
+            authService.checkID(_emailController.text) == false ?
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '비밀번호',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Color(0xff4E4B66)
+                      ),
+                    ),
+
+                    textFieldForm(_passwordController, "비밀번호를 입력해주세요", "",
+                        true, emailChecked, false),
+
+                    Text(
+                      '비밀번호 확인',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Color(0xff4E4B66)
+                      ),
+                    ),
+
+                    //비번 일치 하지 않으면 일치 하지 않다고 알려주는 기능 추가 해야함
+                    textFieldForm(_passwordCheckController, "비밀번호를 입력해주세요", "비밀번호가 일치하지 않습니다.",
+                        true, emailChecked, false),
+                  ],
+                ) : Container()
+
           ],
         ),
       ),
@@ -344,21 +439,143 @@ class _SignUpScreenState extends State<SignUpScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            SizedBox(height: phoneSize.height * 0.04),
             Text(
               '회원정보 입력',
+              style: TextStyle(
+                color: Color(0xff14142B),
+                fontWeight: FontWeight.w700,
+                fontSize: 24
+              ),
             ),
-            SizedBox(height: phoneSize.height * 0.01),
+            SizedBox(height: phoneSize.height * 0.015),
+
             Text(
               'WOOMUL에서 사용할 정보들을 입력해주세요.',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff4E4B66)
+              ),
             ),
-            SizedBox(height: phoneSize.height * 0.08),
-            Text('닉네임'),
+            SizedBox(height: phoneSize.height * 0.05),
+
+            Text(
+              '닉네임',
+              style: TextStyle(
+                color: Color(0xff4E4B66),
+                fontWeight: FontWeight.w400,
+                fontSize: 14
+              ),
+            ),
+
             textFieldForm(_nameController, "닉네임을 입력해주세요.", "닉네임을 확인해주세요", false, false, 2),
-            SizedBox(height: phoneSize.height * 0.03),
-            Text('생년월일'),
-            textFieldForm(_birthController, "생년월일을 입력해주세요.", "생년월일을 확인해주세요",
+            SizedBox(height: phoneSize.height * 0.05),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        '생년월일',
+                      style: TextStyle(
+                          color: Color(0xff4E4B66),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14
+                      ),
+                    ),
+
+                    Container(
+                      width: phoneSize.width*0.56,
+                      child: textFieldForm(_birthController, "생년월일 (YYYYMMDD)", "생년월일을 확인해주세요",
                 false, true, 3),
+                    ),
+                  ],
+                ),
+
+                SizedBox(width: phoneSize.width*0.07),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '성별',
+                      style: TextStyle(
+                          color: Color(0xff4E4B66),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14
+                      ),
+                    ),
+                    SizedBox(height: phoneSize.height * 0.007),
+                    Container(
+                      width: phoneSize.width*0.2,
+                      padding: EdgeInsets.only(left: 12.0, right: 0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 9,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(12)
+                      ),
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: Row(
+                          children: [
+                            SizedBox(width: phoneSize.width*0.02,),
+                            Icon(
+                                Icons.keyboard_arrow_down,
+                              color: Color(0xffD0D3E5),
+                            ),
+                          ],
+                        ),
+                        elevation: 16,
+                        style: TextStyle(color: Color(0xffA0A3BD)),
+                        underline: Container(
+                          color: Colors.white,
+                        ),
+                        onChanged: (String? value) {
+                          // This is called when the user selects an item.
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                        items: list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+
+            SizedBox(height: phoneSize.height * 0.05),
+
+            Text(
+              'MBTI',
+              style: TextStyle(
+                  color: Color(0xff4E4B66),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14
+              ),
+            ),
+
+            SizedBox(height: phoneSize.height * 0.02,),
+
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -368,6 +585,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti1 == false ? LinearGradient(
+                                                      colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                      begin: Alignment.bottomCenter,
+                                                      end: Alignment.topCenter
+                                                  )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -376,8 +610,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti1 == false ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -386,14 +620,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'E',
                           style: TextStyle(
                               color:
-                                  mbti1 == false ? Colors.white : Colors.blue),
+                                  mbti1 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: phoneSize.height * 0.01),
+                    SizedBox(height: phoneSize.height * 0.03),
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti1 == true ? LinearGradient(
+                                                      colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                      begin: Alignment.bottomCenter,
+                                                      end: Alignment.topCenter
+                                                  )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -402,8 +656,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti1 == true ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -412,19 +665,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'I',
                           style: TextStyle(
                               color:
-                                  mbti1 == true ? Colors.white : Colors.blue),
+                                  mbti1 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(width: phoneSize.width * 0.02),
+                SizedBox(width: phoneSize.width * 0.03),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti2 == false ? LinearGradient(
+                                                      colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                      begin: Alignment.bottomCenter,
+                                                      end: Alignment.topCenter
+                                                  )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
@@ -433,8 +706,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti2 == false ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -443,14 +715,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'S',
                           style: TextStyle(
                               color:
-                                  mbti2 == false ? Colors.white : Colors.blue),
+                                  mbti2 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: phoneSize.height * 0.01),
+                    SizedBox(height: phoneSize.height * 0.03),
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti2 == true ? LinearGradient(
+                                                      colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                      begin: Alignment.bottomCenter,
+                                                      end: Alignment.topCenter
+                                                  )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
@@ -459,8 +751,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti2 == true ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -469,19 +760,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'N',
                           style: TextStyle(
                               color:
-                                  mbti2 == true ? Colors.white : Colors.blue),
+                                  mbti2 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(width: phoneSize.width * 0.02),
+                SizedBox(width: phoneSize.width * 0.03),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti3 == false ? LinearGradient(
+                                                      colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                      begin: Alignment.bottomCenter,
+                                                      end: Alignment.topCenter
+                                                  )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
@@ -490,8 +801,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti3 == false ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -500,14 +810,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'T',
                           style: TextStyle(
                               color:
-                                  mbti3 == false ? Colors.white : Colors.blue),
+                                  mbti3 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: phoneSize.height * 0.01),
+                    SizedBox(height: phoneSize.height * 0.03),
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti3 == true ? LinearGradient(
+                                                      colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                      begin: Alignment.bottomCenter,
+                                                      end: Alignment.topCenter
+                                                  )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
@@ -516,8 +846,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti3 == true ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -526,19 +855,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'F',
                           style: TextStyle(
                               color:
-                                  mbti3 == true ? Colors.white : Colors.blue),
+                                  mbti3 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(width: phoneSize.width * 0.02),
+                SizedBox(width: phoneSize.width * 0.03),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti4 == false ? LinearGradient(
+                                                    colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                                                    begin: Alignment.bottomCenter,
+                                                    end: Alignment.topCenter
+                                                )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
@@ -547,8 +896,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti4 == false ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -557,14 +905,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'J',
                           style: TextStyle(
                               color:
-                                  mbti4 == false ? Colors.white : Colors.blue),
+                                  mbti4 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: phoneSize.height * 0.01),
+                    SizedBox(height: phoneSize.height * 0.03),
                     Container(
                       width: 75,
                       height: 75,
+                      decoration: BoxDecoration(
+                        gradient: mbti4 == true ? LinearGradient(
+                            colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter
+                        )
+                            : LinearGradient(colors: [Color.fromRGBO(255, 255, 255, 0.9), Color.fromRGBO(255, 255, 255, 0.9)]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
                       child: ElevatedButton(
                         onPressed: () {
                           //색 바뀌게 하고, 해당 정보 값 저장하기
@@ -573,8 +941,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              mbti4 == true ? Colors.blue : Colors.white,
+                          backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -583,7 +950,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           'P',
                           style: TextStyle(
                               color:
-                                  mbti4 == true ? Colors.white : Colors.blue),
+                                  mbti4 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18
+                          ),
                         ),
                       ),
                     ),
@@ -601,7 +971,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         MaterialPageRoute(
                             builder: (context) => MBTITestScreen()));
                   },
-                  child: Text('내 MBTI 를 모르겠어요'),
+                  child: Text(
+                      '내 MBTI 를 모르겠어요',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Inter',
+                      decoration: TextDecoration.underline,
+                      color: Color(0xffA0A3BD),
+                    ),
+                  ),
                 ),
               ],
             )
@@ -624,14 +1003,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: <Widget>[
             Text(
               '약관동의',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 24,
+                color: Color(0xff14142B)
+              ),
             ),
-            SizedBox(height: phoneSize.height * 0.01),
+            SizedBox(height: phoneSize.height * 0.03),
             Text(
               'WOOMUL 서비스를 이용하시려면\n'
               '필수 약관에 동의가 필요합니다.',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff4E4B66)
+              ),
             ),
-            SizedBox(height: phoneSize.height * 0.08),
+            SizedBox(height: phoneSize.height * 0.04),
             Row(
               children: [
                 Checkbox(
@@ -652,34 +1040,253 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Text('WOOMUL 이용약관 전체동의'),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 6, 0, 6),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.check,
-                          size: 20,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            //색 바뀌기
-                            //선택 됐음 알려주는 기능 추가
-                          });
-                        },
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xffF8FAFE),
                       ),
-                      Text('[필수] 어쩌고저쩌고')
-                    ],
-                  ),
-                ],
-              ),
+                      onPressed: () {
+                        setState(() {
+                          //색 바뀌기
+                          //선택 됐음 알려주는 기능 추가
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ExpansionTile(
+                        title: Text(
+                            '(필수) 개인정보 수집 및 이용에 동의합니다.',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13
+                          ),
+                        ),
+                        children: <Widget>[
+                          ListTile(
+                              title: Text(
+                              '개인정보 수집 및 이용 내용 쭈르르르ㅡㄱ',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xffF8FAFE),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          //색 바뀌기
+                          //선택 됐음 알려주는 기능 추가
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ExpansionTile(
+                        title: Text(
+                          '(필수) 이용약관에 동의합니다.',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13
+                          ),
+                        ),
+                        children: <Widget>[
+                          ListTile(
+                              title: Text(
+                                '이용약관 내용 쭈르르르ㅡㄱ',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xffF8FAFE),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          //색 바뀌기
+                          //선택 됐음 알려주는 기능 추가
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ExpansionTile(
+                        title: Text(
+                          '(필수) 개인정보의 제 3자 제공에 동의합니다.',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13
+                          ),
+                        ),
+                        children: <Widget>[
+                          ListTile(
+                              title: Text(
+                                '개인정보 제 3자 제공 내용 쭈르르르ㅡㄱ',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xffF8FAFE),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          //색 바뀌기
+                          //선택 됐음 알려주는 기능 추가
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ExpansionTile(
+                        title: Text(
+                          '(선택) 상품 정보 및 혜택 수신 동의',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13
+                          ),
+                        ),
+                        children: <Widget>[
+                          ListTile(
+                              title: Text(
+                                '상품정보 및 혜택 수신 동의 내용 쭈르르르ㅡㄱ',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             )
           ],
         ),
       ),
     ));
+  }
+
+  Widget _buildForm4(BuildContext context) {
+    var phoneSize = MediaQuery.of(context).size;
+    return Form(
+        child: SingleChildScrollView(
+          // physics: NeverScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '짝짝짝!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 24,
+                      color: Color(0xff14142B)
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '닉네임',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24,
+                          color: Color(0xff466FFF)
+                      ),
+                    ),
+                    SizedBox(width: phoneSize.width*0.02,),
+                    Text(
+                      '님',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24,
+                          color: Color(0xff14142B)
+                      ),
+                    )
+                  ],
+                ),
+
+                Text(
+                  '회원가입이 완료되었습니다.',
+                    style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                    color: Color(0xff14142B)
+                    ),
+                ),
+
+                SizedBox(height: phoneSize.height*0.07,),
+
+                //가입축하 이미지 넣기
+                Placeholder(fallbackHeight: phoneSize.height*0.4,),
+
+
+
+
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,
@@ -688,18 +1295,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Container(
         decoration: BoxDecoration(
-            boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.4))]),
+            boxShadow: [
+              BoxShadow(
+                  color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 9,
+                  offset: Offset(0, 3),
+              )
+            ],
+          borderRadius: BorderRadius.circular(12)
+        ),
         child: TextFormField(
           keyboardType:
               keyboardType == true ? TextInputType.number : TextInputType.text,
           obscureText: obscure,
           controller: controller,
+          cursorColor: Color(0xffA0A3BD),
           onChanged: (data) {
           },
           style: Theme.of(context)
               .textTheme
               .titleSmall
-              ?.copyWith(color: Colors.black),
+              ?.copyWith(color: Color(0xff4E4B66)),
           validator: (value) {
             if (value!.isEmpty) {
               setState(() {
@@ -719,19 +1336,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
               filled: true,
               fillColor: Colors.white,
               labelText: labelText,
+              hintText: labelText,
+              hintStyle: TextStyle(
+                color: Color(0xffA0A3BD)
+              ),
               labelStyle: TextStyle(
                   color: Colors.white //Theme.of(context).colorScheme.primary,
                   ),
               enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                     color: Color(
                         0xFF0000) /*Theme.of(context).colorScheme.surface*/),
               ),
               focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Color(0xFF0000))),
               errorBorder: OutlineInputBorder(
                   borderSide:
-                      BorderSide(color: Theme.of(context).colorScheme.error))),
+                      BorderSide(color: Color(0xffFF6868)))),
         ),
       ),
     );

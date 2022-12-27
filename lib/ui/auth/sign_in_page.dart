@@ -21,6 +21,9 @@ class _SignInScreenState extends State<SignInScreen> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late TextEditingController _resetEmailController;
+
+  late ScrollController _scrollController;
+
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var errorCheck;
@@ -40,6 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
     _emailController = TextEditingController(text: "");
     _passwordController = TextEditingController(text: "");
     _resetEmailController = TextEditingController(text: "");
+    _scrollController = ScrollController();
     errorCheck = false;
 
   }
@@ -49,6 +53,7 @@ class _SignInScreenState extends State<SignInScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _resetEmailController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -56,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Consumer2<AuthService, UserData>(builder: (context, authService, userData, child) {
         return Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset : false,
           key: _scaffoldKey,
           body: Align(
             alignment: Alignment.center,
@@ -76,6 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
         key: _formKey,
         child: SingleChildScrollView(
           // physics: NeverScrollableScrollPhysics(),
+          controller: _scrollController,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -87,12 +93,19 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 Text(
                   'WOOMUL',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                  ),
                 ),
                 SizedBox(height: phoneSize.height * 0.01),
                 Text(
                   '우리들의 MBTI 로 소통하는 공간',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff6E7191)
+                  ),
                 ),
                 SizedBox(height: phoneSize.height * 0.2),
                 Container(
@@ -107,12 +120,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         padding: EdgeInsets.only(right : 16.0),
                         child: Icon(
                           Icons.account_circle,
-                          color: Colors.black,
+                          color: Color(0xffA0A3BD),
                         ),
                       ),
                       Expanded(
                         child: textFieldForm(
-                            _emailController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
+                            _emailController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false, _scrollController),
                       ),
                     ],
                   ),
@@ -130,12 +143,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         padding: EdgeInsets.only(right : 16.0),
                         child: Icon(
                           Icons.lock,
-                          color: Colors.black,
+                          color: Color(0xffA0A3BD),
                         ),
                       ),
                       Expanded(
                         child: textFieldForm(
-                            _passwordController, "비밀번호를 입력해주세요.", "비밀번호를 확인해주세요", true),
+                            _passwordController, "비밀번호를 입력해주세요.", "비밀번호를 확인해주세요", true, _scrollController),
                       ),
                     ],
                   ),
@@ -158,7 +171,12 @@ class _SignInScreenState extends State<SignInScreen> {
                           //foregroundColor: Colors.black,
                         ),
                         child: Text(
-                          '비밀번호를 잊으셨나요?'
+                          '비밀번호를 잊으셨나요?',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff466FFF)
+                          ),
                         ),
                       )
                     ),
@@ -169,7 +187,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Container(
                   width: phoneSize.width *0.7,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.blueAccent, Colors.lightBlueAccent]),
+                    gradient: LinearGradient(colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)]),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: ElevatedButton(
@@ -220,7 +238,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                     child: Text(
-                      '시 작 하 기'
+                      '시 작 하 기',
+                      style: TextStyle(
+                          color: Color(0xffFCFCFC),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16
+                      ),
                     ),
                   ),
                 ),
@@ -233,9 +256,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     Text(
                         '아직 아이디가 없으신가요?  ',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400
+                        ),
                     ),
                     InkWell(
                       onTap: () {
@@ -246,9 +270,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       },
                       child: Text(
                         "회원 가입하러 가기",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Color(0xff466FFF)
+                        ),
                       ),
                     ),
                   ],
@@ -285,16 +311,22 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure) {
+      String errorText, bool obscure, ScrollController scontroller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
+        onTap: () {
+          scontroller.animateTo(120.0,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.ease);
+        },
         obscureText: obscure,
         controller: controller,
         style: Theme.of(context)
             .textTheme
             .titleSmall
-            ?.copyWith(color: Colors.black),
+            ?.copyWith(color: Color(0xffA0A3BD)),
+        cursorColor: Color(0xffA0A3BD),
         validator: (value) {
           if (value!.isEmpty) {
             setState(() {
@@ -321,7 +353,7 @@ class _SignInScreenState extends State<SignInScreen> {
             OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF0000))),
             errorBorder: OutlineInputBorder(
                 borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.error))),
+                BorderSide(color: Color(0xffFF6868)))),
       ),
     );
   }
