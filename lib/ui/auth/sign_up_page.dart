@@ -350,8 +350,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            SizedBox(height: phoneSize.height * 0.08),
-            Text('이메일'),
             textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요",
                 false, false, 1),
 
@@ -390,7 +388,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
 
             //중복 이메일 체크 기능 추가하시면 여기 확인 해주세여!
-            authService.checkID(_emailController.text) == false ?
+            emailDoubleChecked == true ?
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,8 +402,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
 
-                    textFieldForm(_passwordController, "비밀번호를 입력해주세요", "",
-                        true, emailChecked, false),
+                    textFieldForm(_passwordController, "비밀번호를 입력해주세요.", "", true, false, 1),
 
                     Text(
                       '비밀번호 확인',
@@ -418,7 +415,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     //비번 일치 하지 않으면 일치 하지 않다고 알려주는 기능 추가 해야함
                     textFieldForm(_passwordCheckController, "비밀번호를 입력해주세요", "비밀번호가 일치하지 않습니다.",
-                        true, emailChecked, false),
+                        true, false, 1),
                   ],
                 ) : Container()
 
