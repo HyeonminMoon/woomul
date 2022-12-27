@@ -198,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         bottomNavigationBar: Material(
           color: (index == 0 && _emailController.text != '' && emailDoubleChecked == true) || (index == 1 && _nameController.text != '' && _birthController.text != '') || (index == 2)
-              ? Colors.blue
+              ? Color(0xff4D64F3)
               : const Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
           child: (index == 0 && _emailController.text != '') || (index == 1 && _nameController.text != '' && _birthController.text != '') || (index == 2)
           ? InkWell(
