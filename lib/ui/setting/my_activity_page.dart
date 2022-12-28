@@ -10,6 +10,7 @@ import 'package:woomul/ui/board/edit_board_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
+import '../board/detail_board_page.dart';
 
 class MyActivityScreen extends StatefulWidget {
   @override
@@ -59,6 +60,10 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
         userData.getUserData(user!.uid),
       ]),
       builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Container();
+        }
+
         final docsBoard = snapshot.data[0]?.docs ?? [];
         final docsComment = snapshot.data[1]?.docs ?? [];
         final docsUser = snapshot.data[2]?.docs ?? [];
@@ -135,7 +140,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                     child: _buildBoardForm(context, docsBoard),
                   ),
                   Center(
-                    child: _buildCommentForm(context, docsComment),
+                    child: _buildCommentForm(context, docsComment, boardService),
                   ),
                 ],
               ),/*Align(
@@ -169,6 +174,11 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                   GestureDetector(
                     onTap: () {
                       //해당 게시글로 이동될려나?
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailBoardScreen(boardType, doc.get("key"))));
                     },
                     child: Container(
                       //height: phoneSize.height*0.25,
@@ -256,7 +266,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
     );
   }
 
-  Widget _buildCommentForm(BuildContext context, docs) {
+  Widget _buildCommentForm(BuildContext context, docs, BoardService boardService) {
     var phoneSize = MediaQuery.of(context).size;
     return ListView.builder(
       itemCount: docs.length,
@@ -266,6 +276,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
         String comment = doc.get("comment");
         String name = doc.get("name");
         DateTime createDate = doc.get("createDate").toDate();
+        String data = '없다';
 
         return Form(
             child: SingleChildScrollView(
@@ -275,7 +286,16 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                      boardService.readBoardType(doc.get('contentKey')).then((value){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailBoardScreen(value, doc.get("contentKey"))));
+                      });
+
                       //해당 게시글로 이동될려나?
+
                     },
                     child: Container(
                       //height: phoneSize.height*0.25,

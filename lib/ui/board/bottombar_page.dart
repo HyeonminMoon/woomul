@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:woomul/provider/board_service.dart';
+import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/main_board_page.dart';
 import 'package:woomul/ui/setting/main_setting_page.dart';
 
 
+import '../../provider/auth_service.dart';
 import '../../routes.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -102,240 +107,205 @@ class _BoardScreenState extends State<BoardScreen> {
 
   }
 
-  Widget _board1(BuildContext context){
-    var phoneSize = MediaQuery.of(context).size;
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              //HOT 게시판 이동
-            },
-            child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'HOT 게시판'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              //BEST 게시판 이동
-            },
-            child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                      'BEST 게시판'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-
-          SizedBox(height: phoneSize.height*0.04),
-
-          GestureDetector(
-            onTap: () {
-              //자유 게시판 이동
-            },
-            child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                      '자유 게시판'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              //연애 게시판 이동
-            },
-            child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                      '연애 게시판'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              //고민 게시판 이동
-            },
-            child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                      '고민 게시판'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              //비밀 게시판 이동
-            },
-            child: Container(
-              width: phoneSize.width*0.8,
-              height: phoneSize.height*0.1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                      '비밀 게시판'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-          ),
-
-
-        ],
-      ),
-    );
-  }
-
   Widget _board2(BuildContext context){
     var phoneSize = MediaQuery.of(context).size;
+
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
+    final userData = context.read<UserData>();
+    final boardService = context.read<BoardService>();
+
     return Expanded(
-      child: Column(
-        children: [
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-        ],
+      child: FutureBuilder<List<QuerySnapshot>>(
+        future: Future.wait([
+          boardService.readLimit('commentNum', 1),
+          boardService.readLimit('likeNum', 1)
+        ]),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting){
+            return Container();
+          }
+          final docs = snapshot.data![0].docs ?? [];
+          final docs2 = snapshot.data![1].docs ?? [];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DetailBoardScreen('HOT 게시판', docs[0].get('key'))));
+                },
+                child: Container(
+                  //height: phoneSize.height*0.25,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Placeholder(
+                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                          SizedBox(width: phoneSize.width * 0.03),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [Text('mbti')],
+                              ),
+                              Row(
+                                children: [
+                                  Text('개인 mbti'),
+                                  SizedBox(width: 10),
+                                  Text('뜻')
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(width: phoneSize.width * 0.48),
+                          Row(
+                            children: [
+                              IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  onPressed: () {
+                                  },
+                                  icon: Icon(docs2.isEmpty == true
+                                      ? Icons.favorite_border
+                                      : Icons.favorite)),
+                              Icon(Icons.bookmark_border_outlined)
+                            ],
+                          )
+                        ],
+                      ),
+                      if (docs[0].get('title').length > 50)
+                        Text(
+                          docs[0].get('title').substring(0,40) + '...',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      if (docs[0].get('title').length <= 50)
+                        Text(
+                          docs[0].get('title'),
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      SizedBox(height: phoneSize.height * 0.02),
+                      if (docs[0].get('content').length > 50)
+                        Text(docs[0].get('content').substring(0,40) + '...'),
+                      if (docs[0].get('content').length <= 50)
+                        Text(docs[0].get('content')),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [Text('2')],
+                              ),
+                              Row(
+                                children: [Text('대표 닉네임 님 외 n인이 좋아합니다.')],
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DetailBoardScreen('BEST 게시판', docs2[0].get('key'))));
+                },
+                child: Container(
+                  //height: phoneSize.height*0.25,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Placeholder(
+                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                          SizedBox(width: phoneSize.width * 0.03),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [Text(docs2[0].get('name'))],
+                              ),
+                              Row(
+                                children: [
+                                  Text('개인MBTI'),
+                                  SizedBox(width: 10),
+                                  Text('뜻')
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(width: phoneSize.width * 0.48),
+                          Row(
+                            children: [
+                              IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  onPressed: () {
+                                  },
+                                  icon: Icon(docs2.isEmpty == true
+                                      ? Icons.favorite_border
+                                      : Icons.favorite)),
+                              Icon(Icons.bookmark_border_outlined)
+                            ],
+                          )
+                        ],
+                      ),
+                      Text(
+                        docs2[0].get('title'),
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(height: phoneSize.height * 0.02),
+                      Text(docs2[0].get('content')),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [Text('2')],
+                              ),
+                              Row(
+                                children: [Text('대표 닉네임 님 외 n인이 좋아합니다.')],
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+        },
       ),
     );
   }
-
-  Widget _board3(BuildContext context){
-    var phoneSize = MediaQuery.of(context).size;
-    return Expanded(
-      child: Column(
-        children: [
-          SettingScreen()
-        ],
-      ),
-    );
-  }
-
-
-
-
-
 }
 
 

@@ -150,6 +150,11 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             likeService.read(widget.contentKey)
           ]),
           builder: (context, snapshot) {
+
+            if(snapshot.connectionState == ConnectionState.waiting){
+              return Container();
+            }
+
             final docs = snapshot.data![0].docs ?? [];
             final docs2 = snapshot.data![1].docs ?? [];
             final docs3 = snapshot.data![2].docs ?? [];

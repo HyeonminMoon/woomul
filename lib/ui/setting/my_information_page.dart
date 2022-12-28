@@ -217,7 +217,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           child: Row(
                             children: [
                               Text(
-                                '비밀번호파이어베이스에서가져오기'
+                                '⚫⚫⚫⚫⚫⚫⚫'
                               )
                             ],
                           ),

@@ -95,6 +95,9 @@ class _SettingScreenState extends State<SettingScreen> {
     return FutureBuilder<void>(
       future: userData.getUserData(user!.uid),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
         return Column(
           children: [
             Row(

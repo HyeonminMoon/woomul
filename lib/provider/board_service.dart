@@ -18,8 +18,24 @@ class BoardService extends ChangeNotifier {
         .get(); // return 값 미구현 에러
   }
 
+  Future<String> readBoardType(boardKey) async {
+    // 내 bucketList 가져오기
+    var data = await bucketCollection
+        .where('key', isEqualTo: boardKey)
+        .get();
+    var board = data.docs[0].get('boardType');
+    return board;
+  }
+
   Future<QuerySnapshot> readGood(data) async {
+    DateTime date = DateTime.now().subtract(Duration(days: 3));
     return bucketCollection.orderBy('$data', descending: true).get();
+    // where("createDate", isGreaterThan: date).
+  }
+
+  Future<QuerySnapshot> readLimit(String data, int unit) async {
+    return bucketCollection.orderBy(data, descending: true).limit(unit).get();
+    // where("createDate", isGreaterThan: date).
   }
 
   Future<QuerySnapshot> readAll(uid) async {

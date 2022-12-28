@@ -57,8 +57,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BoardScreen()));
+              Navigator.pop(context);
             },
           ),
           actions: [
@@ -84,8 +83,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                 //얘를 여러 개 불러오도록 하면 됨
                 if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
                   _board1(context, boardService),
-                if (widget.name == 'HOT 게시판' || widget.name == 'BEST 게시판')
-                _board2(context, boardService)
+                if (widget.name == 'HOT 게시판')
+                  _board2(context, boardService, 'commentNum'),
+                if (widget.name == 'BEST 게시판')
+                  _board2(context, boardService, 'likeNum')
               ],
             ),
           ),
@@ -145,7 +146,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(title),
+                                      if (title.length > 50)
+                                        Text("${title.substring(0, 40)}..."),
+                                      if (title.length <= 50)
+                                          Text(title),
                                       Row(
                                         children: [
                                           Text(userName),
@@ -159,7 +163,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                   Icon(Icons.more_horiz)
                                 ],
                               ),
-                              Text(content),
+                              if (content.length > 50)
+                                Text('${content.substring(0,40)}...'),
+                              if (content.length <= 50)
+                                Text(content, overflow: TextOverflow.ellipsis,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -195,11 +202,11 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
     );
   }
 
-  Widget _board2(BuildContext context, BoardService boardService) {
+  Widget _board2(BuildContext context, BoardService boardService, String boardType) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: FutureBuilder<QuerySnapshot>(
-          future: boardService.readGood("commentNum"),
+          future: boardService.readGood(boardType),
           builder: (context, snapshot) {
             final docs = snapshot.data?.docs ?? [];
             return ListView.builder(
@@ -244,7 +251,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                     children: [
-                                      Text(title),
+                                      if (title.length > 50)
+                                        Text('${title.substring(0, 50)}...'),
+                                      if (title.length <= 50)
+                                        Text(title),
                                       Row(
                                         children: [
                                           Text(userName),
@@ -258,7 +268,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                   Icon(Icons.more_horiz)
                                 ],
                               ),
-                              Text(content),
+                              if (content.length > 50)
+                                Text('${content.substring(0,50)}...'),
+                              if (content.length <= 50)
+                                Text(content),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
