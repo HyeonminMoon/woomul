@@ -156,13 +156,13 @@ class _BoardScreenState extends State<BoardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                children: [Text('mbti')],
+                                children: [Text(docs[0].get('name'))],
                               ),
                               Row(
                                 children: [
-                                  Text('개인 mbti'),
+                                  Text(docs[0].get('userMbti')),
                                   SizedBox(width: 10),
-                                  Text('뜻')
+                                  Text(docs[0].get('userMbtiMean'))
                                 ],
                               )
                             ],
@@ -250,9 +250,9 @@ class _BoardScreenState extends State<BoardScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text('개인MBTI'),
+                                  Text(docs2[0].get('userMbti')),
                                   SizedBox(width: 10),
-                                  Text('뜻')
+                                  Text(docs2[0].get('userMbtiMean'))
                                 ],
                               )
                             ],

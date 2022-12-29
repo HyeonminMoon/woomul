@@ -143,6 +143,8 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                           ageNum: _currentSliderValue,
                           ageRange: age[(_currentSliderValue / 25).round()],
                           mbti: selectedList,
+                          userMbti: userData.mbti,
+                          userMbtiMean: userData.mbtiMean,
                           boardType: dropdownValue,
                           createDate: DateTime.now(),
                           title: _TitleController.text,

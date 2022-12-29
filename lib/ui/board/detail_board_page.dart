@@ -194,9 +194,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                 ),
                               Row(
                                 children: [
-                                  Text('개인MBTI'),
+                                  Text(docs[0].get('userMbti')),
                                   SizedBox(width: 10),
-                                  Text('뜻')
+                                  Text(docs[0].get('userMbtiMean'))
                                 ],
                               )
                             ],
