@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _birthController.dispose();
     _passwordController.dispose();
     _passwordCheckController.dispose();
-    index.dispose();
+    //index.dispose(); int 값을 dispose() 했을떄 오류 발생함 221228 현민
     super.dispose();
   }
 
@@ -207,10 +207,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 //index 가 2보다 작을 동안만 되도록 바꾸기
                 //3이 되면 회원 가입 완료 페이지로 넘어가도록
                 //인증 완료 및 입력값이 다 들어갔을 경우에 색이 바뀌고, 페이지 바뀌도록 하는 기능
+                if (index == 0) {
 
-                if (index < 3) {
+                  if (_passwordController.text != _passwordCheckController.text) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("비밀번호가 일치하지 않습니다."),
+                    ));
+                  } else {
+                    if (_passwordController.text.length < 8 || _passwordController.text.length > 20) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("비밀번호 길이는 8자 이상, 20자 이하로 설정해주세요"),
+                      ));
+                    } else {
+                      index++;
+                    }
+
+                  }
+                }
+                else if (index == 1) {
                   index++;
-                  print(index);
                 } else if (index == 2) {
                   //mbti 계산 로직직
 
@@ -229,7 +244,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   authService.signUp(
                       email: _emailController.text,
-                      password: tmpPW,
+                      password: _passwordController.text,
                       onSuccess: () {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("회원가입 성공"),
@@ -237,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                         authService.signIn(
                             email: _emailController.text,
-                            password: tmpPW,
+                            password: _passwordController.text,
                             onSuccess: () {
                               // 로그인 성공
                               ScaffoldMessenger.of(context)
@@ -252,7 +267,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     uid: user.uid,
                                     email: _emailController.text,
                                     name: _nameController.text,
-                                    sex: tmpSEX,
+                                    sex: dropdownValue,
                                     birth: int.parse(_birthController.text),
                                     mbti: mbti,
                                     signupDate: DateTime.now(),

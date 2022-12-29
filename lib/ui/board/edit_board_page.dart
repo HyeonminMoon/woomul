@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -98,78 +99,85 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     final userData = context.read<UserData>();
 
     return Consumer<BoardService>(builder: (context, boardService, child) {
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          automaticallyImplyLeading: true,
-          centerTitle: true,
-          title: Text(
-            '게시물 작성',
-            style: TextStyle(
-              color: Colors.black,
+      return FutureBuilder<void>(
+        future: userData.getUserData(user!.uid),
+        builder: (context, snapshot) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              automaticallyImplyLeading: true,
+              centerTitle: true,
+              title: Text(
+                '게시물 작성',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  print(userData.name);
+                  Navigator.pop(context);
+                },
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    print(userData.name);
+                    //내용 fb 에 저장 및 업로드
+                    if (_ContentController.text != '' && _TitleController.text != ''){
+                      String key = getRandomString(16);
+
+                      List<String> selectedList = selectedMbti(mbtiList, mbtiValue);
+
+                      boardService.create(
+                          key: key,
+                          userUid: user!.uid,
+                          name: userData.name,
+                          firstPicUrl: null,
+                          ageNum: _currentSliderValue,
+                          ageRange: age[(_currentSliderValue / 25).round()],
+                          mbti: selectedList,
+                          boardType: dropdownValue,
+                          createDate: DateTime.now(),
+                          title: _TitleController.text,
+                          content: _ContentController.text,
+                          commentNum: 20,
+                          likeNum: 20);
+
+                      Navigator.pop(context);
+                    }
+
+                  },
+                  child: Text('업로드'),
+                )
+              ],
             ),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                //내용 fb 에 저장 및 업로드
-                String key = getRandomString(16);
-
-                List<String> selectedList = selectedMbti(mbtiList, mbtiValue);
-
-                if (user != null)
-                  // 유저가 여러명일 때 체크 해 봐야함!
-                  // 그리고 Provider 저장은 로그인할때로 넘겨야함!
-                  userData.getUserData(user.uid);
-
-                boardService.create(
-                    key: key,
-                    userUid: user!.uid,
-                    name: userData.name,
-                    firstPicUrl: null,
-                    ageNum: _currentSliderValue,
-                    ageRange: age[(_currentSliderValue / 25).round()],
-                    mbti: selectedList,
-                    boardType: dropdownValue,
-                    createDate: DateTime.now(),
-                    title: _TitleController.text,
-                    content: _ContentController.text,
-                    commentNum: 20,
-                    likeNum: 20);
-              },
-              child: Text('업로드'),
-            )
-          ],
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //얘를 여러 개 불러오도록 하면 됨
-                  _board0(context, boardService, userData),
-                  SizedBox(
-                    height: phoneSize.height * 0.04,
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //얘를 여러 개 불러오도록 하면 됨
+                      _board0(context, boardService, userData),
+                      SizedBox(
+                        height: phoneSize.height * 0.04,
+                      ),
+                      _board1(context),
+                    ],
                   ),
-                  _board1(context),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }
       );
     });
   }

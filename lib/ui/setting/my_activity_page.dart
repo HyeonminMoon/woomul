@@ -276,7 +276,6 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
         String comment = doc.get("comment");
         String name = doc.get("name");
         DateTime createDate = doc.get("createDate").toDate();
-        String data = '없다';
 
         return Form(
             child: SingleChildScrollView(

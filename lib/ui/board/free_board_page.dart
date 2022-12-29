@@ -61,17 +61,18 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
             },
           ),
           actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditBoardScreen()));
-                },
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.black,
-                ))
+            if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditBoardScreen()));
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  ))
           ],
         ),
         body: SafeArea(
@@ -84,9 +85,9 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                 if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
                   _board1(context, boardService),
                 if (widget.name == 'HOT 게시판')
-                  _board2(context, boardService, 'commentNum'),
+                  _board2(context, boardService, 'commentNum', 3),
                 if (widget.name == 'BEST 게시판')
-                  _board2(context, boardService, 'likeNum')
+                  _board2(context, boardService, 'likeNum', 7)
               ],
             ),
           ),
@@ -202,11 +203,11 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
     );
   }
 
-  Widget _board2(BuildContext context, BoardService boardService, String boardType) {
+  Widget _board2(BuildContext context, BoardService boardService, String boardType, int days) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: FutureBuilder<QuerySnapshot>(
-          future: boardService.readGood(boardType),
+          future: boardService.readGood(boardType, days),
           builder: (context, snapshot) {
             final docs = snapshot.data?.docs ?? [];
             return ListView.builder(

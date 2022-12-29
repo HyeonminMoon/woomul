@@ -7,6 +7,7 @@ class BoardService extends ChangeNotifier {
   Future<QuerySnapshot> read(boardName) async {
     // 내 bucketList 가져오기
     return bucketCollection
+        .orderBy('createDate', descending: true)
         .where('boardType', isEqualTo: boardName)
         .get();
   }
@@ -20,17 +21,15 @@ class BoardService extends ChangeNotifier {
 
   Future<String> readBoardType(boardKey) async {
     // 내 bucketList 가져오기
-    var data = await bucketCollection
-        .where('key', isEqualTo: boardKey)
-        .get();
+    var data = await bucketCollection.where('key', isEqualTo: boardKey).get();
     var board = data.docs[0].get('boardType');
     return board;
   }
 
-  Future<QuerySnapshot> readGood(data) async {
-    DateTime date = DateTime.now().subtract(Duration(days: 3));
-    return bucketCollection.orderBy('$data', descending: true).get();
-    // where("createDate", isGreaterThan: date).
+  Future<QuerySnapshot> readGood(String data, int days) async {
+    DateTime date = DateTime.now().subtract(Duration(days: days));
+    print(DateTime.now());
+    return bucketCollection.where("createDate", isGreaterThan: date).orderBy(data, descending: true).get();
   }
 
   Future<QuerySnapshot> readLimit(String data, int unit) async {
@@ -39,7 +38,10 @@ class BoardService extends ChangeNotifier {
   }
 
   Future<QuerySnapshot> readAll(uid) async {
-    return bucketCollection.where('userUid', isEqualTo: uid).get();
+    return bucketCollection
+        .where('userUid', isEqualTo: uid)
+        .orderBy('createDate', descending: true)
+        .get();
   }
 
   void create(
