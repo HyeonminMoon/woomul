@@ -54,6 +54,8 @@ class _SettingScreenState extends State<SettingScreen> {
           '설정',
           style: TextStyle(
             color: Colors.black,
+            fontWeight: FontWeight.w700,
+            fontSize: 16
           ),
         ),
         leading: IconButton(
@@ -62,7 +64,7 @@ class _SettingScreenState extends State<SettingScreen> {
             color: Colors.black,
           ),
           onPressed: () {
-
+            //뒤로가기
           },
         ),
       ),
@@ -102,7 +104,7 @@ class _SettingScreenState extends State<SettingScreen> {
           children: [
             Row(
               children: [
-                Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진
+                Placeholder(fallbackHeight: 15,fallbackWidth: 15),//프로필 사진 불러오기
                 SizedBox(width: phoneSize.width *0.03),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -111,18 +113,36 @@ class _SettingScreenState extends State<SettingScreen> {
                     Row(
                       children: [
                         Text(
-                            userData.name
+                            userData.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600
+                          ),
                         )
                       ],
                     ),
                     Row(
                       children: [
                         Text(
-                            userData.mbti
+                            userData.mbti,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                          ),
                         ),
                         SizedBox(width:10),
+
                         Text(
-                            'mbti 뜻'
+                          '|'
+                        ),
+
+                        SizedBox(width:10),
+                        Text(
+                            'mbti 뜻',//이것도 값 가져와야 함!
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14
+                          ),
                         )
                       ],
                     )
@@ -140,10 +160,9 @@ class _SettingScreenState extends State<SettingScreen> {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          
-
+          Container(),
           SizedBox(height: phoneSize.height*0.04),
 
           GestureDetector(
@@ -156,22 +175,46 @@ class _SettingScreenState extends State<SettingScreen> {
               width: phoneSize.width*0.8,
               height: phoneSize.height*0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '내 정보'
+
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 12,right : 12.0),
+                        child: Icon(
+                          Icons.account_circle_outlined,
+                          color: Color(0xff466FFF),
+                        ),
+                      ),
+                      Text(
+                          '내 정보',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -190,20 +233,45 @@ class _SettingScreenState extends State<SettingScreen> {
             child: Container(
               width: phoneSize.width*0.8,
               height: phoneSize.height*0.1,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '내 활동'
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 12,right : 12.0),
+                        child: Icon(
+                          Icons.public,
+                          color: Color(0xff466FFF),
+                        ),
+                      ),
+                      Text(
+                          '내 활동',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -225,20 +293,45 @@ class _SettingScreenState extends State<SettingScreen> {
             child: Container(
               width: phoneSize.width*0.8,
               height: phoneSize.height*0.1,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '게시판 설정'
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 12,right : 12.0),
+                        child: Icon(
+                          Icons.article_outlined,
+                          color: Color(0xff466FFF),
+                        ),
+                      ),
+                      Text(
+                          '게시판 설정',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -256,22 +349,44 @@ class _SettingScreenState extends State<SettingScreen> {
               width: phoneSize.width*0.8,
               height: phoneSize.height*0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '이용안내'
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 12,right : 12.0),
+                        child: Icon(
+                          Icons.info_outline,
+                          color: Color(0xff466FFF),
+                        ),
+                      ),
+                      Text(
+                          '이용안내',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -296,24 +411,38 @@ class _SettingScreenState extends State<SettingScreen> {
               width: phoneSize.width*0.8,
               height: phoneSize.height*0.1,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '로그아웃'
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 11,
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 12,right : 12.0),
+                        child: Icon(
+                          Icons.logout,
+                          color: Color(0xff466FFF),
+                        ),
+                      ),
+                      Text(
+                          '로그아웃',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
 
                 ],
