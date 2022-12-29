@@ -126,6 +126,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                       commentKey: key,
                                       createDate: DateTime.now(),
                                       likeNum: 2);
+
+                                  _commentController.clear();
+
                                 }
                               },
                               child: Text('저장'))
@@ -143,11 +146,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
       LikeService likeService, UserData userData, String uid) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
-      child: FutureBuilder<List<QuerySnapshot>>(
+      child: FutureBuilder<dynamic>(
           future: Future.wait([
             boardService.readOne(widget.contentKey),
             likeService.readOne(uid, widget.contentKey),
-            likeService.read(widget.contentKey)
+            likeService.read(widget.contentKey),
+            userData.getUserData(uid)
           ]),
           builder: (context, snapshot) {
 
@@ -180,9 +184,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [Text(docs[0].get('name'))],
-                              ),
+                              if (widget.name != '비밀게시판')
+                                Row(
+                                  children: [Text(docs[0].get('name'))],
+                                ),
+                              if (widget.name == '비밀게시판')
+                                Row(
+                                  children: [Text("익명")],
+                                ),
                               Row(
                                 children: [
                                   Text('개인MBTI'),

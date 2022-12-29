@@ -153,7 +153,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                           Text(title),
                                       Row(
                                         children: [
-                                          Text(userName),
+                                          if (widget.name != '비밀게시판')
+                                            Text(userName),
+                                          if (widget.name == '비밀게시판')
+                                            Text("익명"),
                                           SizedBox(width: 10),
                                           Text(date.toString())
                                         ],
