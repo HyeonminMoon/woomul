@@ -51,6 +51,8 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
           '게시판 설정',
           style: TextStyle(
             color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w700
           ),
         ),
         leading: IconButton(
