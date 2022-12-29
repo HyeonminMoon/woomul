@@ -88,6 +88,7 @@ class AuthService extends ChangeNotifier {
       required String sex,
       required int birth,
       required String mbti,
+      required String mbtiMean,
       required DateTime signupDate,
       required DateTime? deleteDate}) async {
     await bucketCollection.add({
@@ -97,6 +98,7 @@ class AuthService extends ChangeNotifier {
       'sex': sex,
       'birth': birth,
       'mbti': mbti,
+      'mbtiMean': mbtiMean,
       'signupDate': signupDate,
       'deleteDate': deleteDate
     });
@@ -134,26 +136,13 @@ class AuthService extends ChangeNotifier {
   }
 }
 
-class MbtiService extends ChangeNotifier {
+ class MbtiService extends ChangeNotifier {
   final bucketCollection = FirebaseFirestore.instance.collection('etcDB');
 
   Future<QuerySnapshot> read() async {
-    // 내 bucketList 가져오기
     return bucketCollection.get();
   }
-
-  void create(String job, String uid) async {
-    // bucket 만들기
-  }
-
-  void update(String docId, bool isDone) async {
-    // bucket isDone 업데이트
-  }
-
-  void delete(String docId) async {
-    // bucket 삭제
-  }
-}
+ }
 
 class UserData extends ChangeNotifier {
   final bucketCollection = FirebaseFirestore.instance.collection('user');
@@ -164,6 +153,7 @@ class UserData extends ChangeNotifier {
   var sex;
   var birth;
   var mbti;
+  var mbtiMean;
   var signupDate;
   var deleteDate;
 
@@ -176,8 +166,33 @@ class UserData extends ChangeNotifier {
     sex = await data.docs[0].data()['sex'];
     birth = await data.docs[0].data()['birth'];
     mbti = await data.docs[0].data()['mbti'];
+    mbtiMean = await data.docs[0].data()['mbtiMean'];
     signupDate = await data.docs[0].data()['signupDate'];
     deleteDate = await data.docs[0].data()['deleteDate'];
 
   }
+}
+
+String? meanMBTI(String mbti) {
+
+  final Map<String, String> listMean = {
+    'INTJ' : '용의주도한 전략가',
+    'INTP' : '논리적인 사색가',
+    'ENTJ' : '대담한 통솔자',
+    'ENTP' : '뜨거운 논쟁을 즐기는 변론가',
+    'INFJ' : '선의의 옹호자',
+    'INFP' : '열정적인 중재자',
+    'ENFJ' : '정의로운 사회운동가',
+    'ENFP' : '재기발랄한 활동가',
+    'ISTJ' : '청렴결백한 논리주의자',
+    'ISFJ' : '용감한 수호자',
+    'ESTJ' : '엄격한 관리자',
+    'ESFJ' : '사교적인 외교관',
+    'ISTP' : '만능 재주꾼',
+    'ISFP' : '호기심 많은 예술가',
+    'ESTP' : '모험을 즐기는 사업가',
+    'ESFP' : '자유로운 영혼의 연예인'
+  };
+
+  return listMean[mbti];
 }

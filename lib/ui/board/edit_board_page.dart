@@ -102,6 +102,10 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
       return FutureBuilder<void>(
         future: userData.getUserData(user!.uid),
         builder: (context, snapshot) {
+
+          int position = mbtiList.indexOf(userData.mbti);
+          mbtiValue[position] = true;
+
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
@@ -128,7 +132,6 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    print(userData.name);
                     //내용 fb 에 저장 및 업로드
                     if (_ContentController.text != '' && _TitleController.text != ''){
                       String key = getRandomString(16);
@@ -143,6 +146,8 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                           ageNum: _currentSliderValue,
                           ageRange: age[(_currentSliderValue / 25).round()],
                           mbti: selectedList,
+                          userMbti: userData.mbti,
+                          userMbtiMean: userData.mbtiMean,
                           boardType: dropdownValue,
                           createDate: DateTime.now(),
                           title: _TitleController.text,
@@ -279,7 +284,6 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             onPressed: () {
               //색 바뀌게 하고, 해당 정보 값 저장하기
               setState(() {
-                print(userData.mbti);
 
                 if (mbtiList[index] != userData.mbti) {
                   if (mbtiValue[index] == false) {
@@ -287,6 +291,8 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                   } else {
                     mbtiValue[index] = false;
                   }
+                } else {
+                  print(userData.mbti);
                 }
               });
             },
@@ -418,9 +424,6 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
         result.add(data[i]);
       }
     }
-
-    print(result);
-
     return result;
   }
 }

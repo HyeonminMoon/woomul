@@ -52,6 +52,8 @@ class BoardService extends ChangeNotifier {
       required double ageNum,
       required String ageRange,
       required List<dynamic> mbti,
+      required String userMbti,
+      required String userMbtiMean,
       required String? boardType,
       required DateTime createDate,
       required String title,
@@ -66,6 +68,8 @@ class BoardService extends ChangeNotifier {
       'ageNum': ageNum,
       'ageRange': ageRange,
       'mbti': mbti,
+      'userMbti': userMbti,
+      'userMbtiMean': userMbtiMean,
       'boardType': boardType,
       'createDate': createDate,
       'title': title,
@@ -77,8 +81,9 @@ class BoardService extends ChangeNotifier {
     // bucket 만들기
   }
 
-  void update(String docId, bool isDone) async {
-    // bucket isDone 업데이트
+  void update(String docId, String data, int value) async {
+    await bucketCollection.doc(docId).update({data: value});
+    notifyListeners();
   }
 
   void delete(String docId) async {

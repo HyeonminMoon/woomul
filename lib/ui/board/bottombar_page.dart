@@ -156,31 +156,17 @@ class _BoardScreenState extends State<BoardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                children: [Text('mbti')],
+                                children: [Text(docs[0].get('name'))],
                               ),
                               Row(
                                 children: [
-                                  Text('개인 mbti'),
+                                  Text(docs[0].get('userMbti')),
                                   SizedBox(width: 10),
-                                  Text('뜻')
+                                  Text(docs[0].get('userMbtiMean'))
                                 ],
                               )
                             ],
                           ),
-                          SizedBox(width: phoneSize.width * 0.48),
-                          Row(
-                            children: [
-                              IconButton(
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(),
-                                  onPressed: () {
-                                  },
-                                  icon: Icon(docs2.isEmpty == true
-                                      ? Icons.favorite_border
-                                      : Icons.favorite)),
-                              Icon(Icons.bookmark_border_outlined)
-                            ],
-                          )
                         ],
                       ),
                       if (docs[0].get('title').length > 50)
@@ -250,27 +236,14 @@ class _BoardScreenState extends State<BoardScreen> {
                               ),
                               Row(
                                 children: [
-                                  Text('개인MBTI'),
+                                  Text(docs2[0].get('userMbti')),
                                   SizedBox(width: 10),
-                                  Text('뜻')
+                                  Text(docs2[0].get('userMbtiMean'))
                                 ],
                               )
                             ],
                           ),
-                          SizedBox(width: phoneSize.width * 0.48),
-                          Row(
-                            children: [
-                              IconButton(
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(),
-                                  onPressed: () {
-                                  },
-                                  icon: Icon(docs2.isEmpty == true
-                                      ? Icons.favorite_border
-                                      : Icons.favorite)),
-                              Icon(Icons.bookmark_border_outlined)
-                            ],
-                          )
+
                         ],
                       ),
                       Text(

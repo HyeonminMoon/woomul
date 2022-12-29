@@ -270,6 +270,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     sex: dropdownValue,
                                     birth: int.parse(_birthController.text),
                                     mbti: mbti,
+                                    mbtiMean: meanMBTI(mbti)!,
                                     signupDate: DateTime.now(),
                                     deleteDate: null);
                               }
@@ -374,6 +375,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                   onPressed: () async {
 
+                    // 여기 체크해봐야함! [ERROR]
                     if (await authService.doubleCheck(_emailController.text) == true){
                       emailDoubleChecked = false;
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

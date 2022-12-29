@@ -12,6 +12,7 @@ import 'package:woomul/ui/board/main_board_page.dart';
 import '../../provider/auth_service.dart';
 import '../../provider/board_service.dart';
 import '../../routes.dart';
+import 'package:intl/intl.dart';
 
 class FreeBoardScreen extends StatefulWidget {
   final String name;
@@ -112,6 +113,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                   String title = doc.get('title');
                   String userName = doc.get('name');
                   DateTime date = doc.get('createDate').toDate();
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(date);
                   String content = doc.get('content');
                   String contentKey = doc.get('key');
                   int likeNum = doc.get('likeNum');
@@ -153,9 +155,12 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                           Text(title),
                                       Row(
                                         children: [
-                                          Text(userName),
+                                          if (widget.name != '비밀게시판')
+                                            Text(userName),
+                                          if (widget.name == '비밀게시판')
+                                            Text("익명"),
                                           SizedBox(width: 10),
-                                          Text(date.toString())
+                                          Text(formattedDate)
                                         ],
                                       )
                                     ],
