@@ -17,7 +17,7 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
   var errorCheck;
   late bool _showAppleSignIn;
 
-  double _currentSliderValue = 20;
+  RangeValues _currentSliderValue = RangeValues(20,50);
   List<String> age = ['10대 중반', '10대 후반', '20대', '30대', '전연령'];
 
   @override
@@ -90,51 +90,103 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+                    SizedBox(height: phoneSize.height*0.04,),
+
                     Container(
-                      padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 25),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
                           color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             '게시판 연령대 필터',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16
+                            ),
                           ),
+                          SizedBox(height: phoneSize.height * 0.01,),
                           Text(
-                            '필터를 적용하면 원하는 연령대의 게시물만 볼 수 있어요!'
+                            '필터를 적용하면 원하는 연령대의 게시물만 볼 수 있어요!',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400
+                            ),
                           ),
-                          Slider(
-                            value: _currentSliderValue,
-                            max: 100,
-                            divisions: 4,
-                            onChanged: (double value) {
-                              setState(() {
-                                _currentSliderValue = value;
-                              });
-                            },
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              activeTrackColor: Color(0xff5F8BFF),
+                              inactiveTrackColor: Color(0xffB1C7FF),
+                              thumbColor: Colors.white,
+                              thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: 12.0,
+                              ),
+                            ),
+                            child: RangeSlider(
+                              values: _currentSliderValue,
+                              max: 100,
+                              divisions: 4,
+                              //activeColor: Color(0xff5F8BFF),
+                              //inactiveColor: Color(0xffB1C7FF),
+                              onChanged: (RangeValues values) {
+                                setState(() {
+                                  _currentSliderValue = values;
+                                });
+                              },
+                            ),
                           ),
                           Row(
                             children: [
                               Text(
-                                  '10대 중반'
-                              ),
-                              SizedBox(width: phoneSize.width*0.03,),
-                              Text(
-                                  '10대 후반'
-                              ),
-                              SizedBox(width: phoneSize.width*0.09,),
-                              Text(
-                                  '20대'
-                              ),
-                              SizedBox(width: phoneSize.width*0.13,),
-                              Text(
-                                  '30대'
+                                  '10대 중반',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10
+                                ),
                               ),
                               SizedBox(width: phoneSize.width*0.08,),
                               Text(
-                                  '전연령'
+                                  '10대 후반',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10
+                                ),
+                              ),
+                              SizedBox(width: phoneSize.width*0.09,),
+                              Text(
+                                  '20대',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10
+                                ),
+                              ),
+                              SizedBox(width: phoneSize.width*0.13,),
+                              Text(
+                                  '30대',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10
+                                ),
+                              ),
+                              SizedBox(width: phoneSize.width*0.08,),
+                              Text(
+                                  '전연령',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10
+                                ),
                               )
                             ],
                           ),
@@ -150,20 +202,38 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
                 ),
 
                 Container(
+                  padding: EdgeInsets.only(left: 20, top: 10, right: 20, bottom: 25),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
                       color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: Offset(0, 3),
+                        )
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '게시판 MBTI 필터'
+                          '게시판 MBTI 필터',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600
+                          ),
                         ),
+                        SizedBox(height: phoneSize.height*0.01,),
                         Text(
-                          '선택한 MBTI 유형의 게시물만 볼 수 있어요!'
+                          '선택한 MBTI 유형의 게시물만 볼 수 있어요!',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13
+                          ),
                         ),
-                        SizedBox(height: phoneSize.height*0.02,),
+                        SizedBox(height: phoneSize.height*0.03,),
                         _MBTI2(context, mbtiList),
                       ],
                     )
@@ -177,14 +247,22 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
                   children: [
                     GestureDetector(
                       onTap: (){
-                        //여기선 그냥 터치 안 되도록
+                        //커뮤니티 이용규칙 페이지? 여기 어떻게 할려나?
                       },
                       child: Container(
                         height: phoneSize.height * 0.08,
-                        padding: EdgeInsets.only(left:10.0, right:10.0),
+                        padding: EdgeInsets.only(left:12.0, right:10.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
                           color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            )
+                          ],
                         ),
                         child: Row(
                           children: [
@@ -197,6 +275,10 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
                             ),
                             Text(
                               '커뮤니티 이용규칙',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14
+                              ),
                             ),
                           ],
                         ),
@@ -217,36 +299,65 @@ class _BoardSettingScreenState extends State<BoardSettingScreen> {
 
   Widget _MBTI2(BuildContext context, List mbti){
     var phoneSize = MediaQuery.of(context).size;
-    return SizedBox(
-      height: phoneSize.height*0.3,
+    return SingleChildScrollView(
+      //height: phoneSize.height*0.3,
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
           mainAxisSpacing: 6,
           crossAxisSpacing: 10,
-          childAspectRatio: 2 / 1,
+          childAspectRatio: 2 / 1.4,
         ),
         shrinkWrap: true,
         itemCount: mbti.length,
-        itemBuilder: (context, index) => Container(
-          width: 71,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: () {
-              //색 바뀌게 하고, 해당 정보 값 저장하기
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                side: BorderSide(color: Color(0xffB1C7FF))
-            ),
-            child: Text(
-              '${mbti[index]}',
-              style: TextStyle(
-                  color: Colors.blue
+        itemBuilder: (context, index) => InkWell(
+          onTap: () {
+            //색 바뀌게 하고, 해당 정보 값 저장하기
+          },
+          child: Container(
+            width: 71,
+            height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white, //선택되면 색 바뀌어야함!
+                border: Border.all(
+                  width: 1,
+                  color: Color(0xffB1C7FF),
+                ),
               ),
-            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${mbti[index]}',
+                  style: TextStyle(
+                      color: Color(0xff4E4B66), //선택되면 색 바껴야 함!
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            )
+            /*ElevatedButton(
+              onPressed: () {
+                //색 바뀌게 하고, 해당 정보 값 저장하기
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  side: BorderSide(color: Color(0xffB1C7FF))
+              ),
+              child: Text(
+                '${mbti[index]}',
+                style: TextStyle(
+                    color: Color(0xff4E4B66),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
+            ),*/
           ),
         ),
       ),
