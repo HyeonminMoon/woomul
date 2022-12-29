@@ -81,8 +81,9 @@ class BoardService extends ChangeNotifier {
     // bucket 만들기
   }
 
-  void update(String docId, bool isDone) async {
-    // bucket isDone 업데이트
+  void update(String docId, String data, int value) async {
+    await bucketCollection.doc(docId).update({data: value});
+    notifyListeners();
   }
 
   void delete(String docId) async {

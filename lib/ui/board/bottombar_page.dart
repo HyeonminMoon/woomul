@@ -167,20 +167,6 @@ class _BoardScreenState extends State<BoardScreen> {
                               )
                             ],
                           ),
-                          SizedBox(width: phoneSize.width * 0.48),
-                          Row(
-                            children: [
-                              IconButton(
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(),
-                                  onPressed: () {
-                                  },
-                                  icon: Icon(docs2.isEmpty == true
-                                      ? Icons.favorite_border
-                                      : Icons.favorite)),
-                              Icon(Icons.bookmark_border_outlined)
-                            ],
-                          )
                         ],
                       ),
                       if (docs[0].get('title').length > 50)
@@ -257,20 +243,7 @@ class _BoardScreenState extends State<BoardScreen> {
                               )
                             ],
                           ),
-                          SizedBox(width: phoneSize.width * 0.48),
-                          Row(
-                            children: [
-                              IconButton(
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(),
-                                  onPressed: () {
-                                  },
-                                  icon: Icon(docs2.isEmpty == true
-                                      ? Icons.favorite_border
-                                      : Icons.favorite)),
-                              Icon(Icons.bookmark_border_outlined)
-                            ],
-                          )
+
                         ],
                       ),
                       Text(
