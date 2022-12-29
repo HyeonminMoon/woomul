@@ -65,6 +65,8 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
             '내 정보',
             style: TextStyle(
               color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w700
             ),
           ),
           leading: IconButton(
@@ -82,7 +84,12 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                 //내용 fb 에 저장 및 업로드
               },
               child: Text(
-                  '저장하기'
+                  '저장하기',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: Color(0xff4975FF)
+                ),
               ),
   
             )
@@ -107,18 +114,32 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
             child: Column(
               children: <Widget>[
                 Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기
-                SizedBox(height: phoneSize.height * 0.01),
+                SizedBox(height: phoneSize.height * 0.04),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '닉네임',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14
+                      ),
                     ),
+                    SizedBox(height: phoneSize.height * 0.01),
                     Container(
                       padding: EdgeInsets.only(left:10.0, right:10.0),
+                      height: phoneSize.height * 0.08,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -132,7 +153,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                             padding: EdgeInsets.only(right : 16.0),
                             child: Icon(
                               Icons.edit_outlined,
-                              color: Colors.blue,
+                              color: Color(0xff466FFF),
                             ),
                           ),
                         ],
@@ -148,12 +169,26 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                   children: [
                     Text(
                       'MBTI',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14
+                      ),
                     ),
+                    SizedBox(height: phoneSize.height * 0.01),
                     Container(
+                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -165,7 +200,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                             padding: EdgeInsets.only(right : 16.0),
                             child: Icon(
                               Icons.edit_outlined,
-                              color: Colors.blue,
+                              color: Color(0xff466FFF),
                             ),
                           ),
                         ],
@@ -181,12 +216,26 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                   children: [
                     Text(
                       '이메일',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14
+                      ),
                     ),
+                    SizedBox(height: phoneSize.height * 0.01),
                     Container(
+                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -198,7 +247,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                             padding: EdgeInsets.only(right : 16.0),
                             child: Icon(
                               Icons.edit_outlined,
-                              color: Colors.blue,
+                              color: Color(0xff466FFF),
                             ),
                           ),
                         ],
@@ -214,12 +263,26 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                   children: [
                     Text(
                       '비밀번호',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14
+                      ),
                     ),
+                    SizedBox(height: phoneSize.height * 0.01),
                     Container(
+                      height: phoneSize.height * 0.08,
                       padding: EdgeInsets.only(left:10.0, right:10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -231,7 +294,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                             padding: EdgeInsets.only(right : 16.0),
                             child: Icon(
                               Icons.edit_outlined,
-                              color: Colors.blue,
+                              color: Color(0xff466FFF),
                             ),
                           ),
                         ],
@@ -247,21 +310,39 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                   children: [
                     Container(
                       padding: EdgeInsets.only(left:10.0, right:10.0),
+                      height: phoneSize.height * 0.08,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: EdgeInsets.only(right : 16.0),
-                            child: Icon(
-                              Icons.shield,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          Text(
-                            '정보 동의 설정',
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(right : 16.0),
+                                child: Icon(
+                                  Icons.shield,
+                                  color: Color(0xff466FFF),
+                                ),
+                              ),
+                              Text(
+                                '정보 동의 설정',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500
+                                ),
+                              ),
+                            ],
                           ),
                           Switch(
                             value: isSwitched,
@@ -270,7 +351,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                                 isSwitched = value; //firebase 에서 값 가져오면 될듯
                               });
                             },
-                            activeTrackColor: Colors.blue,
+                            activeTrackColor: Color(0xff466FFF),
                             activeColor: Colors.white,
                           ),
                         ],
@@ -290,9 +371,18 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                       },
                       child: Container(
                         padding: EdgeInsets.only(left:10.0, right:10.0),
+                        height: phoneSize.height * 0.08,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
                           color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            )
+                          ],
                         ),
                         child: Row(
                           children: [
@@ -300,11 +390,15 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                               padding: EdgeInsets.only(right : 16.0),
                               child: Icon(
                                 Icons.mood_bad,
-                                color: Colors.blue,
+                                color: Color(0xff466FFF),
                               ),
                             ),
                             Text(
                               '탈퇴하기',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500
+                              ),
                             ),
                           ],
                         ),
@@ -330,6 +424,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
       child: TextFormField(
         obscureText: obscure,
         controller: controller,
+        cursorColor: Color(0xffA0A3BD),
         style: Theme.of(context)
             .textTheme
             .titleSmall
@@ -360,12 +455,12 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
               ),
             ),
             filled: true,
-            fillColor: Color(0xffFCFCFC),
+            fillColor: Color(0xffFFFFFF),
             focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFEFF0F7))),
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
             errorBorder: OutlineInputBorder(
                 borderSide:
-                BorderSide(color: Theme.of(context).colorScheme.error))),
+                BorderSide(color: Color(0xffFF6868)))),
       ),
     );
   }
