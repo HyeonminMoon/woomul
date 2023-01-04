@@ -29,36 +29,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   // 스몰아이즈 //
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  var initialzationSettingsIOS = DarwinInitializationSettings(
-    requestSoundPermission: true,
-    requestBadgePermission: true,
-    requestAlertPermission: true,
-  );
-
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  var initializationSettings =
-      InitializationSettings(android: initialzationSettingsAndroid, iOS: initialzationSettingsIOS);
-
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-  );
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+  await initFirebaseMessage();
   // 스몰아이즈 //
 
   runApp(
@@ -94,4 +67,33 @@ class MyApp extends StatelessWidget {
           : BoardScreen(), //const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
+}
+
+Future<void> initFirebaseMessage() async {
+  var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  var initialzationSettingsIOS = DarwinInitializationSettings(
+    requestSoundPermission: true,
+    requestBadgePermission: true,
+    requestAlertPermission: true,
+  );
+
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  var initializationSettings =
+      InitializationSettings(android: initialzationSettingsAndroid, iOS: initialzationSettingsIOS);
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 }

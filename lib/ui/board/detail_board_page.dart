@@ -145,20 +145,18 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                             commentKey: key,
                                             createDate: DateTime.now(),
                                             likeNum: 0);
-
-                                        _commentController.clear();
                                       }
 
                                       print(docs5[0].id);
                                       print(docs5.length);
 
                                       boardService.update(docs[0].id, 'commentNum', docs5.length);
-
                                       await fcmService.sendMessageNotification(
                                         name: userData.name,
                                         message: _commentController.text,
                                         boardWriterUid: boardWriteUid,
                                       );
+                                      _commentController.clear();
                                     },
                                     child: Text('저장'))
                               ],
