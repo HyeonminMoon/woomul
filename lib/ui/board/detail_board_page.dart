@@ -173,8 +173,10 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   Widget _board1(BuildContext context, BoardService boardService, LikeService likeService,
       UserData userData, String uid, docs, docs2, docs3) {
     var phoneSize = MediaQuery.of(context).size;
+    final fcmService = context.read<FcmService>();
 
     bool likeBool = false;
+    final String boardWriteUid = docs[0].get('userUid');
 
     return Expanded(
         child: Column(
@@ -217,7 +219,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       IconButton(
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
-                          onPressed: () {
+                          onPressed: () async {
                             print(docs3.length);
 
                             if (docs2.isEmpty == true) {
@@ -234,6 +236,13 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                             print(docs3.length);
 
                             boardService.update(docs[0].id, 'likeNum', docs3.length);
+                            if (docs2.isEmpty == true) {
+                              await fcmService.sendMessageNotification(
+                                name: userData.name,
+                                message: '좋아요를 눌렀습니다',
+                                boardWriterUid: boardWriteUid,
+                              );
+                            }
                           },
                           icon:
                               Icon(docs2.isEmpty == true ? Icons.favorite_border : Icons.favorite)),
