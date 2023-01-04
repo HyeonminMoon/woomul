@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:core';
@@ -70,6 +71,9 @@ class AuthService extends ChangeNotifier {
       );
 
       onSuccess(); // 성공 함수 호출
+
+      await updatePushTokenWhenSignIn();
+
       notifyListeners(); // 로그인 상태 변경 알림
     } on FirebaseAuthException catch (e) {
       // firebase auth 에러 발생
@@ -79,6 +83,15 @@ class AuthService extends ChangeNotifier {
       onError(e.toString());
     }
     // 로그인
+  }
+
+  Future<void> updatePushTokenWhenSignIn() async {
+    final pushToken = await FirebaseMessaging.instance.getToken();
+    final myUserSnap = await bucketCollection
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    final myUserDocId = myUserSnap.docs[0].id;
+    bucketCollection.doc(myUserDocId).update({'pushToken': pushToken});
   }
 
   void createUserData(
@@ -91,12 +104,14 @@ class AuthService extends ChangeNotifier {
       required String mbtiMean,
       required DateTime signupDate,
       required DateTime? deleteDate}) async {
+    final pushToken = await FirebaseMessaging.instance.getToken();
     await bucketCollection.add({
       'uid': uid,
       'email': email,
       'name': name,
       'sex': sex,
       'birth': birth,
+      'pushToken': pushToken,
       'mbti': mbti,
       'mbtiMean': mbtiMean,
       'signupDate': signupDate,
@@ -114,8 +129,8 @@ class AuthService extends ChangeNotifier {
 
   Future<bool> doubleCheck(String email) async {
     bool data = false;
-    await bucketCollection.where('email', isEqualTo: email).get().then((value){
-      if (value.docs.isEmpty){
+    await bucketCollection.where('email', isEqualTo: email).get().then((value) {
+      if (value.docs.isEmpty) {
         data = false;
       } else {
         data = true;
@@ -128,7 +143,6 @@ class AuthService extends ChangeNotifier {
     return bucketCollection.where('uid', isEqualTo: uid).get();
   }
 
-
   void signOut() async {
     await FirebaseAuth.instance.signOut();
     notifyListeners();
@@ -136,13 +150,13 @@ class AuthService extends ChangeNotifier {
   }
 }
 
- class MbtiService extends ChangeNotifier {
+class MbtiService extends ChangeNotifier {
   final bucketCollection = FirebaseFirestore.instance.collection('etcDB');
 
   Future<QuerySnapshot> read() async {
     return bucketCollection.get();
   }
- }
+}
 
 class UserData extends ChangeNotifier {
   final bucketCollection = FirebaseFirestore.instance.collection('user');
@@ -169,29 +183,27 @@ class UserData extends ChangeNotifier {
     mbtiMean = await data.docs[0].data()['mbtiMean'];
     signupDate = await data.docs[0].data()['signupDate'];
     deleteDate = await data.docs[0].data()['deleteDate'];
-
   }
 }
 
 String? meanMBTI(String mbti) {
-
   final Map<String, String> listMean = {
-    'INTJ' : '용의주도한 전략가',
-    'INTP' : '논리적인 사색가',
-    'ENTJ' : '대담한 통솔자',
-    'ENTP' : '뜨거운 논쟁을 즐기는 변론가',
-    'INFJ' : '선의의 옹호자',
-    'INFP' : '열정적인 중재자',
-    'ENFJ' : '정의로운 사회운동가',
-    'ENFP' : '재기발랄한 활동가',
-    'ISTJ' : '청렴결백한 논리주의자',
-    'ISFJ' : '용감한 수호자',
-    'ESTJ' : '엄격한 관리자',
-    'ESFJ' : '사교적인 외교관',
-    'ISTP' : '만능 재주꾼',
-    'ISFP' : '호기심 많은 예술가',
-    'ESTP' : '모험을 즐기는 사업가',
-    'ESFP' : '자유로운 영혼의 연예인'
+    'INTJ': '용의주도한 전략가',
+    'INTP': '논리적인 사색가',
+    'ENTJ': '대담한 통솔자',
+    'ENTP': '뜨거운 논쟁을 즐기는 변론가',
+    'INFJ': '선의의 옹호자',
+    'INFP': '열정적인 중재자',
+    'ENFJ': '정의로운 사회운동가',
+    'ENFP': '재기발랄한 활동가',
+    'ISTJ': '청렴결백한 논리주의자',
+    'ISFJ': '용감한 수호자',
+    'ESTJ': '엄격한 관리자',
+    'ESFJ': '사교적인 외교관',
+    'ISTP': '만능 재주꾼',
+    'ISFP': '호기심 많은 예술가',
+    'ESTP': '모험을 즐기는 사업가',
+    'ESFP': '자유로운 영혼의 연예인'
   };
 
   return listMean[mbti];

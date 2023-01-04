@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/provider/comment_service.dart';
+import 'package:woomul/provider/fcm_service.dart';
 import 'package:woomul/provider/like_service.dart';
 import '../../provider/auth_service.dart';
 import '../../provider/board_service.dart';
@@ -22,18 +23,16 @@ class DetailBoardScreen extends StatefulWidget {
 }
 
 class _DetailBoardScreenState extends State<DetailBoardScreen> {
-  late TextEditingController _commentController =
-      TextEditingController(text: "");
+  late TextEditingController _commentController = TextEditingController(text: "");
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var errorCheck;
 
-  final String _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rnd = Random();
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  String getRandomString(int length) => String.fromCharCodes(
+      Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   @override
   void initState() {
@@ -57,6 +56,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     final user = authService.currentUser();
     final userData = context.read<UserData>();
     final boardService = context.read<BoardService>();
+    final fcmService = context.read<FcmService>();
 
     return Consumer2<CommentService, LikeService>(
         builder: (context, commentService, likeService, child) {
@@ -92,8 +92,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 commentService.read(widget.contentKey)
               ]),
               builder: (context, snapshot) {
-
-                if(snapshot.connectionState == ConnectionState.waiting){
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Container();
                 }
 
@@ -102,16 +101,18 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 final docs3 = snapshot.data![2].docs ?? [];
                 final docs5 = snapshot.data![4].docs ?? [];
 
+                // 스몰아이즈 : 게시글 작성자 uid
+                final String boardWriteUid = docs[0].get('userUid');
+
                 return Padding(
                   padding: EdgeInsets.all(24.0),
                   child: Stack(children: <Widget>[
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _board1(context, boardService, likeService, userData,
-                            user!.uid, docs, docs2, docs3),
-                        _commentPart(
-                            context, commentService, boardService, docs5),
+                        _board1(context, boardService, likeService, userData, user!.uid, docs,
+                            docs2, docs3),
+                        _commentPart(context, commentService, boardService, docs5),
                       ],
                     ),
                     Positioned(
@@ -124,14 +125,13 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                 //댓글칸 조정하기
                                 Container(
                                   width: phoneSize.width * 0.5,
-                                  child: textFieldForm(
-                                      _commentController, "", "", false),
+                                  child: textFieldForm(_commentController, "", "", false),
                                 ),
                                 SizedBox(
                                   width: phoneSize.width * 0.2,
                                 ),
                                 TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       String key = getRandomString(16);
 
                                       //댓글 내용 fb 에 전송해서 저장
@@ -154,6 +154,11 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
 
                                       boardService.update(docs[0].id, 'commentNum', docs5.length);
 
+                                      await fcmService.sendMessageNotification(
+                                        name: userData.name,
+                                        message: _commentController.text,
+                                        boardWriterUid: boardWriteUid,
+                                      );
                                     },
                                     child: Text('저장'))
                               ],
@@ -167,15 +172,8 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   }
 
   //게시글 detail UI
-  Widget _board1(
-      BuildContext context,
-      BoardService boardService,
-      LikeService likeService,
-      UserData userData,
-      String uid,
-      docs,
-      docs2,
-      docs3) {
+  Widget _board1(BuildContext context, BoardService boardService, LikeService likeService,
+      UserData userData, String uid, docs, docs2, docs3) {
     var phoneSize = MediaQuery.of(context).size;
 
     bool likeBool = false;
@@ -186,8 +184,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
       children: [
         Container(
           //height: phoneSize.height*0.25,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: Colors.white),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -238,12 +235,10 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
 
                             print(docs3.length);
 
-                            boardService.update(
-                                docs[0].id, 'likeNum', docs3.length);
+                            boardService.update(docs[0].id, 'likeNum', docs3.length);
                           },
-                          icon: Icon(docs2.isEmpty == true
-                              ? Icons.favorite_border
-                              : Icons.favorite)),
+                          icon:
+                              Icon(docs2.isEmpty == true ? Icons.favorite_border : Icons.favorite)),
                       //Icon(Icons.bookmark_border_outlined)
                     ],
                   )
@@ -279,8 +274,8 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     ));
   }
 
-  Widget _commentPart(BuildContext context, CommentService commentService,
-      BoardService boardService, docs5) {
+  Widget _commentPart(
+      BuildContext context, CommentService commentService, BoardService boardService, docs5) {
     return Expanded(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,8 +300,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   }
 
   //댓글 하나하나
-  Widget _comment(
-      CommentService commentService, BoardService boardService, docs) {
+  Widget _comment(CommentService commentService, BoardService boardService, docs) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
         child: ListView.builder(
@@ -316,10 +310,10 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
               String name = doc.get('name');
               String mbti = doc.get('mbti');
               DateTime createDate = doc.get('createDate').toDate();
-              String formattedDate =
-                  DateFormat('yyyy-MM-dd').format(createDate);
+              String formattedDate = DateFormat('yyyy-MM-dd').format(createDate);
               String comment = doc.get('comment');
               int likeNum = doc.get('likeNum');
+
               return Column(
                 children: [
                   Container(
@@ -331,19 +325,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       children: [
                         Row(
                           children: [
-                            Placeholder(
-                                fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                            Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
                             SizedBox(width: phoneSize.width * 0.03),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  children: [
-                                    Text(name),
-                                    Text(' . '),
-                                    Text(mbti)
-                                  ],
+                                  children: [Text(name), Text(' . '), Text(mbti)],
                                 ),
                                 SizedBox(height: phoneSize.height * 0.02),
                               ],
@@ -385,17 +374,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             }));
   }
 
-  Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure) {
+  Widget textFieldForm(
+      TextEditingController controller, String labelText, String errorText, bool obscure) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
         obscureText: obscure,
         controller: controller,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(color: Colors.black),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.black),
         validator: (value) {
           if (value!.isEmpty) {
             setState(() {
@@ -410,11 +396,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
           }
         },
         decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
             labelText: labelText,
-            labelStyle: TextStyle(
-                color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+            labelStyle: TextStyle(color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
                 ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -424,11 +408,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             ),
             filled: true,
             fillColor: Color(0xffFCFCFC),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFEFF0F7))),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFEFF0F7))),
             errorBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: Theme.of(context).colorScheme.error))),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.error))),
       ),
     );
   }
