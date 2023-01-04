@@ -27,6 +27,12 @@ class _BoardScreenState extends State<BoardScreen> {
 
   @override
   void initState() {
+    InitFirebaseMessage();
+
+    super.initState();
+  }
+
+  void InitFirebaseMessage() {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) async {
         RemoteNotification? notification = message.notification;
@@ -52,8 +58,6 @@ class _BoardScreenState extends State<BoardScreen> {
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print(message);
     });
-
-    super.initState();
   }
 
   @override
@@ -104,7 +108,6 @@ class _BoardScreenState extends State<BoardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextButton(onPressed: () {}, child: Text('푸시')),
             _widgetOptions.elementAt(_selectedIndex),
             //_board1(context),
             //_board2(context),
