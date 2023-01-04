@@ -54,6 +54,8 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
           '게시판',
           style: TextStyle(
             color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.w700
           ),
         ),
         leading: IconButton(
@@ -88,8 +90,9 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Container(),
           GestureDetector(
             onTap: () {
               //HOT 게시판 이동
@@ -103,23 +106,41 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
               height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      'HOT 게시판'
+                  Row(
+                    children: [
+                      Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                      SizedBox(width: phoneSize.width*0.02,),
+                      Text(
+                          'HOT 게시판',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -143,18 +164,38 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('BEST 게시판'),
+                  Row(
+                    children: [
+                      Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                      SizedBox(width: phoneSize.width*0.02,),
+                      Text(
+                          'BEST 게시판',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -176,21 +217,41 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
               height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('자유 게시판'),
+                  Row(
+                    children: [
+                      Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                      SizedBox(width: phoneSize.width*0.02,),
+                      Text(
+                          '자유 게시판',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -209,18 +270,40 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
             child: Container(
               width: phoneSize.width * 0.8,
               height: phoneSize.height * 0.1,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('연애 게시판'),
+                  Row(
+                    children: [
+                      Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                      SizedBox(width: phoneSize.width*0.02,),
+                      Text(
+                          '연애 게시판',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -239,18 +322,40 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
             child: Container(
               width: phoneSize.width * 0.8,
               height: phoneSize.height * 0.1,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('고민 게시판'),
+                  Row(
+                    children: [
+                      Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                      SizedBox(width: phoneSize.width*0.02,),
+                      Text(
+                          '고민 게시판',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
@@ -271,21 +376,41 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
               height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12)),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 10),
+                  )
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('비밀 게시판'),
+                  Row(
+                    children: [
+                      Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                      SizedBox(width: phoneSize.width*0.02,),
+                      Text(
+                          '비밀 게시판',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
                     width: 32,
                     height: 32,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Colors.grey,
+                      color: Color(0xffD0D3E5),
                       size: 11,
                     ),
                   ),
