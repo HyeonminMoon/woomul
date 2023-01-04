@@ -26,28 +26,31 @@ class FcmService extends ChangeNotifier {
         await FirebaseFirestore.instance.collection('user').doc(boardWriterUserDocId).get();
 
     // 게시글 작성자의 pushToken
-    final pushToken = userSnap.get('pushToken');
+    final String pushToken = userSnap.get('pushToken');
+    final bool isPushAlarmTurnOn = userSnap.get('isPushAlarmTurnOn');
 
-    try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=$_fcmKey'
-        },
-        body: jsonEncode(
-          {
-            'notification': {
-              'title': '$name',
-              'body': '$message',
-              'sound': 'false',
-            },
-            'to': '${pushToken}'
+    if (isPushAlarmTurnOn) {
+      try {
+        await http.post(
+          Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'key=$_fcmKey'
           },
-        ),
-      );
-    } catch (e) {
-      print('error $e');
+          body: jsonEncode(
+            {
+              'notification': {
+                'title': '$name',
+                'body': '$message',
+                'sound': 'false',
+              },
+              'to': '${pushToken}'
+            },
+          ),
+        );
+      } catch (e) {
+        print('error $e');
+      }
     }
   }
 }

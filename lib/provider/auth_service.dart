@@ -113,6 +113,7 @@ class AuthService extends ChangeNotifier {
       'birth': birth,
       'pushToken': pushToken,
       'mbti': mbti,
+      'isPushAlarmTurnOn': true,
       'mbtiMean': mbtiMean,
       'signupDate': signupDate,
       'deleteDate': deleteDate

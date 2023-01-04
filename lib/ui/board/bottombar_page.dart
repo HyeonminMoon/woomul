@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/main.dart';
 import 'package:woomul/provider/board_service.dart';
@@ -27,12 +28,11 @@ class _BoardScreenState extends State<BoardScreen> {
 
   @override
   void initState() {
-    InitFirebaseMessage();
-
+    initFirebaseMessage();
     super.initState();
   }
 
-  void InitFirebaseMessage() {
+  void initFirebaseMessage() {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) async {
         RemoteNotification? notification = message.notification;
