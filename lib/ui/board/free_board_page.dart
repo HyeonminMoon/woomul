@@ -138,7 +138,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                           margin: EdgeInsets.only(top: 10, bottom: 12),
                           padding: EdgeInsets.only(left: 15,top:20,right: 15),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(12),
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
@@ -345,7 +345,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                           margin: EdgeInsets.only(top: 10, bottom: 12),
                           padding: EdgeInsets.only(left: 15,top:20,right: 15),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(12),
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
