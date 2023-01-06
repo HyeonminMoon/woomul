@@ -145,8 +145,10 @@ class _BoardScreenState extends State<BoardScreen> {
 
     return Expanded(
       child: FutureBuilder<List<QuerySnapshot>>(
-        future: Future.wait(
-            [boardService.readLimit('commentNum', 1), boardService.readLimit('likeNum', 1)]),
+        future: Future.wait([
+          boardService.readLimit('commentNum', 1),
+          boardService.readLimit('likeNum', 1)
+        ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
@@ -161,18 +163,21 @@ class _BoardScreenState extends State<BoardScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailBoardScreen('HOT 게시판', docs[0].get('key'))));
+                          builder: (context) => DetailBoardScreen(
+                              'HOT 게시판', docs[0].get('key'))));
                 },
                 child: Container(
                   //height: phoneSize.height*0.25,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                          Placeholder(
+                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
                           SizedBox(width: phoneSize.width * 0.03),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -205,7 +210,8 @@ class _BoardScreenState extends State<BoardScreen> {
                       SizedBox(height: phoneSize.height * 0.02),
                       if (docs[0].get('content').length > 50)
                         Text(docs[0].get('content').substring(0, 40) + '...'),
-                      if (docs[0].get('content').length <= 50) Text(docs[0].get('content')),
+                      if (docs[0].get('content').length <= 50)
+                        Text(docs[0].get('content')),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -232,19 +238,21 @@ class _BoardScreenState extends State<BoardScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              DetailBoardScreen('BEST 게시판', docs2[0].get('key'))));
+                          builder: (context) => DetailBoardScreen(
+                              'BEST 게시판', docs2[0].get('key'))));
                 },
                 child: Container(
                   //height: phoneSize.height*0.25,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                          Placeholder(
+                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
                           SizedBox(width: phoneSize.width * 0.03),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,

@@ -9,7 +9,7 @@ import 'mbti_test_page.dart';
 
 import '../../routes.dart';
 
-List<String> list = <String>['선택', '여', '남'];
+List<String> listSex = <String>['선택', '여', '남'];
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -29,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var tmpPW = 'testpassword1';
   var tmpSEX = 'man';
 
-  String dropdownValue = list.first;
+  String dropdownValue = listSex.first;
 
   bool mbti1 = false;
   bool mbti2 = false;
@@ -510,7 +510,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             dropdownValue = value!;
                           });
                         },
-                        items: list.map<DropdownMenuItem<String>>((String value) {
+                        items: listSex.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),

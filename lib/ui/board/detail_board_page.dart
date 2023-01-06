@@ -23,7 +23,7 @@ class DetailBoardScreen extends StatefulWidget {
 }
 
 class _DetailBoardScreenState extends State<DetailBoardScreen> {
-  late TextEditingController _commentController = TextEditingController(text: "");
+  late TextEditingController _commentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   var errorCheck;
@@ -38,7 +38,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _commentController = TextEditingController(text: "");
+    _commentController = TextEditingController();
     errorCheck = false;
   }
 
@@ -85,11 +85,11 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
         body: SafeArea(
           child: FutureBuilder<dynamic>(
               future: Future.wait([
-                boardService.readOne(widget.contentKey),
-                likeService.readOne(user!.uid, widget.contentKey),
-                likeService.read(widget.contentKey),
-                userData.getUserData(user!.uid),
-                commentService.read(widget.contentKey)
+                boardService.readOne(widget.contentKey), //게시글 한개 불러오기
+                likeService.readOne(user!.uid, widget.contentKey), // 해당 유저가 좋아요 눌렀나 안눌렀나 체크
+                likeService.read(widget.contentKey), // 이 게시글에 달린 좋아요 수
+                userData.getUserData(user!.uid), // 유저 데이터 불러오기
+                commentService.read(widget.contentKey) //댓글 읽기
               ]),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -220,7 +220,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
                           onPressed: () async {
-                            print(docs3.length);
 
                             if (docs2.isEmpty == true) {
                               likeService.create(
@@ -228,12 +227,10 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                   userUid: userData.userUid,
                                   contentKey: widget.contentKey,
                                   createDate: DateTime.now());
-                              print(docs3.length);
                             } else {
                               likeService.delete(docs2[0].id);
                             }
 
-                            print(docs3.length);
 
                             boardService.update(docs[0].id, 'likeNum', docs3.length);
                             if (docs2.isEmpty == true) {
@@ -363,14 +360,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                 Text(likeNum.toString())
                               ],
                             ),
-                            // Row(
-                            //                                     children: [
-                            //                                       IconButton(
-                            //                                           onPressed: () {},
-                            //                                           icon: Icon(Icons.forum_outlined)),
-                            //                                       Text('댓글 수')
-                            //                                     ],
-                            //                                   )
                           ],
                         )
                       ],
