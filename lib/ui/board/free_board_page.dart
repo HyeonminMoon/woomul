@@ -59,9 +59,6 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
       late QuerySnapshot<Map<String, dynamic>> querySnapshot;
 
       if (lastDocument == null) {
-        print('lastDocument입니다');
-        print(lastDocument);
-
         if (boardType != 'HOT 게시판' && boardType != 'BEST 게시판') {
           querySnapshot = await collectionReference
               .where('boardType', isEqualTo: boardType)
@@ -69,31 +66,46 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
               .limit(6)
               .get();
         } else {
-
           String data = '';
           String date = DateFormat('yyyyMM').format(DateTime.now());
 
-          if (boardType == 'HOT 게시판'){
+          if (boardType == 'HOT 게시판') {
             data = 'commentNum';
           } else {
             data = 'likeNum';
           }
-          print('data입니다: $data');
-          print('date입니다: $date');
 
           querySnapshot = await collectionReference
               .where("createDateMonth", isEqualTo: date)
               .orderBy(data, descending: true)
               .limit(6)
               .get();
-          print('querySnapshot 입니다.');
-          print(querySnapshot);
         }
       } else {
-        querySnapshot = await collectionReference
-            .limit(6)
-            .startAfterDocument(lastDocument!)
-            .get();
+        if (boardType != 'HOT 게시판' && boardType != 'BEST 게시판') {
+          querySnapshot = await collectionReference
+              .where('boardType', isEqualTo: boardType)
+              .orderBy('createDate', descending: true)
+              .limit(6)
+              .startAfterDocument(lastDocument!)
+              .get();
+        } else {
+          String data = '';
+          String date = DateFormat('yyyyMM').format(DateTime.now());
+
+          if (boardType == 'HOT 게시판') {
+            data = 'commentNum';
+          } else {
+            data = 'likeNum';
+          }
+
+          querySnapshot = await collectionReference
+              .where("createDateMonth", isEqualTo: date)
+              .orderBy(data, descending: true)
+              .limit(6)
+              .startAfterDocument(lastDocument!)
+              .get();
+        }
       }
 
       lastDocument = querySnapshot.docs.last;

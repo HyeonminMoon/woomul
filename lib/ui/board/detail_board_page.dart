@@ -375,6 +375,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
+        maxLength: 100,
         obscureText: obscure,
         controller: controller,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.black),
