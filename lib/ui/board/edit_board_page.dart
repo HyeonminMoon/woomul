@@ -105,35 +105,37 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             int position = mbtiList.indexOf(userData.mbti);
             mbtiValue[position] = true;
 
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                automaticallyImplyLeading: true,
-                centerTitle: true,
-                title: Text(
-                  '게시물 작성',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              automaticallyImplyLeading: true,
+              centerTitle: true,
+              title: Text(
+                '게시물 작성',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700
                 ),
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                  ),
+              ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  print(userData.name);
+                  Navigator.pop(context);
+                },
+              ),
+              actions: [
+                TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      //내용 fb 에 저장 및 업로드
-                      if (_ContentController.text != '' &&
-                          _TitleController.text != '') {
-                        String key = getRandomString(16);
+                    //내용 fb 에 저장 및 업로드
+                    if (_ContentController.text != '' && _TitleController.text != ''){
+                      String key = getRandomString(16);
 
                         List<String> selectedList =
                             selectedMbti(mbtiList, mbtiValue);
@@ -159,87 +161,122 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                             commentNum: 0,
                             likeNum: 0);
 
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text('업로드'),
-                  )
-                ],
-              ),
-              body: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //얘를 여러 개 불러오도록 하면 됨
-                        _board0(context, boardService, userData),
-                        SizedBox(
-                          height: phoneSize.height * 0.04,
-                        ),
-                        _board1(context),
-                      ],
+                      Navigator.pop(context);
+                    }
+
+                  },
+                  child: Text(
+                      '업로드',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Color(0xff4975FF) //이거 text 가 차 있으면 색깔 바뀌게 해야함!
                     ),
                   ),
+                )
+              ],
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //얘를 여러 개 불러오도록 하면 됨
+                    //_board0(context, boardService, userData), //나중에 조검 적용된 담에 활성화 하기
+                    SizedBox(
+                      height: phoneSize.height * 0.04,
+                    ),
+                    Expanded(child: _board1(context)),
+                  ],
                 ),
               ),
-            );
-          });
+            ),
+          );
+        }
+      );
     });
   }
 
   Widget _board0(BuildContext context, boardService, UserData userData) {
     var phoneSize = MediaQuery.of(context).size;
-    return ExpansionTile(
-      title: Text('게시물 노출 필터'),
-      backgroundColor: Colors.white,
-      children: <Widget>[
-        //ListTile(title: Text('This is tile number 1')),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '연령대',
-            ),
-            Slider(
-              value: _currentSliderValue,
-              max: 100,
-              divisions: 4,
-              onChanged: (double value) {
-                setState(() {
-                  _currentSliderValue = value;
-                });
-              },
-            ),
-            Row(
-              children: [
-                Text('10대 중반'),
-                SizedBox(
-                  width: phoneSize.width * 0.03,
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.transparent,
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: Offset(0, 3),
+              )
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: ExpansionTile(
+              title: Text(
+                  '게시물 노출 필터',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600
                 ),
-                Text('10대 후반'),
-                SizedBox(
-                  width: phoneSize.width * 0.09,
-                ),
-                Text('20대'),
-                SizedBox(
-                  width: phoneSize.width * 0.13,
-                ),
-                Text('30대'),
-                SizedBox(
-                  width: phoneSize.width * 0.08,
-                ),
-                Text('전연령')
+              ),
+              backgroundColor: Colors.white,
+              collapsedBackgroundColor: Colors.white,
+              children: <Widget>[
+                //ListTile(title: Text('This is tile number 1')),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '연령대',
+                    ),
+                    Slider(
+                      value: _currentSliderValue,
+                      max: 100,
+                      divisions: 4,
+                      onChanged: (double value) {
+                        setState(() {
+                          _currentSliderValue = value;
+                        });
+                      },
+                    ),
+                    Row(
+                      children: [
+                        Text('10대 중반'),
+                        SizedBox(
+                          width: phoneSize.width * 0.03,
+                        ),
+                        Text('10대 후반'),
+                        SizedBox(
+                          width: phoneSize.width * 0.09,
+                        ),
+                        Text('20대'),
+                        SizedBox(
+                          width: phoneSize.width * 0.13,
+                        ),
+                        Text('30대'),
+                        SizedBox(
+                          width: phoneSize.width * 0.08,
+                        ),
+                        Text('전연령')
+                      ],
+                    ),
+                    SizedBox(
+                      height: phoneSize.height * 0.06,
+                    ),
+                    Text('MBTI'),
+                    _MBTI2(context, userData),
+                  ],
+                )
               ],
             ),
-            SizedBox(
-              height: phoneSize.height * 0.06,
-            ),
-            Text('MBTI'),
-            _MBTI2(context, userData),
-          ],
-        )
+          ),
+        ),
       ],
     );
   }
@@ -320,55 +357,81 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
   //값 저장해서 fb 로 보내기~
   Widget _board1(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-              width: phoneSize.width,
-              color: Colors.white,
-              child: Column(
+    return SingleChildScrollView(
+      child: Container(
+          width: phoneSize.width,
+          padding: EdgeInsets.only(left: 12.0, right: 10, top: 10, bottom : 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 8,
+                offset: Offset(0, 3),
+              )
+            ],
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.blueAccent),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
+                  Container(
+                    //width: phoneSize.width*0.2,
+                    padding: EdgeInsets.only(left: 15.0, right: 10),
+                    decoration: BoxDecoration(
+                        color: Color(0xffECF1FF),
+                        borderRadius: BorderRadius.circular(54)
                     ),
-                    onChanged: (String? value) {
-                      //게시판 data 불러오고 저장하기
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                    items: board.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-
-                  //title
-                  Container(
-                    width: phoneSize.width * 0.8,
-                    child: textFieldForm(_TitleController, "", "", false),
-                  ),
-
-                  Container(
-                    width: phoneSize.width * 0.8,
-                    child: textFieldForm(_ContentController, "", "", false),
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: Icon(
+                          Icons.keyboard_arrow_down,
+                        color: Color(0xff3462FF),
+                      ),
+                      elevation: 16,
+                      style: TextStyle(
+                          color: Color(0xff466FFF),
+                        fontWeight: FontWeight.w600
+                      ),
+                      underline: Container(
+                        color: Colors.transparent,
+                      ),
+                      onChanged: (String? value) {
+                        //게시판 data 불러오고 저장하기
+                        setState(() {
+                          dropdownValue = value!;
+                        });
+                      },
+                      items: board.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ],
-              ))
-        ],
-      ),
+              ),
+
+              //title
+              Container(
+                width: phoneSize.width * 0.8,
+                child: textFieldForm(_TitleController, "제목을 입력해주세요.", "", false),
+              ),
+
+              Container(
+                width: phoneSize.width * 0.8,
+                child: textFieldForm2(_ContentController, "내용을 입력해주세요.", "", false),
+              ),
+            ],
+          )),
     );
   }
 
+  //title Form
   Widget textFieldForm(TextEditingController controller, String labelText,
       String errorText, bool obscure) {
     return Padding(
@@ -400,10 +463,14 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             labelStyle: TextStyle(
                 color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
                 ),
+            hintText: labelText,
+            hintStyle: TextStyle(
+              color: Color(0xffA0A3BD)
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
               borderSide: BorderSide(
-                color: Colors.blue,
+                color: Color(0xFFEFF0F7),
               ),
             ),
             filled: true,
@@ -413,6 +480,62 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             errorBorder: OutlineInputBorder(
                 borderSide:
                     BorderSide(color: Theme.of(context).colorScheme.error))),
+      ),
+    );
+  }
+
+  //text titleForm
+  Widget textFieldForm2(TextEditingController controller, String labelText,
+      String errorText, bool obscure) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        obscureText: obscure,
+        controller: controller,
+        minLines: 100, // any number you need (It works as the rows for the textarea)
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        style: Theme.of(context)
+            .textTheme
+            .titleSmall
+            ?.copyWith(color: Colors.black),
+        validator: (value) {
+          if (value!.isEmpty) {
+            setState(() {
+              errorCheck = true;
+            });
+            return errorText;
+          } else {
+            setState(() {
+              errorCheck = false;
+            });
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding:
+            EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            labelText: labelText,
+            labelStyle: TextStyle(
+                color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+            ),
+            hintText: labelText,
+            hintStyle: TextStyle(
+                color: Color(0xffA0A3BD)
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              borderSide: BorderSide(
+                color: Color(0xFFEFF0F7),
+              ),
+            ),
+            filled: true,
+            fillColor: Color(0xffFCFCFC),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFEFF0F7))),
+            errorBorder: OutlineInputBorder(
+                borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.error))),
       ),
     );
   }

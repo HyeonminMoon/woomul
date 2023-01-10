@@ -115,6 +115,9 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Color(0xff466FFF),
+        selectedFontSize: 13,
+        unselectedFontSize: 13,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

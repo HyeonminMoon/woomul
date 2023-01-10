@@ -4,12 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:woomul/ui/auth/sign_up_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/edit_board_page.dart';
 import 'package:woomul/ui/board/main_board_page.dart';
-import 'package:intl/intl.dart';
 
 import '../../provider/auth_service.dart';
 import '../../provider/board_service.dart';
@@ -138,6 +136,8 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
             '${widget.name}',
             style: TextStyle(
               color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w700
             ),
           ),
           leading: IconButton(
@@ -159,7 +159,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                             builder: (context) => EditBoardScreen()));
                   },
                   icon: Icon(
-                    Icons.edit,
+                    Icons.edit_outlined,
                     color: Colors.black,
                   ))
           ],
@@ -207,7 +207,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                   int likeNum = doc.get('likeNum');
                   int commentNum = doc.get('commentNum');
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -220,49 +220,122 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                         },
                         child: Container(
                           //height: phoneSize.height*0.25,
+                          height: phoneSize.height*0.25,
+                          margin: EdgeInsets.only(top: 10, bottom: 12),
+                          padding: EdgeInsets.only(left: 15,top:20,right: 15),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
+                              )
+                            ],
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Placeholder(
-                                      fallbackHeight: 15,
-                                      fallbackWidth: 15), //프로필 사진
-                                  SizedBox(width: phoneSize.width * 0.03),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      if (title.length > 50)
-                                        Text("${title.substring(0, 40)}..."),
-                                      if (title.length <= 50) Text(title),
-                                      Row(
+                                      Placeholder(
+                                          fallbackHeight: 20,
+                                          fallbackWidth: 20),//프로필 사진 들어가야 함~
+                                      SizedBox(width: phoneSize.width * 0.03),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          if (widget.name != '비밀게시판')
-                                            Text(userName),
-                                          if (widget.name == '비밀게시판')
-                                            Text("익명"),
-                                          SizedBox(width: 10),
-                                          Text(formattedDate)
+                                          if (title.length > 50)
+                                            Text(
+                                                "${title.substring(0, 40)}...",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 13,
+                                                  color: Color(0xff14142B)
+                                              ),
+                                            ),
+                                          if (title.length <= 50)
+                                            Text(
+                                                title,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 13,
+                                                  color: Color(0xff14142B)
+                                              ),
+                                            ),
+                                          Row(
+                                            children: [
+                                              if (widget.name != '비밀게시판')
+                                                Text(
+                                                    userName,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 13,
+                                                    color: Color(0xffA0A3BD)
+                                                  ),
+                                                ),
+                                              if (widget.name == '비밀게시판')
+                                                Text(
+                                                    "익명",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 13,
+                                                      color: Color(0xffA0A3BD)
+                                                  ),
+                                                ),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                '.',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 13,
+                                                    color: Color(0xffA0A3BD)
+                                                ),
+                                              ),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                  formattedDate,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 13,
+                                                    color: Color(0xffA0A3BD)
+                                                ),
+                                              )
+                                            ],
+                                          )
                                         ],
-                                      )
+                                      ),
                                     ],
-                                  ),
-                                  SizedBox(width: phoneSize.width * 0.2),
-                                  Icon(Icons.more_horiz)
+                                  ), //프로필 사진
+                                  Icon(
+                                      Icons.more_horiz,
+                                    color: Color(0xff6E7191),
+                                  )
                                 ],
                               ),
                               if (content.length > 50)
-                                Text('${content.substring(0, 40)}...'),
+                                Text(
+                                    '${content.substring(0,40)}...',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                  ),
+                                ),
                               if (content.length <= 50)
                                 Text(
                                   content,
                                   overflow: TextOverflow.ellipsis,
-                                ),
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400
+                                  ),),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -273,16 +346,40 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                             //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
                                             //횟수 증가 되도록
                                           },
-                                          icon: Icon(Icons.favorite_border)),
-                                      Text(likeNum.toString())
+                                          icon: Icon(
+                                              Icons.favorite_border,
+                                            color: Color(0xffA0A3BD),
+                                            size: 15,
+                                          )
+                                      ),
+                                      Text(
+                                          likeNum.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: Color(0xffA0A3BD),
+                                        ),
+                                      )
                                     ],
                                   ),
                                   Row(
                                     children: [
                                       IconButton(
                                           onPressed: () {},
-                                          icon: Icon(Icons.forum_outlined)),
-                                      Text(commentNum.toString())
+                                          icon: Icon(
+                                              Icons.forum_outlined,
+                                            color: Color(0xffA0A3BD),
+                                            size: 15,
+                                          )
+                                      ),
+                                      Text(
+                                          commentNum.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: Color(0xffA0A3BD),
+                                        ),
+                                      )
                                     ],
                                   )
                                 ],
@@ -315,7 +412,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
               int likeNum = doc['likeNum'];
               int commentNum = doc['commentNum'];
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -328,71 +425,166 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                     },
                     child: Container(
                       //height: phoneSize.height*0.25,
+                      height: phoneSize.height*0.25,
+                      margin: EdgeInsets.only(top: 10, bottom: 12),
+                      padding: EdgeInsets.only(left: 15,top:20,right: 15),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Placeholder(
-                                  fallbackHeight: 15,
-                                  fallbackWidth: 15), //프로필 사진
-                              SizedBox(width: phoneSize.width * 0.03),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (title.length > 50)
-                                    Text('${title.substring(0, 50)}...'),
-                                  if (title.length <= 50) Text(title),
-                                  Row(
-                                    children: [
-                                      Text(userName),
-                                      SizedBox(width: 10),
-                                      Text(date.toString())
-                                    ],
-                                  )
-                                ],
-                              ),
-                              SizedBox(width: phoneSize.width * 0.2),
-                              Icon(Icons.more_horiz)
-                            ],
-                          ),
-                          if (content.length > 50)
-                            Text('${content.substring(0, 50)}...'),
-                          if (content.length <= 50) Text(content),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                        //횟수 증가 되도록
-                                      },
-                                      icon: Icon(Icons.favorite_border)),
-                                  Text(likeNum.toString())
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.forum_outlined)),
-                                  Text(commentNum.toString())
-                                ],
-                              )
-                            ],
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
                           )
                         ],
                       ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Placeholder(
+                                        fallbackHeight: 20,
+                                        fallbackWidth: 20),
+                                    SizedBox(width: phoneSize.width * 0.03),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (title.length > 50)
+                                          Text(
+                                            '${title.substring(0, 50)}...',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13,
+                                                color: Color(0xff14142B)
+                                            ),
+                                          ),
+                                        if (title.length <= 50)
+                                          Text(
+                                            title,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13,
+                                                color: Color(0xff14142B)
+                                            ),
+                                          ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              userName,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13,
+                                                  color: Color(0xffA0A3BD)
+                                              ),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              '.',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 13,
+                                                  color: Color(0xffA0A3BD)
+                                              ),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              date.toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13,
+                                                  color: Color(0xffA0A3BD)
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ), //프로필 사진
+
+                                Icon(
+                                  Icons.more_horiz,
+                                  color: Color(0xff6E7191),
+                                )
+                              ],
+                            ),
+                            if (content.length > 50)
+                              Text(
+                                '${content.substring(0,50)}...',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              ),
+                            if (content.length <= 50)
+                              Text(
+                                content,
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {
+                                          //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
+                                          //횟수 증가 되도록
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite_border,
+                                          color: Color(0xffA0A3BD),
+                                          size: 15,
+                                        )),
+                                    Text(
+                                      likeNum.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Color(0xffA0A3BD),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.forum_outlined,
+                                          color: Color(0xffA0A3BD),
+                                          size: 15,
+                                        )),
+                                    Text(
+                                      commentNum.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Color(0xffA0A3BD),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        )
                     ),
                   )
                 ],
               );
             }));
   }
+
 }
