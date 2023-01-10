@@ -24,8 +24,7 @@ class DetailBoardScreen extends StatefulWidget {
 class _DetailBoardScreenState extends State<DetailBoardScreen> {
   late TextEditingController _commentController =
       TextEditingController(text: "");
-  final _formKey = GlobalKey<FormState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   var errorCheck;
 
   final String _chars =
@@ -104,74 +103,78 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 final docs3 = snapshot.data![2].docs ?? [];
                 final docs5 = snapshot.data![4].docs ?? [];
 
-                return Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: Stack(children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _board1(context, boardService, likeService, userData,
-                              user!.uid, docs, docs2, docs3),
-                          _commentPart(
-                              context, commentService, boardService, docs5),
-                        ],
+                return Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(0.0),
+                        child: Stack(children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _board1(context, boardService, likeService, userData,
+                                  user!.uid, docs, docs2, docs3),
+                              _commentPart(
+                                  context, commentService, boardService, docs5),
+                            ],
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              child: Container(
+                                padding: EdgeInsets.only(left: 20, right: 5, top: 5, bottom: 5),
+                                  margin: EdgeInsets.zero,
+                                  width: phoneSize.width,
+                                  height: phoneSize.height*0.09,
+                                  color: Colors.white,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      //댓글칸 조정하기
+                                      Container(
+                                        width: phoneSize.width * 0.75,
+                                        child: textFieldForm(
+                                            _commentController, "댓글을 작성해주세요.", "", false),
+                                      ),
+                                      TextButton(
+                                          onPressed: () {
+                                            String key = getRandomString(16);
+
+                                            //댓글 내용 fb 에 전송해서 저장
+                                            if (_commentController.text.isNotEmpty) {
+                                              commentService.create(
+                                                  uid: user.uid,
+                                                  name: userData.name,
+                                                  mbti: userData.mbti,
+                                                  comment: _commentController.text,
+                                                  contentKey: widget.contentKey,
+                                                  commentKey: key,
+                                                  createDate: DateTime.now(),
+                                                  likeNum: 0);
+
+                                              _commentController.clear();
+                                            }
+
+                                            print(docs5[0].id);
+                                            print(docs5.length);
+
+                                            boardService.update(docs[0].id, 'commentNum', docs5.length);
+
+                                          },
+                                          child: Text(
+                                              '저장',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                              color: Color(0xffD0D3E5)
+                                            ),
+                                          ))
+                                    ],
+                                  ))),
+                        ]),
                       ),
-                      Positioned(
-                          bottom: 0,
-                          child: Container(
-                            padding: EdgeInsets.only(left: 20, right: 5, top: 5, bottom: 5),
-                              margin: EdgeInsets.zero,
-                              width: phoneSize.width,
-                              height: phoneSize.height*0.09,
-                              color: Colors.white,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  //댓글칸 조정하기
-                                  Container(
-                                    width: phoneSize.width * 0.75,
-                                    child: textFieldForm(
-                                        _commentController, "댓글을 작성해주세요.", "", false),
-                                  ),
-                                  TextButton(
-                                      onPressed: () {
-                                        String key = getRandomString(16);
-
-                                        //댓글 내용 fb 에 전송해서 저장
-                                        if (_commentController.text.isNotEmpty) {
-                                          commentService.create(
-                                              uid: user.uid,
-                                              name: userData.name,
-                                              mbti: userData.mbti,
-                                              comment: _commentController.text,
-                                              contentKey: widget.contentKey,
-                                              commentKey: key,
-                                              createDate: DateTime.now(),
-                                              likeNum: 0);
-
-                                          _commentController.clear();
-                                        }
-
-                                        print(docs5[0].id);
-                                        print(docs5.length);
-
-                                        boardService.update(docs[0].id, 'commentNum', docs5.length);
-
-                                      },
-                                      child: Text(
-                                          '저장',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: Color(0xffD0D3E5)
-                                        ),
-                                      ))
-                                ],
-                              ))),
-                    ]),
-                  ),
+                    ),
+                  ],
                 );
               }),
         ),
