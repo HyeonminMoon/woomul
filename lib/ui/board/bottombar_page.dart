@@ -1,14 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/main.dart';
 import 'package:woomul/provider/board_service.dart';
 import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/main_board_page.dart';
 import 'package:woomul/ui/setting/main_setting_page.dart';
-
+import 'package:http/http.dart' as http;
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -19,14 +24,40 @@ class BoardScreen extends StatefulWidget {
 }
 
 class _BoardScreenState extends State<BoardScreen> {
-
   int _selectedIndex = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
+    initFirebaseMessage();
     super.initState();
+  }
 
+  void initFirebaseMessage() {
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) async {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                priority: Priority.max,
+                icon: android.smallIcon,
+              ),
+            ),
+          );
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print(message);
+    });
   }
 
   @override
@@ -39,7 +70,6 @@ class _BoardScreenState extends State<BoardScreen> {
       _selectedIndex = index;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +135,10 @@ class _BoardScreenState extends State<BoardScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-
     );
-
   }
 
-  Widget _board2(BuildContext context){
+  Widget _board2(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
 
     final authService = context.read<AuthService>();
@@ -124,8 +152,8 @@ class _BoardScreenState extends State<BoardScreen> {
           boardService.readLimit('commentNum', 1),
           boardService.readLimit('likeNum', 1)
         ]),
-        builder: (context, snapshot){
-          if (snapshot.connectionState == ConnectionState.waiting){
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
           }
           final docs = snapshot.data![0].docs ?? [];
@@ -134,12 +162,12 @@ class _BoardScreenState extends State<BoardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              DetailBoardScreen('HOT 게시판', docs[0].get('key'))));
+                          builder: (context) => DetailBoardScreen(
+                              'HOT 게시판', docs[0].get('key'))));
                 },
                 child: Container(
                   //height: phoneSize.height*0.25,
@@ -174,7 +202,7 @@ class _BoardScreenState extends State<BoardScreen> {
                       ),
                       if (docs[0].get('title').length > 50)
                         Text(
-                          docs[0].get('title').substring(0,40) + '...',
+                          docs[0].get('title').substring(0, 40) + '...',
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       if (docs[0].get('title').length <= 50)
@@ -184,7 +212,7 @@ class _BoardScreenState extends State<BoardScreen> {
                         ),
                       SizedBox(height: phoneSize.height * 0.02),
                       if (docs[0].get('content').length > 50)
-                        Text(docs[0].get('content').substring(0,40) + '...'),
+                        Text(docs[0].get('content').substring(0, 40) + '...'),
                       if (docs[0].get('content').length <= 50)
                         Text(docs[0].get('content')),
                       Row(
@@ -208,14 +236,13 @@ class _BoardScreenState extends State<BoardScreen> {
                   ),
                 ),
               ),
-
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              DetailBoardScreen('BEST 게시판', docs2[0].get('key'))));
+                          builder: (context) => DetailBoardScreen(
+                              'BEST 게시판', docs2[0].get('key'))));
                 },
                 child: Container(
                   //height: phoneSize.height*0.25,
@@ -246,7 +273,6 @@ class _BoardScreenState extends State<BoardScreen> {
                               )
                             ],
                           ),
-
                         ],
                       ),
                       Text(
@@ -283,5 +309,3 @@ class _BoardScreenState extends State<BoardScreen> {
     );
   }
 }
-
-

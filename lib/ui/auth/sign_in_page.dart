@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
@@ -10,7 +11,6 @@ import '../../routes.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -45,7 +45,6 @@ class _SignInScreenState extends State<SignInScreen> {
     _resetEmailController = TextEditingController(text: "");
     _scrollController = ScrollController();
     errorCheck = false;
-
   }
 
   @override
@@ -60,16 +59,15 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthService, UserData>(builder: (context, authService, userData, child) {
-        return Scaffold(
-          resizeToAvoidBottomInset : false,
-          key: _scaffoldKey,
-          body: Align(
-            alignment: Alignment.center,
-            child: _buildForm(context, authService, userData),
-          ),
-        );
-      }
-    );
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        key: _scaffoldKey,
+        body: Align(
+          alignment: Alignment.center,
+          child: _buildForm(context, authService, userData),
+        ),
+      );
+    });
   }
 
   Widget _buildForm(BuildContext context, AuthService authService, UserData userData) {
@@ -87,8 +85,8 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  width: phoneSize.width*1,
-                  height: phoneSize.width*0.4,
+                  width: phoneSize.width * 1,
+                  height: phoneSize.width * 0.4,
                   //child: Image.asset("assets/images/login.png"), -> 이미지 값 넣기
                 ),
                 Text(
@@ -102,14 +100,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 Text(
                   '우리들의 MBTI 로 소통하는 공간',
                   style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff6E7191)
-                  ),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xff6E7191)),
                 ),
                 SizedBox(height: phoneSize.height * 0.2),
                 Container(
-                  padding: EdgeInsets.only(left:10.0, right:10.0),
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
                     color: Colors.white,
@@ -117,22 +112,22 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(right : 16.0),
+                        padding: EdgeInsets.only(right: 16.0),
                         child: Icon(
                           Icons.account_circle,
                           color: Color(0xffA0A3BD),
                         ),
                       ),
                       Expanded(
-                        child: textFieldForm(
-                            _emailController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false, _scrollController),
+                        child: textFieldForm(_emailController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false,
+                            _scrollController),
                       ),
                     ],
                   ),
                 ),
                 SizedBox(height: phoneSize.height * 0.02),
                 Container(
-                  padding: EdgeInsets.only(left:10.0, right:10.0),
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
                     color: Colors.white,
@@ -140,15 +135,15 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(right : 16.0),
+                        padding: EdgeInsets.only(right: 16.0),
                         child: Icon(
                           Icons.lock,
                           color: Color(0xffA0A3BD),
                         ),
                       ),
                       Expanded(
-                        child: textFieldForm(
-                            _passwordController, "비밀번호를 입력해주세요.", "비밀번호를 확인해주세요", true, _scrollController),
+                        child: textFieldForm(_passwordController, "비밀번호를 입력해주세요.", "비밀번호를 확인해주세요",
+                            true, _scrollController),
                       ),
                     ],
                   ),
@@ -158,36 +153,34 @@ class _SignInScreenState extends State<SignInScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      child: TextButton(
-                        onPressed: (){
-                          //비밀번호 찾기 기능 추가
-                          print(userData2.name);
-                          print(userData2.mbti);
-                          if (user != null) {
-                            print(user.uid);
-                          }
-                        },
-                        style: TextButton.styleFrom(
+                        child: TextButton(
+                      onPressed: () {
+                        //비밀번호 찾기 기능 추가
+                        print(userData2.name);
+                        print(userData2.mbti);
+                        if (user != null) {
+                          print(user.uid);
+                        }
+                      },
+                      style: TextButton.styleFrom(
                           //foregroundColor: Colors.black,
-                        ),
-                        child: Text(
-                          '비밀번호를 잊으셨나요?',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff466FFF)
                           ),
-                        ),
-                      )
-                    ),
+                      child: Text(
+                        '비밀번호를 잊으셨나요?',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w400, color: Color(0xff466FFF)),
+                      ),
+                    )),
                   ],
                 ),
                 SizedBox(height: phoneSize.height * 0.05),
-
                 Container(
-                  width: phoneSize.width *0.7,
+                  width: phoneSize.width * 0.7,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Color.fromRGBO(74, 84, 255, 0.9), Color.fromRGBO(0, 102, 255, 0.6)]),
+                    gradient: LinearGradient(colors: [
+                      Color.fromRGBO(74, 84, 255, 0.9),
+                      Color.fromRGBO(0, 102, 255, 0.6)
+                    ]),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: ElevatedButton(
@@ -200,18 +193,13 @@ class _SignInScreenState extends State<SignInScreen> {
                       authService.signIn(
                         email: _emailController.text,
                         password: _passwordController.text,
-                        onSuccess: () {
+                        onSuccess: () async {
                           // 로그인 성공
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("로그인 성공"),
                           ));
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      BoardScreen()));
-
-
+                              context, MaterialPageRoute(builder: (context) => BoardScreen()));
                         },
                         onError: (err) {
                           // 에러 발생
@@ -221,16 +209,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       );
 
-
-
-                      if(user == null) {
+                      if (user == null) {
                         print("유저 정보가 없습니다");
-                      }else{
+                      } else {
                         print("안녕하세요. ${user.email}님");
                         print(userData.getUserData(user.uid));
                       }
-
-                   },
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
@@ -240,46 +225,32 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: Text(
                       '시 작 하 기',
                       style: TextStyle(
-                          color: Color(0xffFCFCFC),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16
-                      ),
+                          color: Color(0xffFCFCFC), fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                   ),
                 ),
-
                 SizedBox(height: phoneSize.height * 0.02),
-
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                        '아직 아이디가 없으신가요?  ',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400
-                        ),
+                      '아직 아이디가 없으신가요?  ',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) =>
-                                SignUpScreen())
-                        );
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => SignUpScreen()));
                       },
                       child: Text(
                         "회원 가입하러 가기",
                         style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Color(0xff466FFF)
-                        ),
+                            fontWeight: FontWeight.w600, fontSize: 14, color: Color(0xff466FFF)),
                       ),
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
@@ -305,27 +276,21 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
             ],
           ),
-          child: Center(
-              child: Image.asset(image, width: size * 0.7, height: size * 0.7)),
+          child: Center(child: Image.asset(image, width: size * 0.7, height: size * 0.7)),
         ));
   }
 
-  Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure, ScrollController scontroller) {
+  Widget textFieldForm(TextEditingController controller, String labelText, String errorText,
+      bool obscure, ScrollController scontroller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
         onTap: () {
-          scontroller.animateTo(120.0,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.ease);
+          scontroller.animateTo(120.0, duration: Duration(milliseconds: 500), curve: Curves.ease);
         },
         obscureText: obscure,
         controller: controller,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(color: Color(0xffA0A3BD)),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xffA0A3BD)),
         cursorColor: Color(0xffA0A3BD),
         validator: (value) {
           if (value!.isEmpty) {
@@ -343,17 +308,14 @@ class _SignInScreenState extends State<SignInScreen> {
         decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
             labelText: labelText,
-            labelStyle: TextStyle(
-              color: Color(0xFF0000)//Theme.of(context).colorScheme.primary,
-            ),
+            labelStyle: TextStyle(color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+                ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFF0000)/*Theme.of(context).colorScheme.surface*/),
+              borderSide:
+                  BorderSide(color: Color(0xFF0000) /*Theme.of(context).colorScheme.surface*/),
             ),
-            focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF0000))),
-            errorBorder: OutlineInputBorder(
-                borderSide:
-                BorderSide(color: Color(0xffFF6868)))),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF0000))),
+            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffFF6868)))),
       ),
     );
   }

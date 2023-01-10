@@ -24,15 +24,101 @@ class FreeBoardScreen extends StatefulWidget {
 }
 
 class _FreeBoardScreenState extends State<FreeBoardScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  DocumentSnapshot? lastDocument;
+  List<Map<String, dynamic>> list = [];
+  final ScrollController _pageController = ScrollController();
+  bool isMoreData = true;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    paginatedData(widget.name);
+
+    _pageController.addListener(() {
+      if (_pageController.position.pixels ==
+          _pageController.position.maxScrollExtent) {
+        paginatedData(widget.name);
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void paginatedData(String boardType) async {
+    print(boardType);
+    if (isMoreData) {
+      final collectionReference = _firestore.collection('board');
+
+      late QuerySnapshot<Map<String, dynamic>> querySnapshot;
+
+      if (lastDocument == null) {
+        if (boardType != 'HOT 게시판' && boardType != 'BEST 게시판') {
+          querySnapshot = await collectionReference
+              .where('boardType', isEqualTo: boardType)
+              .orderBy('createDate', descending: true)
+              .limit(6)
+              .get();
+        } else {
+          String data = '';
+          String date = DateFormat('yyyyMM').format(DateTime.now());
+
+          if (boardType == 'HOT 게시판') {
+            data = 'commentNum';
+          } else {
+            data = 'likeNum';
+          }
+
+          querySnapshot = await collectionReference
+              .where("createDateMonth", isEqualTo: date)
+              .orderBy(data, descending: true)
+              .limit(6)
+              .get();
+        }
+      } else {
+        if (boardType != 'HOT 게시판' && boardType != 'BEST 게시판') {
+          querySnapshot = await collectionReference
+              .where('boardType', isEqualTo: boardType)
+              .orderBy('createDate', descending: true)
+              .limit(6)
+              .startAfterDocument(lastDocument!)
+              .get();
+        } else {
+          String data = '';
+          String date = DateFormat('yyyyMM').format(DateTime.now());
+
+          if (boardType == 'HOT 게시판') {
+            data = 'commentNum';
+          } else {
+            data = 'likeNum';
+          }
+
+          querySnapshot = await collectionReference
+              .where("createDateMonth", isEqualTo: date)
+              .orderBy(data, descending: true)
+              .limit(6)
+              .startAfterDocument(lastDocument!)
+              .get();
+        }
+      }
+
+      lastDocument = querySnapshot.docs.last;
+      print('lastDocument입니다');
+      print(lastDocument);
+
+      list.addAll(querySnapshot.docs.map((e) => e.data()));
+      setState(() {});
+
+      if (querySnapshot.docs.length < 6) {
+        isMoreData = false;
+      }
+    } else {
+      print("No More Data");
+    }
   }
 
   @override
@@ -88,9 +174,9 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                 if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
                   _board1(context, boardService),
                 if (widget.name == 'HOT 게시판')
-                  _board2(context, boardService, 'commentNum', 3),
+                  _board2(context, boardService, 'commentNum'),
                 if (widget.name == 'BEST 게시판')
-                  _board2(context, boardService, 'likeNum', 7)
+                  _board2(context, boardService, 'likeNum')
               ],
             ),
           ),
@@ -129,8 +215,8 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailBoardScreen(widget.name, contentKey)));
+                                  builder: (context) => DetailBoardScreen(
+                                      widget.name, contentKey)));
                         },
                         child: Container(
                           //height: phoneSize.height*0.25,
@@ -309,200 +395,196 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
     );
   }
 
-  Widget _board2(BuildContext context, BoardService boardService, String boardType, int days) {
+  Widget _board2(
+      BuildContext context, BoardService boardService, String boardType) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
-      child: FutureBuilder<QuerySnapshot>(
-          future: boardService.readGood(boardType, days),
-          builder: (context, snapshot) {
-            final docs = snapshot.data?.docs ?? [];
-            return ListView.builder(
-                itemCount: docs.length,
-                itemBuilder: (context, index) {
-                  final doc = docs[index];
-                  String title = doc.get('title');
-                  String userName = doc.get('name');
-                  DateTime date = doc.get('createDate').toDate();
-                  String content = doc.get('content');
-                  String contentKey = doc.get('key');
-                  int likeNum = doc.get('likeNum');
-                  int commentNum = doc.get('commentNum');
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          //자세히 보기로 이동
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailBoardScreen(widget.name, contentKey)));
-                        },
-                        child: Container(
-                          //height: phoneSize.height*0.25,
-                          height: phoneSize.height*0.25,
-                          margin: EdgeInsets.only(top: 10, bottom: 12),
-                          padding: EdgeInsets.only(left: 15,top:20,right: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset: Offset(0, 3),
-                              )
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Placeholder(
-                                          fallbackHeight: 20,
-                                          fallbackWidth: 20),
-                                      SizedBox(width: phoneSize.width * 0.03),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          if (title.length > 50)
+        child: ListView.builder(
+            controller: _pageController,
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              final doc = list[index];
+              String title = doc['title'];
+              String userName = doc['name'];
+              DateTime date = doc['createDate'].toDate();
+              String content = doc['content'];
+              String contentKey = doc['key'];
+              int likeNum = doc['likeNum'];
+              int commentNum = doc['commentNum'];
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      //자세히 보기로 이동
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailBoardScreen(widget.name, contentKey)));
+                    },
+                    child: Container(
+                      //height: phoneSize.height*0.25,
+                      height: phoneSize.height*0.25,
+                      margin: EdgeInsets.only(top: 10, bottom: 12),
+                      padding: EdgeInsets.only(left: 15,top:20,right: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                      ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Placeholder(
+                                        fallbackHeight: 20,
+                                        fallbackWidth: 20),
+                                    SizedBox(width: phoneSize.width * 0.03),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (title.length > 50)
+                                          Text(
+                                            '${title.substring(0, 50)}...',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13,
+                                                color: Color(0xff14142B)
+                                            ),
+                                          ),
+                                        if (title.length <= 50)
+                                          Text(
+                                            title,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13,
+                                                color: Color(0xff14142B)
+                                            ),
+                                          ),
+                                        Row(
+                                          children: [
                                             Text(
-                                                '${title.substring(0, 50)}...',
+                                              userName,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13,
+                                                  color: Color(0xffA0A3BD)
+                                              ),
+                                            ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              '.',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: 13,
-                                                  color: Color(0xff14142B)
+                                                  color: Color(0xffA0A3BD)
                                               ),
                                             ),
-                                          if (title.length <= 50)
+                                            SizedBox(width: 5),
                                             Text(
-                                                title,
+                                              date.toString(),
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
+                                                  fontWeight: FontWeight.w400,
                                                   fontSize: 13,
-                                                  color: Color(0xff14142B)
+                                                  color: Color(0xffA0A3BD)
                                               ),
-                                            ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  userName,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13,
-                                                    color: Color(0xffA0A3BD)
-                                                ),
-                                              ),
-                                              SizedBox(width: 5),
-                                              Text(
-                                                '.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 13,
-                                                    color: Color(0xffA0A3BD)
-                                                ),
-                                              ),
-                                              SizedBox(width: 5),
-                                              Text(
-                                                  date.toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13,
-                                                    color: Color(0xffA0A3BD)
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ), //프로필 사진
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ), //프로필 사진
 
-                                  Icon(
-                                      Icons.more_horiz,
-                                    color: Color(0xff6E7191),
-                                  )
-                                ],
+                                Icon(
+                                  Icons.more_horiz,
+                                  color: Color(0xff6E7191),
+                                )
+                              ],
+                            ),
+                            if (content.length > 50)
+                              Text(
+                                '${content.substring(0,50)}...',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
+                                ),
                               ),
-                              if (content.length > 50)
-                                Text(
-                                    '${content.substring(0,50)}...',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400
-                                  ),
+                            if (content.length <= 50)
+                              Text(
+                                content,
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400
                                 ),
-                              if (content.length <= 50)
-                                Text(
-                                    content,
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400
-                                  ),
+                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {
+                                          //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
+                                          //횟수 증가 되도록
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite_border,
+                                          color: Color(0xffA0A3BD),
+                                          size: 15,
+                                        )),
+                                    Text(
+                                      likeNum.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Color(0xffA0A3BD),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                            //횟수 증가 되도록
-                                          },
-                                          icon: Icon(
-                                              Icons.favorite_border,
-                                            color: Color(0xffA0A3BD),
-                                            size: 15,
-                                          )),
-                                      Text(
-                                          likeNum.toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
+                                Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.forum_outlined,
                                           color: Color(0xffA0A3BD),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                              Icons.forum_outlined,
-                                            color: Color(0xffA0A3BD),
-                                            size: 15,
-                                          )),
-                                      Text(
-                                          commentNum.toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: Color(0xffA0A3BD),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                });
-          }),
-    );
+                                          size: 15,
+                                        )),
+                                    Text(
+                                      commentNum.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Color(0xffA0A3BD),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        )
+                    ),
+                  )
+                ],
+              );
+            }));
   }
 
 }

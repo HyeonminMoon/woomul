@@ -1,6 +1,6 @@
 import 'dart:core';
 import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,11 +100,10 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
 
     return Consumer<BoardService>(builder: (context, boardService, child) {
       return FutureBuilder<void>(
-        future: userData.getUserData(user!.uid),
-        builder: (context, snapshot) {
-
-          int position = mbtiList.indexOf(userData.mbti);
-          mbtiValue[position] = true;
+          future: userData.getUserData(user!.uid),
+          builder: (context, snapshot) {
+            int position = mbtiList.indexOf(userData.mbti);
+            mbtiValue[position] = true;
 
           return Scaffold(
             resizeToAvoidBottomInset: false,
@@ -138,24 +137,29 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                     if (_ContentController.text != '' && _TitleController.text != ''){
                       String key = getRandomString(16);
 
-                      List<String> selectedList = selectedMbti(mbtiList, mbtiValue);
+                        List<String> selectedList =
+                            selectedMbti(mbtiList, mbtiValue);
 
-                      boardService.create(
-                          key: key,
-                          userUid: user!.uid,
-                          name: userData.name,
-                          firstPicUrl: null,
-                          ageNum: _currentSliderValue,
-                          ageRange: age[(_currentSliderValue / 25).round()],
-                          mbti: selectedList,
-                          userMbti: userData.mbti,
-                          userMbtiMean: userData.mbtiMean,
-                          boardType: dropdownValue,
-                          createDate: DateTime.now(),
-                          title: _TitleController.text,
-                          content: _ContentController.text,
-                          commentNum: 20,
-                          likeNum: 20);
+                        boardService.create(
+                            key: key,
+                            userUid: user!.uid,
+                            name: userData.name,
+                            firstPicUrl: null,
+                            ageNum: _currentSliderValue,
+                            ageRange: [
+                              age[(_currentSliderValue / 25).round()]
+                            ], // 임의로 리스트로 넣어놓음!
+                            mbti: selectedList,
+                            userMbti: userData.mbti,
+                            userMbtiMean: userData.mbtiMean,
+                            boardType: dropdownValue,
+                            createDateMonth:
+                                DateFormat('yyyyMM').format(DateTime.now()),
+                            createDate: DateTime.now(),
+                            title: _TitleController.text,
+                            content: _ContentController.text,
+                            commentNum: 0,
+                            likeNum: 0);
 
                       Navigator.pop(context);
                     }
@@ -319,7 +323,6 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             onPressed: () {
               //색 바뀌게 하고, 해당 정보 값 저장하기
               setState(() {
-
                 if (mbtiList[index] != userData.mbti) {
                   if (mbtiValue[index] == false) {
                     mbtiValue[index] = true;

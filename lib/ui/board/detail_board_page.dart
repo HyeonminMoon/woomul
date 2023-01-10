@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/provider/comment_service.dart';
+import 'package:woomul/provider/fcm_service.dart';
 import 'package:woomul/provider/like_service.dart';
 import '../../provider/auth_service.dart';
 import '../../provider/board_service.dart';
@@ -27,18 +28,17 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
 
   var errorCheck;
 
-  final String _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final String _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rnd = Random();
 
-  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+  String getRandomString(int length) => String.fromCharCodes(
+      Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _commentController = TextEditingController(text: "");
+    _commentController = TextEditingController();
     errorCheck = false;
   }
 
@@ -56,6 +56,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     final user = authService.currentUser();
     final userData = context.read<UserData>();
     final boardService = context.read<BoardService>();
+    final fcmService = context.read<FcmService>();
 
     return Consumer2<CommentService, LikeService>(
         builder: (context, commentService, likeService, child) {
@@ -86,15 +87,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
         body: SafeArea(
           child: FutureBuilder<dynamic>(
               future: Future.wait([
-                boardService.readOne(widget.contentKey),
-                likeService.readOne(user!.uid, widget.contentKey),
-                likeService.read(widget.contentKey),
-                userData.getUserData(user!.uid),
-                commentService.read(widget.contentKey)
+                boardService.readOne(widget.contentKey), //게시글 한개 불러오기
+                likeService.readOne(user!.uid, widget.contentKey), // 해당 유저가 좋아요 눌렀나 안눌렀나 체크
+                likeService.read(widget.contentKey), // 이 게시글에 달린 좋아요 수
+                userData.getUserData(user!.uid), // 유저 데이터 불러오기
+                commentService.read(widget.contentKey) //댓글 읽기
               ]),
               builder: (context, snapshot) {
-
-                if(snapshot.connectionState == ConnectionState.waiting){
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Container();
                 }
 
@@ -102,6 +102,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 final docs2 = snapshot.data![1].docs ?? [];
                 final docs3 = snapshot.data![2].docs ?? [];
                 final docs5 = snapshot.data![4].docs ?? [];
+
+                // 스몰아이즈 : 게시글 작성자 uid
+                final String boardWriteUid = docs[0].get('userUid');
 
                 return Column(
                   children: [
@@ -140,41 +143,36 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                           onPressed: () {
                                             String key = getRandomString(16);
 
-                                            //댓글 내용 fb 에 전송해서 저장
-                                            if (_commentController.text.isNotEmpty) {
-                                              commentService.create(
-                                                  uid: user.uid,
-                                                  name: userData.name,
-                                                  mbti: userData.mbti,
-                                                  comment: _commentController.text,
-                                                  contentKey: widget.contentKey,
-                                                  commentKey: key,
-                                                  createDate: DateTime.now(),
-                                                  likeNum: 0);
+                                      //댓글 내용 fb 에 전송해서 저장
+                                      if (_commentController.text.isNotEmpty) {
+                                        commentService.create(
+                                            uid: user.uid,
+                                            name: userData.name,
+                                            mbti: userData.mbti,
+                                            comment: _commentController.text,
+                                            contentKey: widget.contentKey,
+                                            commentKey: key,
+                                            createDate: DateTime.now(),
+                                            likeNum: 0);
 
-                                              _commentController.clear();
-                                            }
+                                        _commentController.clear();
+                                      }
 
-                                            print(docs5[0].id);
-                                            print(docs5.length);
+                                      print(docs5[0].id);
+                                      print(docs5.length);
 
-                                            boardService.update(docs[0].id, 'commentNum', docs5.length);
-
-                                          },
-                                          child: Text(
-                                              '저장',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                              color: Color(0xffD0D3E5)
-                                            ),
-                                          ))
-                                    ],
-                                  ))),
-                        ]),
-                      ),
-                    ),
-                  ],
+                                      boardService.update(docs[0].id, 'commentNum', docs5.length);
+                                      await fcmService.sendMessageNotification(
+                                        name: userData.name,
+                                        message: _commentController.text,
+                                        boardWriterUid: boardWriteUid,
+                                      );
+                                      _commentController.clear();
+                                    },
+                                    child: Text('저장'))
+                              ],
+                            ))),
+                  ]),
                 );
               }),
         ),
@@ -183,18 +181,13 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   }
 
   //게시글 detail UI
-  Widget _board1(
-      BuildContext context,
-      BoardService boardService,
-      LikeService likeService,
-      UserData userData,
-      String uid,
-      docs,
-      docs2,
-      docs3) {
+  Widget _board1(BuildContext context, BoardService boardService, LikeService likeService,
+      UserData userData, String uid, docs, docs2, docs3) {
     var phoneSize = MediaQuery.of(context).size;
+    final fcmService = context.read<FcmService>();
 
     bool likeBool = false;
+    final String boardWriteUid = docs[0].get('userUid');
 
     return Expanded(
         child: Column(
@@ -220,7 +213,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
@@ -291,8 +283,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       IconButton(
                           padding: EdgeInsets.zero,
                           constraints: BoxConstraints(),
-                          onPressed: () {
-                            print(docs3.length);
+                          onPressed: () async {
 
                             if (docs2.isEmpty == true) {
                               likeService.create(
@@ -307,12 +298,17 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
 
                             print(docs3.length);
 
-                            boardService.update(
-                                docs[0].id, 'likeNum', docs3.length);
+                            boardService.update(docs[0].id, 'likeNum', docs3.length);
+                            if (docs2.isEmpty == true) {
+                              await fcmService.sendMessageNotification(
+                                name: userData.name,
+                                message: '좋아요를 눌렀습니다',
+                                boardWriterUid: boardWriteUid,
+                              );
+                            }
                           },
-                          icon: Icon(docs2.isEmpty == true
-                              ? Icons.favorite_border
-                              : Icons.favorite)),
+                          icon:
+                              Icon(docs2.isEmpty == true ? Icons.favorite_border : Icons.favorite)),
                       //Icon(Icons.bookmark_border_outlined)
                     ],
                   )
@@ -357,8 +353,8 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     ));
   }
 
-  Widget _commentPart(BuildContext context, CommentService commentService,
-      BoardService boardService, docs5) {
+  Widget _commentPart(
+      BuildContext context, CommentService commentService, BoardService boardService, docs5) {
     return Expanded(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,10 +375,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 style: TextStyle(
                     color: Color(0xff466FFF),
                 ),
-              )
+              ),
             ],
           ),
         ),
+
+        SizedBox(height: 10),
 
         //댓글 불러오기
         _comment(commentService, boardService, docs5),
@@ -391,8 +389,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   }
 
   //댓글 하나하나
-  Widget _comment(
-      CommentService commentService, BoardService boardService, docs) {
+  Widget _comment(CommentService commentService, BoardService boardService, docs) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
         child: ListView.builder(
@@ -402,10 +399,10 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
               String name = doc.get('name');
               String mbti = doc.get('mbti');
               DateTime createDate = doc.get('createDate').toDate();
-              String formattedDate =
-                  DateFormat('yyyy-MM-dd').format(createDate);
+              String formattedDate = DateFormat('yyyy-MM-dd').format(createDate);
               String comment = doc.get('comment');
               int likeNum = doc.get('likeNum');
+
               return Column(
                 children: [
                   Container(
@@ -504,14 +501,6 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                 )
                               ],
                             ),
-                            // Row(
-                            //                                     children: [
-                            //                                       IconButton(
-                            //                                           onPressed: () {},
-                            //                                           icon: Icon(Icons.forum_outlined)),
-                            //                                       Text('댓글 수')
-                            //                                     ],
-                            //                                   )
                           ],
                         )
                       ],
@@ -522,17 +511,15 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             }));
   }
 
-  Widget textFieldForm(TextEditingController controller, String labelText,
-      String errorText, bool obscure) {
+  Widget textFieldForm(
+      TextEditingController controller, String labelText, String errorText, bool obscure) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
+        maxLength: 100,
         obscureText: obscure,
         controller: controller,
-        style: Theme.of(context)
-            .textTheme
-            .titleSmall
-            ?.copyWith(color: Colors.black),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.black),
         validator: (value) {
           if (value!.isEmpty) {
             setState(() {
@@ -554,8 +541,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 color: Color(0xffA0A3BD)
             ),
             labelText: labelText,
-            labelStyle: TextStyle(
-                color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+            labelStyle: TextStyle(color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
                 ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -565,8 +551,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             ),
             filled: true,
             fillColor: Color(0xffFCFCFC),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFEFF0F7))),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFEFF0F7))),
             errorBorder: OutlineInputBorder(
                 borderSide:
                     BorderSide(color: Colors.red))),
