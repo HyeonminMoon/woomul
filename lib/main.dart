@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: EditBoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: DetailBoardScreen(),//const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(widget.title),
       ),
