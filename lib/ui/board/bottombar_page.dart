@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/main.dart';
 import 'package:woomul/provider/board_service.dart';
+import 'package:woomul/ui/board/board_home_page.dart';
 import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/main_board_page.dart';
 import 'package:woomul/ui/setting/main_setting_page.dart';
@@ -26,10 +27,18 @@ class BoardScreen extends StatefulWidget {
 class _BoardScreenState extends State<BoardScreen> {
   int _selectedIndex = 0;
 
+  var errorCheck;
+
+  late TextEditingController _keywordController;
+
+
   @override
   void initState() {
     initFirebaseMessage();
     super.initState();
+    _keywordController = TextEditingController(text: "");
+
+    errorCheck = false;
   }
 
   void initFirebaseMessage() {
@@ -63,6 +72,8 @@ class _BoardScreenState extends State<BoardScreen> {
   @override
   void dispose() {
     super.dispose();
+    _keywordController.dispose();
+
   }
 
   void _onItemTapped(int index) {
@@ -75,7 +86,7 @@ class _BoardScreenState extends State<BoardScreen> {
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
     final List<Widget> _widgetOptions = <Widget>[
-      _board2(context),
+      Expanded(child: HomeBoardScreen()),
       //_board1(context),
       //_board3(context),
       Expanded(child: MainBoardScreen()),
@@ -138,173 +149,49 @@ class _BoardScreenState extends State<BoardScreen> {
     );
   }
 
-  Widget _board2(BuildContext context) {
-    var phoneSize = MediaQuery.of(context).size;
 
-    final authService = context.read<AuthService>();
-    final user = authService.currentUser();
-    final userData = context.read<UserData>();
-    final boardService = context.read<BoardService>();
-
-    return Expanded(
-      child: FutureBuilder<List<QuerySnapshot>>(
-        future: Future.wait([
-          boardService.readLimit('commentNum', 1),
-          boardService.readLimit('likeNum', 1)
-        ]),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          }
-          final docs = snapshot.data![0].docs ?? [];
-          final docs2 = snapshot.data![1].docs ?? [];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailBoardScreen(
-                              'HOT 게시판', docs[0].get('key'))));
-                },
-                child: Container(
-                  //height: phoneSize.height*0.25,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Placeholder(
-                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
-                          SizedBox(width: phoneSize.width * 0.03),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [Text(docs[0].get('name'))],
-                              ),
-                              Row(
-                                children: [
-                                  Text(docs[0].get('userMbti')),
-                                  SizedBox(width: 10),
-                                  Text(docs[0].get('userMbtiMean'))
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      if (docs[0].get('title').length > 50)
-                        Text(
-                          docs[0].get('title').substring(0, 40) + '...',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      if (docs[0].get('title').length <= 50)
-                        Text(
-                          docs[0].get('title'),
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      SizedBox(height: phoneSize.height * 0.02),
-                      if (docs[0].get('content').length > 50)
-                        Text(docs[0].get('content').substring(0, 40) + '...'),
-                      if (docs[0].get('content').length <= 50)
-                        Text(docs[0].get('content')),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [Text('2')],
-                              ),
-                              Row(
-                                children: [Text('대표 닉네임 님 외 n인이 좋아합니다.')],
-                              )
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailBoardScreen(
-                              'BEST 게시판', docs2[0].get('key'))));
-                },
-                child: Container(
-                  //height: phoneSize.height*0.25,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Placeholder(
-                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
-                          SizedBox(width: phoneSize.width * 0.03),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [Text(docs2[0].get('name'))],
-                              ),
-                              Row(
-                                children: [
-                                  Text(docs2[0].get('userMbti')),
-                                  SizedBox(width: 10),
-                                  Text(docs2[0].get('userMbtiMean'))
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        docs2[0].get('title'),
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(height: phoneSize.height * 0.02),
-                      Text(docs2[0].get('content')),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [Text('2')],
-                              ),
-                              Row(
-                                children: [Text('대표 닉네임 님 외 n인이 좋아합니다.')],
-                              )
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          );
+  Widget textFieldForm(TextEditingController controller, String labelText, String errorText,
+      bool obscure) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        onTap: () {
+          //scontroller.animateTo(120.0, duration: Duration(milliseconds: 500), curve: Curves.ease);
         },
+        obscureText: obscure,
+        controller: controller,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xffA0A3BD)),
+        cursorColor: Color(0xffA0A3BD),
+        validator: (value) {
+          if (value!.isEmpty) {
+            setState(() {
+              errorCheck = true;
+            });
+            return errorText;
+          } else {
+            setState(() {
+              errorCheck = false;
+            });
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            labelText: labelText,
+            labelStyle: TextStyle(color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+            ),
+            hintStyle: TextStyle(
+              color: Color(0xff828796),
+              fontSize: 14,
+              fontWeight: FontWeight.w500
+            ),
+            hintText: labelText,
+            enabledBorder: OutlineInputBorder(
+              borderSide:
+              BorderSide(color: Color(0xFF0000) /*Theme.of(context).colorScheme.surface*/),
+            ),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF0000))),
+            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffFF6868)))),
       ),
     );
   }
