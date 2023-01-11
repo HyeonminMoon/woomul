@@ -61,6 +61,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     return Consumer2<CommentService, LikeService>(
         builder: (context, commentService, likeService, child) {
           return Scaffold(
+            //resizeToAvoidBottomInset: false,
             appBar: AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
@@ -551,6 +552,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             hintStyle: TextStyle(
                 color: Color(0xffA0A3BD)
             ),
+            counterText: '',
             labelText: labelText,
             labelStyle: TextStyle(color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
                 ),
