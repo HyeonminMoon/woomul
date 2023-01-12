@@ -250,18 +250,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               email: _emailController.text,
                               password: _passwordController.text,
                               onSuccess: () {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text("회원가입 성공"),
-                                ));
 
                                 authService.signIn(
                                     email: _emailController.text,
                                     password: _passwordController.text,
                                     onSuccess: () {
                                       // 로그인 성공
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: Text("로그인 성공"),
-                                      ));
 
                                       final user = authService.currentUser();
 
@@ -991,12 +985,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
                       icon: const Icon(
                         Icons.check,
                         size: 20,
                         color: Color(0xffF8FAFE),
                       ),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
                           //색 바뀌기
@@ -1007,7 +1004,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Expanded(
                       child: ExpansionTile(
                         title: Text(
-                          '(필수) 개인정보 수집 및 이용에 동의합니다.',
+                          '(필수) 개인 정보 수집 및 이용에 동의합니다.',
                           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
                         ),
                         children: <Widget>[
@@ -1028,12 +1025,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
                       icon: const Icon(
                         Icons.check,
                         size: 20,
                         color: Color(0xffF8FAFE),
                       ),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
                           //색 바뀌기
@@ -1044,7 +1044,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Expanded(
                       child: ExpansionTile(
                         title: Text(
-                          '(필수) 이용약관에 동의합니다.',
+                          '(필수) 서비스 이용약관에 동의합니다.',
                           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
                         ),
                         children: <Widget>[
@@ -1065,12 +1065,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
                       icon: const Icon(
                         Icons.check,
                         size: 20,
                         color: Color(0xffF8FAFE),
                       ),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
                           //색 바뀌기
@@ -1102,12 +1105,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
                       icon: const Icon(
                         Icons.check,
                         size: 20,
                         color: Color(0xffF8FAFE),
                       ),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
                           //색 바뀌기
@@ -1118,13 +1124,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Expanded(
                       child: ExpansionTile(
                         title: Text(
-                          '(선택) 상품 정보 및 혜택 수신 동의',
+                          '(필수) 커뮤니티 이용규칙 확인 동의',
                           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
                         ),
                         children: <Widget>[
                           ListTile(
                               title: Text(
-                            '상품정보 및 혜택 수신 동의 내용 쭈르르르ㅡㄱ',
+                            '커뮤니티 이용규칙 확인 동의 내용 쭈르르르ㅡㄱ',
                             style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                           )),
                         ],
@@ -1133,7 +1139,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ],
                 ),
               ],
-            )
+            ),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: phoneSize.width * 0.02,),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: Color(0xffF8FAFE),
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      onPressed: () {
+                        setState(() {
+                          //색 바뀌기
+                          //선택 됐음 알려주는 기능 추가
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: ExpansionTile(
+                        title: Text(
+                          '(선택) 광고성 정보 수신 동의',
+                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+                        ),
+                        children: <Widget>[
+                          ListTile(
+                              title: Text(
+                                '광고성 정보 수신 동의 내용 쭈르르르ㅡㄱ',
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
       ),

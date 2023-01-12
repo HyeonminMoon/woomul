@@ -195,17 +195,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         password: _passwordController.text,
                         onSuccess: () async {
                           // 로그인 성공
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("로그인 성공"),
-                          ));
+
                           Navigator.push(
                               context, MaterialPageRoute(builder: (context) => BoardScreen()));
                         },
                         onError: (err) {
                           // 에러 발생
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(err),
-                          ));
                         },
                       );
 
