@@ -336,7 +336,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                                 ),
                               ),
                               Text(
-                                '정보 동의 설정',
+                                '마켓팅 수신 동의 설정',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500

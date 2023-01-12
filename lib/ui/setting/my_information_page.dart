@@ -337,7 +337,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '정보 동의 설정',
+                                    '마켓팅 수신 동의 설정',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -364,6 +364,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
                     SizedBox(height: phoneSize.height * 0.02),
 
+                    /*
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -409,7 +410,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           ),
                         ),
                       ],
-                    ),
+                    ),*/
 
                     SizedBox(height: phoneSize.height * 0.04),
 
