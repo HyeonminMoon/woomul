@@ -123,10 +123,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
             child: SingleChildScrollView(
               // physics: NeverScrollableScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: <Widget>[
                     Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기 해야함!!
+                    //Image(image: AssetImage('assets/images/chara/ENFJ_M.png')),
                     SizedBox(height: phoneSize.height * 0.04),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,7 +338,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '정보 동의 설정',
+                                    '마켓팅 수신 동의 설정',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -364,6 +365,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
                     SizedBox(height: phoneSize.height * 0.02),
 
+                    /*
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -409,7 +411,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           ),
                         ),
                       ],
-                    ),
+                    ),*/
 
                     SizedBox(height: phoneSize.height * 0.04),
 

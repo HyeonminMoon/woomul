@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/main.dart';
+import 'package:woomul/ui/board/board_search_page.dart';
 import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/free_board_page.dart';
 
@@ -134,10 +135,19 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                       child: textFieldForm(_keywordController, "찾고싶은 키워드를 검색하세요", "아이디를 확인해주세요", false),
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 16.0),
-                      child: Icon(
-                        Icons.search,
-                        color: Color(0xffA0A3BD),
+                      padding: EdgeInsets.only(right: 3.0),
+                      child: IconButton(
+                        icon: Icon(
+                            Icons.search,
+                          color: Color(0xff828796),
+                        ),
+                        onPressed: () {
+                          //검색 결과 페이지로 이동
+                          //검색어가 입력 됐을 경우(비어 있으면 검색 안 눌리게 하나욤? 일단 대애충 해놨슴미다)
+                          if (_keywordController.toString() != '') {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResultScreen()));
+                          }
+                        },
                       ),
                     ),
                   ],

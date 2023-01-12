@@ -225,105 +225,122 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      onPressed: () async {
+
+                        if (docs2.isEmpty == true) {
+                          likeService.create(
+                              name: userData.name,
+                              userUid: userData.userUid,
+                              contentKey: widget.contentKey,
+                              createDate: DateTime.now());
+                          print(docs3.length);
+                        } else {
+                          likeService.delete(docs2[0].id);
+                        }
+
+                        print(docs3.length);
+
+                        boardService.update(docs[0].id, 'likeNum', docs3.length);
+                        if (docs2.isEmpty == true) {
+                          await fcmService.sendMessageNotification(
+                            name: userData.name,
+                            message: '좋아요를 눌렀습니다',
+                            boardWriterUid: boardWriteUid,
+                          );
+                        }
+                      },
+                      icon: Icon(docs2.isEmpty == true ? Icons.favorite_border : Icons.favorite)
+                  ),
+
+                  SizedBox(width: phoneSize.width * 0.01,),
+
+                  Text(
+                      docs3.length.toString(),
+                    style: TextStyle(
+                      color: Color(0xffA0A3BD)
+                    ),
+                  ),
+                ],
+              ),
+              Row(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Placeholder(fallbackHeight: 20, fallbackWidth: 20),
-                      SizedBox(width: phoneSize.width * 0.03),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          if (widget.name != '비밀게시판')
-                            Row(
-                              children: [
-                                Text(
-                                    docs[0].get('name'),
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600
-                                  ),
-                                )],
-                            ),
-                          if (widget.name == '비밀게시판')
-                            Row(
-                              children: [
-                                Text(
-                                    "익명",
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600
-                                  ),
-                                )],
-                            ),
-                          Row(
+                          Placeholder(fallbackHeight: 20, fallbackWidth: 20),
+                          SizedBox(width: phoneSize.width * 0.03),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                  docs[0].get('userMbti'),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 13,
-                                  color: Color(0xffA0A3BD)
+                              if (widget.name != '비밀게시판')
+                                Row(
+                                  children: [
+                                    Text(
+                                      docs[0].get('name'),
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600
+                                      ),
+                                    )],
                                 ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                '|',
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xffA0A3BD)
+                              if (widget.name == '비밀게시판')
+                                Row(
+                                  children: [
+                                    Text(
+                                      "익명",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600
+                                      ),
+                                    )],
                                 ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                  docs[0].get('userMbtiMean'),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13,
-                                    color: Color(0xffA0A3BD)
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    docs[0].get('userMbti'),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13,
+                                        color: Color(0xffA0A3BD)
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    '|',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xffA0A3BD)
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    docs[0].get('userMbtiMean'),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13,
+                                        color: Color(0xffA0A3BD)
+                                    ),
+                                  )
+                                ],
                               )
                             ],
-                          )
+                          ),
                         ],
                       ),
+
+
                     ],
                   ), //프로필 사진
-                  Row(
-                    children: [
-                      IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
-                          onPressed: () async {
 
-                            if (docs2.isEmpty == true) {
-                              likeService.create(
-                                  name: userData.name,
-                                  userUid: userData.userUid,
-                                  contentKey: widget.contentKey,
-                                  createDate: DateTime.now());
-                              print(docs3.length);
-                            } else {
-                              likeService.delete(docs2[0].id);
-                            }
-
-                            print(docs3.length);
-
-                            boardService.update(docs[0].id, 'likeNum', docs3.length);
-                            if (docs2.isEmpty == true) {
-                              await fcmService.sendMessageNotification(
-                                name: userData.name,
-                                message: '좋아요를 눌렀습니다',
-                                boardWriterUid: boardWriteUid,
-                              );
-                            }
-                          },
-                          icon:
-                              Icon(docs2.isEmpty == true ? Icons.favorite_border : Icons.favorite)),
-                      //Icon(Icons.bookmark_border_outlined)
-                    ],
-                  )
                 ],
               ),
               Text(
@@ -341,23 +358,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                   fontWeight: FontWeight.w400
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Text(docs3.length.toString())], //이 부분 어떻게 하려는지 잘 모르겠음!
-                      ),
-                      Row(
-                        children: [Text('대표 닉네임 님 외 n인이 좋아합니다.')],
-                      )
-                    ],
-                  ),
-                ],
-              )
+
             ],
           ),
         )
