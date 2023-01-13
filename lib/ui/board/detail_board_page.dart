@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +10,15 @@ import 'package:woomul/provider/fcm_service.dart';
 import 'package:woomul/provider/like_service.dart';
 import '../../provider/auth_service.dart';
 import '../../provider/board_service.dart';
-import '../../routes.dart';
 import 'package:intl/intl.dart';
 
 class DetailBoardScreen extends StatefulWidget {
   final String name;
   final String contentKey;
+  final String id;
+  final String boardWriteUid;
 
-  const DetailBoardScreen(this.name, this.contentKey, {super.key});
+  const DetailBoardScreen(this.name, this.contentKey, this.id, this.boardWriteUid, {super.key});
 
   @override
   _DetailBoardScreenState createState() => _DetailBoardScreenState();
@@ -25,6 +27,15 @@ class DetailBoardScreen extends StatefulWidget {
 class _DetailBoardScreenState extends State<DetailBoardScreen> {
   late TextEditingController _commentController =
       TextEditingController(text: "");
+
+  late AuthService authService;
+  late User? user;
+  late UserData userData;
+  late BoardService boardService;
+  late CommentService commentService;
+  late LikeService likeService;
+
+
 
   var errorCheck;
 
@@ -36,6 +47,17 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
 
   @override
   void initState() {
+
+    authService = context.read<AuthService>();
+    userData = context.read<UserData>();
+    boardService = context.read<BoardService>();
+
+    commentService = context.read<CommentService>();
+    likeService = context.read<LikeService>();
+
+    user = authService.currentUser();
+    userData.getUserData(user!.uid);
+
     // TODO: implement initState
     super.initState();
     _commentController = TextEditingController();
@@ -51,145 +73,138 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
 
-    final authService = context.read<AuthService>();
-    final user = authService.currentUser();
-    final userData = context.read<UserData>();
-    final boardService = context.read<BoardService>();
     final fcmService = context.read<FcmService>();
 
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: true,
+        centerTitle: true,
+        title: Text(
+          widget.name,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w700
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(0.0),
+                child: Stack(children: <Widget>[
+                  FutureBuilder<dynamic>(
+                      future: Future.wait([
+                        boardService.readOne(widget.contentKey),
+                        likeService.readOne(user!.uid, widget.contentKey),
+                        likeService.read(widget.contentKey),
+                        commentService.read(widget.contentKey)
+                      ]),
+                      builder: (context, snapshot) {
 
-    return Consumer2<CommentService, LikeService>(
-        builder: (context, commentService, likeService, child) {
-          return Scaffold(
-            //resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              automaticallyImplyLeading: true,
-              centerTitle: true,
-              title: Text(
-                widget.name,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700
-                ),
-              ),
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            body: SafeArea(
-              child: FutureBuilder<dynamic>(
-                  future: Future.wait([
-                    boardService.readOne(widget.contentKey),
-                    likeService.readOne(user!.uid, widget.contentKey),
-                    likeService.read(widget.contentKey),
-                    userData.getUserData(user!.uid),
-                    commentService.read(widget.contentKey)
-                  ]),
-                  builder: (context, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.waiting){
+                          return Container();
+                        }
 
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                      return Container();
-                    }
+                        final docs = snapshot.data![0].docs ?? [];
+                        final docs2 = snapshot.data![1].docs ?? [];
+                        final docs3 = snapshot.data![2].docs ?? [];
+                        final docs5 = snapshot.data![3].docs ?? [];
 
-                    final docs = snapshot.data![0].docs ?? [];
-                    final docs2 = snapshot.data![1].docs ?? [];
-                    final docs3 = snapshot.data![2].docs ?? [];
-                    final docs5 = snapshot.data![4].docs ?? [];
+                        // 스몰아이즈 : 게시글 작성자 uid
+                        final String boardWriteUid = docs[0].get('userUid');
 
-                    // 스몰아이즈 : 게시글 작성자 uid
-                    final String boardWriteUid = docs[0].get('userUid');
-
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(0.0),
-                            child: Stack(children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _board1(context, boardService, likeService, userData,
-                                      user!.uid, docs, docs2, docs3),
-                                  _commentPart(
-                                      context, commentService, boardService, docs5),
-                                ],
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _board1(context, boardService, likeService, userData,
+                                user!.uid, docs, docs2, docs3),
+                            _commentPart(
+                                context, commentService, boardService, docs5, user!.uid),
+                          ],
+                        );
+                      }
+                  ),
+                  Positioned(
+                      bottom: 0,
+                      child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 5, top: 5, bottom: 5),
+                          margin: EdgeInsets.zero,
+                          width: phoneSize.width,
+                          height: phoneSize.height*0.09,
+                          color: Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              //댓글칸 조정하기
+                              Container(
+                                width: phoneSize.width * 0.75,
+                                child: textFieldForm(
+                                    _commentController, "댓글을 작성해주세요.", "", false),
                               ),
-                              Positioned(
-                                  bottom: 0,
-                                  child: Container(
-                                      padding: EdgeInsets.only(left: 20, right: 5, top: 5, bottom: 5),
-                                      margin: EdgeInsets.zero,
-                                      width: phoneSize.width,
-                                      height: phoneSize.height*0.09,
-                                      color: Colors.white,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          //댓글칸 조정하기
-                                          Container(
-                                            width: phoneSize.width * 0.75,
-                                            child: textFieldForm(
-                                                _commentController, "댓글을 작성해주세요.", "", false),
-                                          ),
-                                          TextButton(
-                                              onPressed: () async {
-                                                String key = getRandomString(16);
+                              TextButton(
+                                  onPressed: () async {
+                                    String key = getRandomString(16);
 
-                                                //댓글 내용 fb 에 전송해서 저장
-                                                if (_commentController.text.isNotEmpty) {
-                                                  commentService.create(
-                                                      uid: user.uid,
-                                                      name: userData.name,
-                                                      mbti: userData.mbti,
-                                                      comment: _commentController.text,
-                                                      contentKey: widget.contentKey,
-                                                      commentKey: key,
-                                                      createDate: DateTime.now(),
-                                                      likeNum: 0);
+                                    //댓글 내용 fb 에 전송해서 저장
+                                    if (_commentController.text.isNotEmpty) {
+                                      commentService.create(
+                                          uid: user!.uid,
+                                          name: userData.name,
+                                          mbti: userData.mbti,
+                                          comment: _commentController.text,
+                                          contentKey: widget.contentKey,
+                                          commentKey: key,
+                                          createDate: DateTime.now(),
+                                          likeNum: 0);
+                                    }
+                                    int comNum = await commentService.readNum(widget.contentKey);
+                                    setState(() {
+                                      boardService.update(widget.id, 'commentNum', comNum);
+                                    });
 
-                                                }
 
-                                                print(docs5[0].id);
-                                                print(docs5.length);
+                                    await fcmService.sendMessageNotification(
+                                      name: userData.name,
+                                      message: _commentController.text,
+                                      boardWriterUid: widget.boardWriteUid,
+                                    );
 
-                                                boardService.update(docs[0].id, 'commentNum', docs5.length);
-                                                await fcmService.sendMessageNotification(
-                                                  name: userData.name,
-                                                  message: _commentController.text,
-                                                  boardWriterUid: boardWriteUid,
-                                                );
-                                                _commentController.clear();
+                                    _commentController.clear();
 
-                                              },
-                                              child: Text(
-                                                '저장',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                    color: Color(0xffD0D3E5)
-                                                ),
-                                              ))
-                                        ],
-                                      ))),
-                            ]),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
+                                  },
+                                  child: Text(
+                                    '저장',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: _commentController.text == "" ? Color(0xffD0D3E5) : Color(0xff466FFF)
+                                    ),
+                                  ))
+                            ],
+                          ))),
+                ]),
+              ),
             ),
-          );
-        });
+          ],
+        ),
+      ),
+    );
   }
 
   //게시글 detail UI
@@ -238,14 +253,17 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                               userUid: userData.userUid,
                               contentKey: widget.contentKey,
                               createDate: DateTime.now());
-                          print(docs3.length);
                         } else {
                           likeService.delete(docs2[0].id);
                         }
 
-                        print(docs3.length);
+                        int likeNum = await likeService.readNum(widget.contentKey);
 
-                        boardService.update(docs[0].id, 'likeNum', docs3.length);
+                        setState(() {
+                          boardService.update(docs[0].id, 'likeNum', likeNum);
+                        });
+
+
                         if (docs2.isEmpty == true) {
                           await fcmService.sendMessageNotification(
                             name: userData.name,
@@ -265,6 +283,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       color: Color(0xffA0A3BD)
                     ),
                   ),
+                  SizedBox(width: phoneSize.width * 0.01,),
+                  if (uid == boardWriteUid)
+                  Icon(
+                    Icons.more_horiz,
+                    color: Color(0xff6E7191),
+                  )
                 ],
               ),
               Row(
@@ -367,7 +391,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
   }
 
   Widget _commentPart(
-      BuildContext context, CommentService commentService, BoardService boardService, docs5) {
+      BuildContext context, CommentService commentService, BoardService boardService, docs5, String uid) {
     return Expanded(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,13 +420,13 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
         SizedBox(height: 10),
 
         //댓글 불러오기
-        _comment(commentService, boardService, docs5),
+        _comment(commentService, boardService, docs5, uid),
       ],
     ));
   }
 
   //댓글 하나하나
-  Widget _comment(CommentService commentService, BoardService boardService, docs) {
+  Widget _comment(CommentService commentService, BoardService boardService, docs, String uid) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
         child: ListView.builder(
@@ -415,6 +439,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
               String formattedDate = DateFormat('yyyy-MM-dd').format(createDate);
               String comment = doc.get('comment');
               int likeNum = doc.get('likeNum');
+              String userUid = doc.get('uid');
 
               return Column(
                 children: [
@@ -443,7 +468,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                            name,
+                                            widget.name == '비밀게시판' ? '익명' : name,
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600
@@ -478,6 +503,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                 fontSize: 14,
                                 color: Color(0xffA0A3BD)
                               ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            if(uid == userUid)
+                            Icon(
+                              Icons.more_horiz,
+                              color: Color(0xff6E7191),
                             )
                           ],
                         ),

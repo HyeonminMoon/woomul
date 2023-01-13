@@ -145,7 +145,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                           //검색 결과 페이지로 이동
                           //검색어가 입력 됐을 경우(비어 있으면 검색 안 눌리게 하나욤? 일단 대애충 해놨슴미다)
                           if (_keywordController.toString() != '') {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResultScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResultScreen(_keywordController.text)));
                           }
                         },
                       ),
@@ -189,7 +189,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => DetailBoardScreen(
-                                        'HOT 게시판', docs[0].get('key'))));
+                                        'HOT 게시판', docs[0].get('key'), docs[0].id, docs[0].get('userUid'))));
                           },
                           child: Container(
                             height: phoneSize.height*0.25,
@@ -226,7 +226,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                       Text(
                                           docs[0].get('name'),
                                       ),*/
-                                            if (docs[0].get('title').length > 50)
+                                            if (docs[0].get('title').length > 40)
                                               Text(
                                                 docs[0].get('title').substring(0, 40) + '...',
                                                 style: TextStyle(
@@ -234,7 +234,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                                     fontSize: 14
                                                 ),
                                               ),
-                                            if (docs[0].get('title').length <= 50)
+                                            if (docs[0].get('title').length <= 40)
                                               Text(
                                                 docs[0].get('title'),
                                                 style: TextStyle(
@@ -314,7 +314,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                             )
                                         ),
                                         Text(
-                                          '좋아요 수',
+                                          docs[0].get('likeNum').toString(),
                                           //likeNum.toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -336,7 +336,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                         ),
                                         Text(
                                           //commentNum.toString(),
-                                          '댓글 수',
+                                          docs[0].get('commentNum').toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 12,
@@ -374,7 +374,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => DetailBoardScreen(
-                                        'BEST 게시판', docs2[0].get('key'))));
+                                        'BEST 게시판', docs2[0].get('key'), docs2[0].id, docs2[0].get('userUid'))));
                           },
                           child: Container(
                             height: phoneSize.height*0.25,
@@ -407,7 +407,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                       children: [
                                         Row(
                                           children: [
-                                            if (docs[0].get('title').length > 50)
+                                            if (docs[0].get('title').length > 40)
                                               Text(
                                                 docs[0].get('title').substring(0, 40) + '...',
                                                 style: TextStyle(
@@ -415,7 +415,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                                     fontSize: 14
                                                 ),
                                               ),
-                                            if (docs[0].get('title').length <= 50)
+                                            if (docs[0].get('title').length <= 40)
                                               Text(
                                                 docs[0].get('title'),
                                                 style: TextStyle(
@@ -493,7 +493,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                             )
                                         ),
                                         Text(
-                                          '좋아요 수',
+                                            docs[0].get('likeNum').toString(),
                                           //likeNum.toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -515,7 +515,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                         ),
                                         Text(
                                           //commentNum.toString(),
-                                          '댓글 수',
+                                          docs[0].get('commentNum').toString(),
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 12,
@@ -623,7 +623,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DetailBoardScreen(
-                                  'HOT 게시판', docs[0].get('key'))));
+                                  'HOT 게시판', docs[0].get('key'), docs[0].id, docs[0].get('userUid'))));
                     },
                     child: Container(
                       height: phoneSize.height*0.25,
@@ -794,7 +794,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => DetailBoardScreen(
-                                'BEST 게시판', docs2[0].get('key'))));
+                                'BEST 게시판', docs2[0].get('key'), docs2[0].id, docs2[0].get('userUid'))));
                   },
                   child: Container(
                     //height: phoneSize.height*0.25,

@@ -43,6 +43,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool isChecked = false;
 
+  bool term1 = false;
+  bool term2 = false;
+  bool term3 = false;
+  bool term4 = false;
+  bool term5 = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -95,7 +101,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   index--;
                 }
               });
-              print(index);
             },
           ),
         ),
@@ -199,14 +204,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         bottomNavigationBar: Material(
-            color: (index == 0 && _emailController.text != '' && emailDoubleChecked == true) ||
+            color: (index == 0 && _emailController.text != '' && emailDoubleChecked == true
+                && _passwordController.text != '' && _passwordCheckController.text != '') ||
                     (index == 1 && _nameController.text != '' && _birthController.text != '') ||
-                    (index == 2)
+                    (index == 2 && term1 == true && term2 == true && term3 == true && term4 == true)
                 ? Color(0xff4D64F3)
-                : const Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
+                : Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
             child: (index == 0 && _emailController.text != '') ||
                     (index == 1 && _nameController.text != '' && _birthController.text != '') ||
-                    (index == 2)
+                    (index == 2 && term1 == true && term2 == true && term3 == true && term4 == true)
                 ? InkWell(
                     onTap: () {
                       setState(() {
@@ -268,6 +274,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             birth: int.parse(_birthController.text),
                                             mbti: mbti,
                                             mbtiMean: meanMBTI(mbti)!,
+                                            marketingPush: term5,
                                             signupDate: DateTime.now(),
                                             deleteDate: null);
                                       }
@@ -971,8 +978,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     setState(() {
                       isChecked = value!;
 
-                      // 전체 동의 되는 기능 추가
-                      // 선택 됐음을 알려주는 기능 추가
+                      if (isChecked == true){
+                        term1 = true;
+                        term2 = true;
+                        term3 = true;
+                        term4 = true;
+                        term5 = true;
+                      }else {
+                        term1 = false;
+                        term2 = false;
+                        term3 = false;
+                        term4 = false;
+                        term5 = false;
+                      }
+
                     });
                   },
                 ),
@@ -987,17 +1006,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.check,
                         size: 20,
-                        color: Color(0xffF8FAFE),
+                        color: term1 == true ? Color(0xff4D64F3) : Color(0xffF8FAFE),
                       ),
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
-                          //색 바뀌기
-                          //선택 됐음 알려주는 기능 추가
+                          if (term1 == false){
+                            term1 = true;
+                          }else{
+                            term1 = false;
+                          }
+                          print(term1);
                         });
                       },
                     ),
@@ -1027,17 +1050,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.check,
                         size: 20,
-                        color: Color(0xffF8FAFE),
+                        color: term2 == true ? Color(0xff4D64F3) : Color(0xffF8FAFE),
                       ),
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
-                          //색 바뀌기
-                          //선택 됐음 알려주는 기능 추가
+                          if (term2 == false){
+                            term2 = true;
+                          }else{
+                            term2 = false;
+                          }
                         });
                       },
                     ),
@@ -1067,17 +1093,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.check,
                         size: 20,
-                        color: Color(0xffF8FAFE),
+                        color: term3 == true ? Color(0xff4D64F3) : Color(0xffF8FAFE),
                       ),
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
-                          //색 바뀌기
-                          //선택 됐음 알려주는 기능 추가
+                          if (term3 == false){
+                            term3 = true;
+                          }else{
+                            term3 = false;
+                          }
                         });
                       },
                     ),
@@ -1107,17 +1136,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.check,
                         size: 20,
-                        color: Color(0xffF8FAFE),
+                        color: term4 == true ? Color(0xff4D64F3) : Color(0xffF8FAFE),
                       ),
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
-                          //색 바뀌기
-                          //선택 됐음 알려주는 기능 추가
+                          if (term4 == false){
+                            term4 = true;
+                          }else{
+                            term4 = false;
+                          }
                         });
                       },
                     ),
@@ -1147,17 +1179,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     SizedBox(width: phoneSize.width * 0.02,),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.check,
                         size: 20,
-                        color: Color(0xffF8FAFE),
+                        color: term5 == true ? Color(0xff4D64F3) : Color(0xffF8FAFE),
                       ),
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       onPressed: () {
                         setState(() {
-                          //색 바뀌기
-                          //선택 됐음 알려주는 기능 추가
+                          if (term5 == false){
+                            term5 = true;
+                          }else{
+                            term5 = false;
+                          }
                         });
                       },
                     ),

@@ -50,7 +50,6 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
   }
 
   void paginatedData(String boardType) async {
-    print(boardType);
     if (isMoreData) {
       final collectionReference = _firestore.collection('board');
 
@@ -107,8 +106,6 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
       }
 
       lastDocument = querySnapshot.docs.last;
-      print('lastDocument입니다');
-      print(lastDocument);
 
       list.addAll(querySnapshot.docs.map((e) => e.data()));
       setState(() {});
@@ -124,6 +121,9 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
   @override
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
+
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
 
     return Consumer<BoardService>(builder: (context, boardService, child) {
       return Scaffold(
@@ -172,11 +172,11 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
               children: [
                 //얘를 여러 개 불러오도록 하면 됨
                 if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
-                  _board1(context, boardService),
+                  _board1(context, boardService, user!.uid),
                 if (widget.name == 'HOT 게시판')
-                  _board2(context, boardService, 'commentNum'),
+                  _board2(context, boardService, 'commentNum', user!.uid),
                 if (widget.name == 'BEST 게시판')
-                  _board2(context, boardService, 'likeNum')
+                  _board2(context, boardService, 'likeNum', user!.uid)
               ],
             ),
           ),
@@ -187,7 +187,8 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
 
   //게시글 UI
   //firebase 랑 model 이용해서 여러 개 불러오도록 하면 됩니다~
-  Widget _board1(BuildContext context, BoardService boardService) {
+  Widget _board1(BuildContext context, BoardService boardService, String uid) {
+
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: FutureBuilder<QuerySnapshot>(
@@ -206,6 +207,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                   String contentKey = doc.get('key');
                   int likeNum = doc.get('likeNum');
                   int commentNum = doc.get('commentNum');
+                  String userUid = doc.get('userUid');
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -216,7 +218,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DetailBoardScreen(
-                                      widget.name, contentKey)));
+                                      widget.name, contentKey, docs[0].id, userUid)));
                         },
                         child: Container(
                           //height: phoneSize.height*0.25,
@@ -252,7 +254,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          if (title.length > 50)
+                                          if (title.length > 40)
                                             Text(
                                                 "${title.substring(0, 40)}...",
                                               style: TextStyle(
@@ -261,7 +263,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                                   color: Color(0xff14142B)
                                               ),
                                             ),
-                                          if (title.length <= 50)
+                                          if (title.length <= 40)
                                             Text(
                                                 title,
                                               style: TextStyle(
@@ -313,7 +315,8 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                         ],
                                       ),
                                     ],
-                                  ), //프로필 사진
+                                  ),
+                                  if (userUid == uid)//프로필 사진
                                   Icon(
                                       Icons.more_horiz,
                                     color: Color(0xff6E7191),
@@ -396,7 +399,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
   }
 
   Widget _board2(
-      BuildContext context, BoardService boardService, String boardType) {
+      BuildContext context, BoardService boardService, String boardType, String uid) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
         child: ListView.builder(
@@ -411,6 +414,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
               String contentKey = doc['key'];
               int likeNum = doc['likeNum'];
               int commentNum = doc['commentNum'];
+              String userUid = doc['userUid'];
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -421,7 +425,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  DetailBoardScreen(widget.name, contentKey)));
+                                  DetailBoardScreen(widget.name, contentKey, doc['id'], userUid)));
                     },
                     child: Container(
                       //height: phoneSize.height*0.25,
@@ -457,9 +461,9 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        if (title.length > 50)
+                                        if (title.length > 40)
                                           Text(
-                                            '${title.substring(0, 50)}...',
+                                            '${title.substring(0, 40)}...',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 13,
@@ -509,7 +513,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                     ),
                                   ],
                                 ), //프로필 사진
-
+                                if (userUid == uid)
                                 Icon(
                                   Icons.more_horiz,
                                   color: Color(0xff6E7191),
