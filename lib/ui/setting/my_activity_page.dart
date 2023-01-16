@@ -53,6 +53,9 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
     final boardService = context.read<BoardService>();
     final commentService = context.read<CommentService>();
 
+    final mbti = userData.mbti;
+    final ss = userData.sex == 'man' ? 'M' : 'F';
+
     var phoneSize = MediaQuery.of(context).size;
 
     return FutureBuilder<dynamic>(
@@ -97,7 +100,10 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                 preferredSize: Size.fromHeight(phoneSize.height * 0.12),
                 child: Column(
                   children: [
-                    Placeholder(fallbackHeight: 120),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                      radius: 60,
+                    ),
                     SizedBox(height: phoneSize.height*0.03,),
                     Text(
                       userData.name,
@@ -109,7 +115,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                     ),
                     SizedBox(height: phoneSize.height*0.01,),
                     Text(
-                      userData.mbti + ' | ' + 'mbti닉', //mbti 뜻 fb 에서 가져와야함~
+                      userData.mbti + ' | ' + userData.mbtiMean, //mbti 뜻 fb 에서 가져와야함~
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w400,
