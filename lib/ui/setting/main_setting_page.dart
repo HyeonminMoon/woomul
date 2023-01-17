@@ -298,6 +298,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     GestureDetector(
                       onTap: () {
                         //이용안내 이동
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen()));
                       },
                       child: Container(
                         width: phoneSize.width * 0.8,
