@@ -110,7 +110,11 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    //Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    SizedBox(width: phoneSize.width*0.02,),
+                                    Image(
+                                        image: AssetImage('assets/images/board/Hotmenu.png')
+                                    ),
                                     SizedBox(width: phoneSize.width*0.02,),
                                     Text(
                                       'HOT 게시판',
@@ -165,7 +169,12 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    //Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    SizedBox(width: phoneSize.width*0.02,),
+                                    Image(
+                                        image: AssetImage('assets/images/board/Bestmenu.png'),
+                                      width: 25,
+                                    ),
                                     SizedBox(width: phoneSize.width*0.02,),
                                     Text(
                                       'BEST 게시판',
@@ -221,7 +230,12 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    //Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    SizedBox(width: phoneSize.width*0.02,),
+                                    Image(
+                                        image: AssetImage('assets/images/board/Freemenu.png'),
+                                      width: 25,
+                                    ),
                                     SizedBox(width: phoneSize.width*0.02,),
                                     Text(
                                       '자유 게시판',
@@ -273,7 +287,12 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    //Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    SizedBox(width: phoneSize.width*0.02,),
+                                    Image(
+                                        image: AssetImage('assets/images/board/Lovemenu.png'),
+                                      width: 25,
+                                    ),
                                     SizedBox(width: phoneSize.width*0.02,),
                                     Text(
                                       '연애 게시판',
@@ -325,7 +344,12 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    //Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    SizedBox(width: phoneSize.width*0.02,),
+                                    Image(
+                                        image: AssetImage('assets/images/board/Worrymenu.png'),
+                                      width: 25,
+                                    ),
                                     SizedBox(width: phoneSize.width*0.02,),
                                     Text(
                                       '고민 게시판',
@@ -380,7 +404,12 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    //Placeholder(fallbackWidth: phoneSize.width*0.05,),
+                                    SizedBox(width: phoneSize.width*0.02,),
+                                    Image(
+                                        image: AssetImage('assets/images/board/Secretmenu.png'),
+                                      width: 25,
+                                    ),
                                     SizedBox(width: phoneSize.width*0.02,),
                                     Text(
                                       '비밀 게시판',
