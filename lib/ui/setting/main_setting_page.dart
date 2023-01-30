@@ -44,6 +44,9 @@ class _SettingScreenState extends State<SettingScreen> {
     final authService = context.read<AuthService>();
     final userData = context.read<UserData>();
 
+    final mbti = userData.mbti;
+    final ss = userData.sex == 'man' ? 'M' : 'F';
+
     final user = authService.currentUser();
 
     return Scaffold(
@@ -86,7 +89,10 @@ class _SettingScreenState extends State<SettingScreen> {
                         children: [
                           Row(
                             children: [
-                              Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
+                              //Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
+                              CircleAvatar(
+                                backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                              ),
                               SizedBox(width: phoneSize.width * 0.03),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -234,11 +240,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ServiceScreen()));
+                        //이용안내 이동
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen()));
                       },
                       child: Container(
                         width: phoneSize.width * 0.8,

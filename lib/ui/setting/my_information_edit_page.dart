@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:woomul/provider/auth_service.dart';
 import 'package:woomul/main.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
 
@@ -26,6 +28,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
   late bool _showAppleSignIn;
 
   bool isSwitched = false;
+
 
   @override
   void initState() {
@@ -59,6 +62,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+
 
     final authService = context.read<AuthService>();
     final user = authService.currentUser();
@@ -113,6 +117,10 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
 
   Widget _buildForm(BuildContext context, AuthService authService) {
     var phoneSize = MediaQuery.of(context).size;
+    final userData = context.read<UserData>();
+    final mbti = userData.mbti;
+    final ss = userData.sex == 'man' ? 'M' : 'F';
+
     return Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -121,7 +129,11 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: <Widget>[
-                Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기
+                SizedBox(height: phoneSize.height * 0.02,),
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                  radius: 60,
+                ),
                 SizedBox(height: phoneSize.height * 0.04),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

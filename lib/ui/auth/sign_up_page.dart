@@ -7,6 +7,9 @@ import 'package:woomul/ui/board/bottombar_page.dart';
 import '../../provider/auth_service.dart';
 import 'mbti_test_page.dart';
 
+//import 'package:flutter_localizations/flutter_localizations.dart';
+//import 'package:flutter_rounded_date_picker/rounded_picker.dart';
+
 import '../../routes.dart';
 
 List<String> listSex = <String>['선택', '여', '남'];
@@ -440,7 +443,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
               '닉네임',
               style: TextStyle(color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),
             ),
-            textFieldForm(_nameController, "닉네임을 입력해주세요.", "닉네임을 확인해주세요", false, false, 2),
+            Row(
+              children: [
+                Container(
+                  width: phoneSize.width * 0.6,
+                    child: textFieldForm(_nameController, "닉네임을 입력해주세요.", "닉네임을 확인해주세요", false, false, 2)),
+
+                SizedBox(width: phoneSize.width * 0.03,),
+
+                ElevatedButton(
+                  onPressed: () async {
+                    // 닉네임 중복 기능 추가
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xffECF1FF),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    side: BorderSide(
+                      color: Color(0xffB1C7FF),
+                    )
+                  ),
+                  child: Text(
+                    '중복 확인',
+                    style: TextStyle(
+                        color: Color(0xff466FFF), fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: phoneSize.height * 0.05),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -455,10 +485,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       style: TextStyle(
                           color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),
                     ),
-                    Container(
-                      width: phoneSize.width * 0.56,
-                      child: textFieldForm(
-                          _birthController, "생년월일 (YYYYMMDD)", "생년월일을 확인해주세요", false, true, 3),
+
+                    SizedBox(height: phoneSize.height * 0.01),
+
+                    GestureDetector(
+                      onTap: () {
+                        //달력 picker 켜지기
+                        Future<DateTime?> future = showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(DateTime.now().year + 1),
+                        );
+                      },
+                      child: Container(
+                        width: phoneSize.width * 0.56,
+                        height: phoneSize.height* 0.062,
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                        ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                              '생년월일 (YYYYMMDD)',//나중에 picker 로 값 가져오면 텍스트 바뀌도록 해야함
+                                style: TextStyle(
+                                  color: Color(0xffA0A3BD),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500
+                                ),
+                              ),
+
+                              Icon(
+                                Icons.calendar_month,
+                                color: Color(0xffA0A3BD),
+                              )
+                            ],
+                          )
+
+                        //textFieldForm(_birthController, "생년월일 (YYYYMMDD)", "생년월일을 확인해주세요", false, true, 3),
+                      ),
                     ),
                   ],
                 ),
@@ -524,6 +601,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
             SizedBox(height: phoneSize.height * 0.05),
+            //textFieldForm(_birthController, "생년월일 (YYYYMMDD)", "생년월일을 확인해주세요", false, true, 3),
             Text(
               'MBTI',
               style: TextStyle(color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),

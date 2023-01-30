@@ -115,6 +115,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
     final userData = context.read<UserData>();
     final user = authService.currentUser();
 
+    final mbti = userData.mbti;
+    final ss = userData.sex == 'man' ? 'M' : 'F';
+
     return FutureBuilder<void>(
       future: userData.getUserData(user!.uid),
       builder: (context, snapshot) {
@@ -126,8 +129,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: <Widget>[
-                    Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기 해야함!!
-                    //Image(image: AssetImage('assets/images/chara/ENFJ_M.png')),
+                    //Placeholder(fallbackHeight: 120,fallbackWidth: 120), // 프로필 불러오기 해야함!!
+                    SizedBox(height: phoneSize.height * 0.02,),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                      radius: 60,
+                    ),
                     SizedBox(height: phoneSize.height * 0.04),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

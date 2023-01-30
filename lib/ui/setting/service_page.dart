@@ -114,629 +114,6 @@ class _ServiceScreenState extends State<ServiceScreen> {
     });
   }
 
-  Widget _buildForm1(BuildContext context, AuthService authService) {
-    var phoneSize = MediaQuery.of(context).size;
-    return Form(
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '이메일 입력',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24, color: Color(0xff14142B)),
-                ),
-                SizedBox(height: phoneSize.height * 0.01),
-                Text(
-                  '안녕하세요!\n'
-                      '이메일(아이디) 인증 후 회원가입을 진행해주세요.',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff4E4B66)),
-                ),
-
-                SizedBox(height: phoneSize.height * 0.07),
-
-                Text(
-                  '이메일',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                ),
-
-                textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요", false, false, 1),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // 여기 체크해봐야함! [ERROR]
-                        if (await authService.doubleCheck(_emailController.text) == true) {
-                          emailDoubleChecked = false;
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("이미 있는 아이디입니다"),
-                          ));
-                        } else {
-                          emailDoubleChecked = true;
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffECF1FF),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(54)),
-                      ),
-                      child: Text(
-                        '중복 확인',
-                        style: TextStyle(
-                            color: Color(0xff466FFF), fontSize: 13, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-
-                //중복 이메일 체크 기능 추가하시면 여기 확인 해주세여!
-                emailDoubleChecked == true
-                    ? Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '비밀번호',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                    ),
-
-                    textFieldForm(_passwordController, "비밀번호를 입력해주세요.", "", true, false, 1),
-
-                    Text(
-                      '비밀번호 확인',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                    ),
-
-                    //비번 일치 하지 않으면 일치 하지 않다고 알려주는 기능 추가 해야함
-                    textFieldForm(_passwordCheckController, "비밀번호를 입력해주세요", "비밀번호가 일치하지 않습니다.",
-                        true, false, 1),
-                  ],
-                )
-                    : Container()
-              ],
-            ),
-          ),
-        ));
-  }
-
-  Widget _buildForm2(BuildContext context) {
-    var phoneSize = MediaQuery.of(context).size;
-    return Form(
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: phoneSize.height * 0.04),
-                Text(
-                  '회원정보 입력',
-                  style: TextStyle(color: Color(0xff14142B), fontWeight: FontWeight.w700, fontSize: 24),
-                ),
-                SizedBox(height: phoneSize.height * 0.015),
-                Text(
-                  'WOOMUL에서 사용할 정보들을 입력해주세요.',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff4E4B66)),
-                ),
-                SizedBox(height: phoneSize.height * 0.05),
-                Text(
-                  '닉네임',
-                  style: TextStyle(color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),
-                ),
-                textFieldForm(_nameController, "닉네임을 입력해주세요.", "닉네임을 확인해주세요", false, false, 2),
-                SizedBox(height: phoneSize.height * 0.05),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '생년월일',
-                          style: TextStyle(
-                              color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),
-                        ),
-                        Container(
-                          width: phoneSize.width * 0.56,
-                          child: textFieldForm(
-                              _birthController, "생년월일 (YYYYMMDD)", "생년월일을 확인해주세요", false, true, 3),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: phoneSize.width * 0.07),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '성별',
-                          style: TextStyle(
-                              color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),
-                        ),
-                        SizedBox(height: phoneSize.height * 0.007),
-                        Container(
-                          width: phoneSize.width * 0.2,
-                          padding: EdgeInsets.only(left: 12.0, right: 0),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 9,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(12)),
-                          child: DropdownButton<String>(
-                            value: dropdownValue,
-                            icon: Row(
-                              children: [
-                                SizedBox(
-                                  width: phoneSize.width * 0.02,
-                                ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Color(0xffD0D3E5),
-                                ),
-                              ],
-                            ),
-                            elevation: 16,
-                            style: TextStyle(color: Color(0xffA0A3BD)),
-                            underline: Container(
-                              color: Colors.white,
-                            ),
-                            onChanged: (String? value) {
-                              // This is called when the user selects an item.
-                              setState(() {
-                                dropdownValue = value!;
-                              });
-                            },
-                            items: listSex.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(height: phoneSize.height * 0.05),
-                Text(
-                  'MBTI',
-                  style: TextStyle(color: Color(0xff4E4B66), fontWeight: FontWeight.w400, fontSize: 14),
-                ),
-                SizedBox(
-                  height: phoneSize.height * 0.02,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti1 == false
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                mbti1 = false;
-                              });
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'E',
-                              style: TextStyle(
-                                color: mbti1 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: phoneSize.height * 0.03),
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti1 == true
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                mbti1 = true;
-                              });
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'I',
-                              style: TextStyle(
-                                  color: mbti1 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: phoneSize.width * 0.03),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti2 == false
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                              setState(() {
-                                mbti2 = false;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'S',
-                              style: TextStyle(
-                                color: mbti2 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: phoneSize.height * 0.03),
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti2 == true
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                              setState(() {
-                                mbti2 = true;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'N',
-                              style: TextStyle(
-                                color: mbti2 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: phoneSize.width * 0.03),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti3 == false
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                              setState(() {
-                                mbti3 = false;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'T',
-                              style: TextStyle(
-                                  color: mbti3 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: phoneSize.height * 0.03),
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti3 == true
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                              setState(() {
-                                mbti3 = true;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'F',
-                              style: TextStyle(
-                                  color: mbti3 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: phoneSize.width * 0.03),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti4 == false
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                              setState(() {
-                                mbti4 = false;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'J',
-                              style: TextStyle(
-                                  color: mbti4 == false ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: phoneSize.height * 0.03),
-                        Container(
-                          width: 75,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            gradient: mbti4 == true
-                                ? LinearGradient(colors: [
-                              Color.fromRGBO(74, 84, 255, 0.9),
-                              Color.fromRGBO(0, 102, 255, 0.6)
-                            ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
-                                : LinearGradient(colors: [
-                              Color.fromRGBO(255, 255, 255, 0.9),
-                              Color.fromRGBO(255, 255, 255, 0.9)
-                            ]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 10,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              //색 바뀌게 하고, 해당 정보 값 저장하기
-                              setState(() {
-                                mbti4 = true;
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: Text(
-                              'P',
-                              style: TextStyle(
-                                  color: mbti4 == true ? Color(0xffFCFCFC) : Color(0xff6E7191),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => MBTITestScreen()));
-                      },
-                      child: Text(
-                        '내 MBTI 를 모르겠어요',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Inter',
-                          decoration: TextDecoration.underline,
-                          color: Color(0xffA0A3BD),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ));
-  }
 
   Widget _buildForm3(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
@@ -776,7 +153,22 @@ class _ServiceScreenState extends State<ServiceScreen> {
                                         '회사는 서비스 제공을 위해, 회원가입 시점에 다음에 해당하는 개인정보를 수집합니다.\n'
                                         '1. 이메일, 닉네임, 생년월일, 성별, 연계정보(CI, DI)\n'
                                         '* 각 항목 또는 추가적으로 수집이 필요한 개인정보 및 개인정보를 포함한 자료는 이용자 응대 과정과 서비스 내부 알림 수단 등을 통해 별도의 동의 절차를 거쳐 요청, 수집될 수 있습니다.\n'
-                                        '* 서비스 이용 과정에서 기기 정보(유저 에이전트), 이용 기록, 로그 기록(IP 주소, 접속 시간)이 자동으로 수집될 수 있습니다.',
+                                        '* 서비스 이용 과정에서 기기 정보(유저 에이전트), 이용 기록, 로그 기록(IP 주소, 접속 시간)이 자동으로 수집될 수 있습니다.\n\n'
+                                        '수집한 개인정보의 처리 목적\n'
+                                        '회원가입 시점에 수집된 개인정보는 다음의 목적에 한해 이용됩니다.\n'
+                                        '1. 가입 및 탈퇴 의사 확인, 회원 식별 확인 등 회원 관리\n'
+                                        '2. 이용자 맞춤형 서비스 제공(서비스 내부 광고 포함) 및 기준, 신규 시스템 개발, 유지, 개선\n'
+                                        '3. 불법, 약관 위반 게시물 게시 등 부정행위 방지를 위한 운영 시스템 개발, 유지 개선\n'
+                                        '4. 문의, 제휴, 광고, 이벤트, 게시 관련 요청 응대 및 처리\n\n'
+                                        '수집한 개인정보의 보관 및 파기\n'
+                                        '회사는 서비스를 제공하는 동안 개인정보 처리방침 및 관련법에 의거하여 회원의 개인정보를 지속적으로 관리 및 보관합니다. 탈퇴 등으로 인해 개인정보 수집 및 이용목적이 달성될 경우, 수집된 개인정보는 즉시 또는 다음과 같이 일정 기간 이후 파기됩니다.\n'
+                                        '1. 가입 시 수집된 개인정보 : 탈퇴 후 14일\n'
+                                        '2. 기기 정보 및 로그 기록: 최대 1년\n'
+                                        '* 위 항에도 불구하고 법령에 의해 개인정보를 보존해야 하는 경우, 해당 개인정보는 물리적, 논리적으로 분리하여 해당 법령에서 정한 기간에 따라 저장합니다.\n'
+                                        '* 회원 탈퇴, 보관 기한 만료 등 파기 사유가 발생한 개인정보는 재생이 불가능한 방법으로 파기됩니다. 전자적 파일 형태로 기록, 저장된 개인정보는 기록을 재생할 수 없도록 파기하며, 종이 문서에 기록, 저장된 개인정보는 분쇄기로 분쇄하거나 소각하여 파기합니다.\n\n'
+                                        '기타\n'
+                                        '개인정보 수집 및 이용에 동의하지 않을 권리가 있으며, 거부할 경우 회원가입이 불가합니다.\n'
+                                        '자세한 내용은 웹사이트 하단에 게시된 개인정보처리방침을 참고하시기 바랍니다.',
                                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                   )),
                             ],
@@ -802,7 +194,122 @@ class _ServiceScreenState extends State<ServiceScreen> {
                             children: <Widget>[
                               ListTile(
                                   title: Text(
-                                    '이용약관 내용 쭈르르르ㅡㄱ',
+                                    '제1조(목적)\n'
+                                        '우물 서비스 이용약관은 우물 서비스(이하 “회사”라고 합니다)가 제공하는 우물 서비스 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임 사항 등을 규정함을 목적으로 합니다.\n\n'
+                                        '제2조(정의)\n'
+                                        '1. 이 약관에서 사용하는 용어의 정의는 다음과 같습니다.\n'
+                                        'ㆍ”서비스”란, 회사가 제공하는 모든 서비스 및 기능을 말합니다.\n'
+                                        'ㆍ”이용자”란, 이 약관에 따라 서비스를 이용하는 회원을 말합니다.\n'
+                                        'ㆍ”회원”이란, 서비스에 회원등록을 하고 서비스를 이용하는 자를 말합니다.\n'
+                                        'ㆍ”게시물”이란, 서비스에 게재된 문자, 사진, 영상, 첨부파일, 광고 등을 말합니다.\n'
+                                        'ㆍ”커뮤니티”란, 게시물을 게시할 수 있는 공간을 말합니다.\n'
+                                        'ㆍ”이용 기록”이란, 이용자가 서비스를 이용하면서 직접 생성한 친정보 등을 말합니다.\n'
+                                        'ㆍ”로그 기록”이란, 이용자가 서비스를 이용하면서 자동으로 생성된 IP 주소, 접속 시간 등을 말합니다.\n'
+                                        'ㆍ”기기 정보”란, 이용자의 통신 기기에서 수집된 유저 에이전트, ADID 등을 말합니다.\n'
+                                        'ㆍ”계정”이란, 이용계약을 통해 생성된 회원의 고유 아이디와 이에 수반하는 정보를 말합니다.\n'
+                                        'ㆍ”서비스 내부 알림 수단”이란, 팝업, 알림, 1:1 대화, 내 정보 메뉴 등을 말합니다.\n'
+                                        'ㆍ”연락처”란, 회원가입, 본인 인증, 문의 창구 등을 통해 수집된 이용자의 이메일, 휴대전화 번호 등을 의미합니다.\n'
+                                        'ㆍ”관련법”이란, 정보통신망 이용촉진 및 정보보호 등에 관한 법률, 전기통신사업법, 개인정보보호법 등 관련 있는 국내 법령을 말합니다.\n'
+                                        'ㆍ”본인 인증”이란, 아이핀, 휴대번호 등을 이용한 본인 확인 절차를 말합니다.\n'
+                                        '2. 제1항에서 정의되지 않은 이 약관 내 용어의 의미는 일반적인 이용관행에 의합니다.\n\n'
+                                        '제3조(약관 등의 명시와 설명 및 개정)\n'
+                                        '1. 회사는 이 약관을 서비스 초기화면, 회원가입 화면 및 “내 정보” 메뉴 등에 게시하거나 기타의 방법으로 회원에게 공지합니다.\n'
+                                        '2. 회사는 필요하다고 인정되는 경우, 관련법을 위배하지 않는 범위에서 이 약관을 개정할 수 있습니다.\n'
+                                        '3. 회사는 약관을 개정할 경우, 적용 일자 및 개정 사유를 명시하여 현행약관과 함께 개정약관 적용 일자 7일 전부터 “공지사항”을 통해 공지합니다. 다만, 개정 내용이 회원의 권리 및 의무에 중대한 영향을 미치는 경우에는 적용 일자 30일 전부터 회원의 연락처 또는 서비스 내부 알림 수단으로 개별 공지합니다.\n'
+                                        '4. 회원은 개정 약관에 동의하지 않을 경우, 제7조(서비스 이용계약의 종료)에 따른 회원 탈퇴 방법으로 거부 의사를 표시할 수 있습니다. 단, 회사가 약관 개정 시 “개정 약관의 적용 일자까지 회원이 거부 의사를 표시하지 아니할 경우 약관의 개정에 동의한 것으로 간주한다”는 내용을 고지하였음에도 불구하고 회원이 약관 개정에 대한 거부 의사를 표시하지 아니하면, 회사는 적용 일자부로 개정 약관에 동의한 것으로 간주합니다.\n'
+                                        '5. 회원은 약관 일부분만을 동의 또는 거부할 수 없습니다.\n'
+                                        '6. 회사는 제1항부터 제4항까지를 준수하였음에도 불구하고 회원이 약관 개정 사실을 알지 못함으로써 발생한 피해에 대한 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n\n'
+                                        '제4조(서비스의 제공)\n'
+                                        '1. 회사는 다음 서비스를 제공합니다.\n'
+                                        ' ㆍ 성격유형별 커뮤니티 서비스\n'
+                                        'ㆍ 대학, 문화, 활동 정보 제공 서비스\n'
+                                        'ㆍ 할인, 이벤트, 프로모션, 광고 정보 제공 서비스\n'
+                                        'ㆍ 다른 회사 및 단체와의 제휴나 협력을 통해 제공하는 서비스\n'
+                                        'ㆍ 기타 회사가 정하는 서비스\n'
+                                        '2. 회사는 운영상, 기술상의 필요에 따라 제공하고 있는 서비스를 변경할 수 있습니다.\n'
+                                        '3. 회사는 이용자의 개인정보 및 서비스 이용 기록에 따라 서비스 이용에 차이를 둘 수 있습니다.\n'
+                                        '4. 회사는 설비의 보수, 교체, 점검 또는 기간통신사업자의 서비스 중지, 인터넷 장애 등의 사유로 인해 일시적으로 서비스 제공이 어려울 경우, 통보 없이 일시적으로 서비스 제공을 중단할 수 있습니다.\n'
+                                        '5. 회사는 천재지변, 전쟁, 경영 악화 등 불가항력적인 사유로 인해 서비스를 더 이상 제공하기 어려울 경우, 통보 없이 서비스 제공을 영구적으로 중단할 수 있습니다.\n'
+                                        '6. 회사는 제3항부터 제5항까지 및 다음 내용으로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n'
+                                        'ㆍ 모든 서비스, 게시물, 이용 기록의 진본성, 무결성, 신뢰성, 이용가능성의 보장\n'
+                                        'ㆍ 서비스 이용 중 타인과 상호 간에 합의한 내용\n'
+                                        'ㆍ 게시물, 광고의 버튼, 하이퍼링크 등 외부로 연결된 서비스와 같이 회사가 제공하지 않은 서비스에서 발생한 피해\n'
+                                        'ㆍ 회사가 관련 법령에 따라 요구되는 보호조치를 이행하였음에도 불구하고, 네트워크의 안정성을 해치는 행위 또는 악성 프로그램 등에 의하여 발생하는 예기치 못한 이용자의 피해\n'
+                                        'ㆍ 이용자의 귀책 사유 또는 회사의 귀책 사유가 아닌 사유로 발생한 이용자의 피해\n\n'
+                                        '제5조(서비스 이용계약의 성립)\n'
+                                        '1. 회사와 회원의 서비스 이용계약은 서비스를 이용하고자 하는 자(이하 “가입 신청자”라고 합니다)가 서비스 내부의 회원가입 양식에 따라 필요한 회원정보를 기입하고, 이 약관, 개인정보 수집 및 이용동의, 커뮤니티 이용규칙 등에 명시적인 동의를 한 후, 신청한 회원가입 의사 표시(이하 “이용신청”이라 합니다)를 회사가 승낙함으로써 체결됩니다.\n'
+                                        '2. 제2항의 승낙은 신청순서에 따라 순차적으로 처리되며, 회원가입의 성립 시기는 회사의 회원가입이 완료되었음을 알리는 승낙의 통지가 회원에게 도달하거나, 이에 준하는 권한이 회원에게 부여되는 시점으로 합니다.\n'
+                                        '3. 회사는 만 14세 미만 이용자의 이용신청을 금지하고 있습니다. 가입 신청자는 이용신청 시 만 14세 이상에 해당한다는 항목에 명시적인 동의를 함으로써 회원은 만 14세 이상임을 진술하고 보증합니다.\n'
+                                        '4. 회사는 부정사용방지 및 본인확인을 위해 회원에게 본인 인증을 요청할 수 있습니다.\n'
+                                        '5. 회사는 가입 신청자의 이용신청에 있어 다음 각 호에 해당하는 경우, 이용신청을 영구적으로 승낙하지 않거나 유보할 수 있습니다.\n'
+                                        'ㆍ회사가 정한 이용신청 요건에 충족되지 않을 경우\n'
+                                        'ㆍ가입 신청자가 만 14세 미만인 경우\n'
+                                        'ㆍ제12조(금지행위)에 해당하는 행위를 하거나 해당하는 행위를 했던 이력이 있을 경우\n'
+                                        'ㆍ회사의 기술 및 설비 상 서비스를 제공할 수 없는 경우\n'
+                                        'ㆍ기타 회사가 합리적인 판단에 의하여 필요하다고 인정하는 경우\n'
+                                        '6. 회사는 제3항부터 제5항까지로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n\n'
+                                        '제6조(개인정보의 관리 및 보호)\n'
+                                        '1. 회사는 관계 법령이 정하는 바에 따라 회원의 개인정보를 보호하기 위해 노력합니다. 개인정보의 보호 및 이용에 관해서는 관련 법령 및 회사의 개인 정보 처리방침을 따릅니다.\n'
+                                        '2. 회원은 개인정보에 변동이 있을 경우, 즉시 “내 정보” 메뉴 및 문의 창구를 이용하여 정보를 최신화해야 합니다.\n'
+                                        '3. 회원의 이메일, 비밀번호 등 모든 개인정보의 관리책임은 본인에게 있으므로, 타인에게 양도 및 대여할 수 없으며 유출되지 않도록 관리해야합니다. 만약 본인의 아이디 및 비밀번호를 타인이 사용하고 있음을 인지했을 경우, 즉시 문의 창구로 알려야 하고, 안내가 있는 경우 이에 따라야 합니다.\n'
+                                        '4. 회사는 회원이 제2항과 제3항을 이행하지 않아 발생한 피해에 대해, 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n\n'
+                                        '제7조(서비스 이용계약의 종료)\n'
+                                        '1. 회원은 언제든지 본인의 계정으로 로그인한 뒤 서비스 내부의 “탈퇴하기” 버튼을 누르는 방법으로 탈퇴를 요청할 수 있으며, 그 외 문의 창구 등을 통한 탈퇴 요청은 처리되지 않습니다. 회사는 해당 요청을 확인한 후 탈퇴를 처리합니다.\n'
+                                        '2. 회원은 관리하고 있는 커뮤니티가 있을 경우, 이를 양도하거나 삭제하기 전까지 탈퇴를 할 수 없습니다.\n'
+                                        '3. 탈퇴 처리가 완료되었더라도, 회원이 게시한 게시물은 삭제되지 않습니다.\n'
+                                        '4. 회사는 회원이 제12조(금지행위)에 해당하는 행위를 하거나 해당하는 행위를 했던 이력이 있을 경우, 제13조(서비스 제공의 중단 및 서비스 이용계약의 해지)에 따라 서비스 제공을 중단하거나 서비스 이용계약을 해지할 수 있습니다.\n'
+                                        '5. 회사는 제1항부터 제4항까지로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n\n'
+                                        '제8조(회원에 대한 통지)\n'
+                                        '1. 회사가 회원에 대한 통지가 필요한 경우, 회원의 연락처 또는 서비스 내부 알림 수단을 이용할 수 있습니다.\n'
+                                        '2. 회사는 회원 전체에 대한 통지의 경우 공지사항에 게시함으로써 전 항의 통지에 갈음할 수 있습니다. 단, 회원의 권리 및 의무에 중대한 영향을 미치는 사항에 대해서는 1항에 따릅니다.\n'
+                                        '3. 회사가 회원에게 “30일 이내에 의사를 표시하지 아니할 경우 동의한 것으로 간주한다”는 내용을 고지하였음에도 불구하고 회원이 의사를 표시하지 아니하면, 회사는 통지 내용에 동의한 것으로 간주합니다.\n\n'
+                                        '제9조(저작권의 귀속)\n'
+                                        '1. 회사는 유용하고 편리한 서비스를 제공하기 위해, 2023년부터 서비스 및 서비스 내부의 기능 등의 체계와 다양한 기능 등을 직접 설계 및 운영하고 있는 데이터베이스 제작자에 해당합니다. 회사는 저작권법에 따라 데이터베이스 제작자는 복제권 및 전송권을 포함한 데이터베이스 전부에 대한 권리를 가지고 있으며, 이는 법률에 따라 보호를 받는 대상입니다. 그러므로 이용자는 데이터베이스 제작자인 회사의 승인 없이 데이터베이스의 전부 또는 일부를 복제, 배포, 방송 또는 전송할 수 없습니다.\n'
+                                        '2. 회사가 작성한 게시물에 대한 권리는 회사에 귀속되며, 회원이 작성한 게시물에 대한 권리는 회원에게 귀속됩니다.\n'
+                                        '3. 회원이 서비스에 게시물을 작성하는 경우 해당 게시물은 서비스에 노출될 수 있고 필요한 범위 내에서 사용, 저장, 복제, 수정, 공중송신, 전시, 배포 등의 방식으로 해당 게시물을 이용할 수 있도록 허락하는 전 세계적인 라이선스를 회사에 제공하게 됩니다. 이 경우, 회사는 저작권법을 준수하며 회원은 언제든지 문의 창구 및 서비스 내부의 관리 기능이 제공되는 경우에는 해당 관리 기능을 이용하여 가능한 범위에 한해 해당 게시물에 대한 삭제, 수정, 비공개 등의 조치를 취할 수 있습니다.\n'
+                                        '4. 회사는 제3항 이외의 방법으로 회원의 게시물을 이용할 경우, 해당 회원으로부터 개별적이고 명시적인 동의를 받아야 합니다.\n\n'
+                                        '제10조(게시물의 삭제 및 접근 차단)\n'
+                                        '1. 누구든지 게시물로 인해 사생활 침해나 명예훼손 등 권리가 침해된 경우 회사에 해당 게시물의 삭제 또는 삭제 또는 반박내용의 게재를 요청할 수 있습니다. 이때 회사는 해당 게시물을 삭제할 수 있으며, 만약 권리 침해 여부가 불분명하거나 당사자 간 다툼이 예상될 경우에는 해당 게시물에 대한 접근을 영구적으로 차단하는 조치를 취할 수 있습니다.\n'
+                                        '2. 회사가 제1항에 따라 회원의 게시물을 삭제하거나 접근을 임시적으로 차단하는 경우, 해당 게시물이 작성된 커뮤니티에 필요한 조치를 한 사실을 명시하고, 불가능한 사유가 없을 경우 이를 요청한 자와 해당 게시물을 작성한 회원에게 그 사실을 통지합니다.\n\n'
+                                        '제11조(광고의 게재 및 발신)\n'
+                                        '1. 회사는 서비스의 제공을 위해 서비스 내부에 광고를 게재할 수 있습니다.\n'
+                                        '2. 회사는 이용자의 이용 기록을 활용한 광고를 게재할 수 있습니다.\n'
+                                        '3. 회사는 회원이 광고성 정보 수신에 명시적으로 동의한 경우, 회원이 동의한 수단을 통해 광고성 정보를 발신할 수 있습니다.\n'
+                                        '4. 회사는 광고 게재 및 동의된 광고성 정보의 발신으로 인해 발생한 피해에 대해 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n\n'
+                                        '제12조(금지행위)\n'
+                                        '1. 이용자는 다음과 같은 행위를 해서는 안됩니다.\n'
+                                        'ㆍ성적 도의관념에 반하는 행위\n'
+                                        '- 정보통신망 이용촉진 및 정보보호 등에 관한 법률에 따른 유해정보 유통 행위\n'
+                                        '- 전기통신사업법에 따른 불법촬영물등 유통 행위\n'
+                                        '- 청소년보호법에 따른 청소년유해매체물 유통 행위\n'
+                                        '- 방송통신심의위원회의 정보통신에 관한 심의규정에 따른 심의기준의 성적 도의관념에 반하는 행위\n'
+                                        '- 커뮤니티 이용규칙 금지행위에 따른 불건전 만남, 유흥, 성매매 등 내용 유통 행위\n'
+                                        'ㆍ홍보/판매 행위\n'
+                                        '- 이 약관이 적용되는 서비스 및 기능과 동일하거나 유사한 서비스 및 기능에 대한 직, 간접적 홍보 행위\n'
+                                        '- 서비스, 브랜드, 사이트, 애플리케이션, 사업체, 단체 등을 알리거나 가입, 방문을 유도하기 위한 직, 간접적 홍보 행위\n'
+                                        '- 계정 판매 및 공유, 대리 게시, 서포터즈 등을 통해 다발적으로 게시되는 동일한 주제에 대한 직, 간접적 홍보 행위\n'
+                                        '- 비상업적 목적의 일상 생활과 관련된 중고 품목 이외의 품목 등 커뮤니티 이용규칙 금지행위에 따른 홍보 및 판매 행위\n'
+                                        'ㆍ개인정보 또는 계정 기만, 침해, 공유 행위\n'
+                                        ' - 개인정보를 허위, 누락, 오기, 도용하여 작성하는 행위\n'
+                                        '- 타인의 개인정보 및 계정을 수집, 저장, 공개, 이용하는 행위\n'
+                                        '- 자신과 타인의 개인정보를 제3자에게 공개, 양도, 승계하는 행위\n'
+                                        '- 자신의 계정을 이용하여 타인의 요청을 이행하는 행위\n'
+                                        'ㆍ 시스템 부정행위\n'
+                                        '- 프로그램, 스크립트, 봇을 이용한 서비스 접근 등 사람이 아닌 컴퓨팅 시스템을 통한 서비스 접근 행위\n'
+                                        '- API 직접 호출, 유저 에이전트 조작, 패킷 캡처, 비정상적인 반복 조회 및 요청 등 허가하지 않은 방식의 서비스 이용행위\n'
+                                        '- 회사의 모든 재산에 대한 침해 행위\n'
+                                        'ㆍ 업무 방해 행위\n'
+                                        '- 서비스 관리자 또는 이에 준하는 자격을 허가 없이 취득하여 권한을 행사하거나, 사칭하여 허위의 정보를 발성하는 행위\n'
+                                        '- 회사 및 타인의 명예를 훼손하거나 기타 업무를 방해하는 행위\n'
+                                        '- 서비스 내부 정보 일체를 허가 없이 이용, 변조, 삭제 및 외부로 유출하는 행위\n'
+                                        'ㆍ기타 현행법에 어긋나거나 부적절하다고 판단되는 행위\n'
+                                        '2. 이용자는 제1항에 기재된 내용 외에 이 약관과 커뮤니티 이용규칙에서 규정한 내용에 반하는 행위를 해서는 안됩니다.\n'
+                                        '3. 이용자가 제1항에 해당하는 행위를 할 경우, 회사는 이 약관 제13조(서비스 제공의 중단 및 서비스 이용계약의 해지)에 따라 서비스 제공을 중단하거나 서비스 이용계약을 해지할 수 있습니다.\n\n'
+                                        '제13조(서비스 제공의 중단 및 서비스 이용계약의 해지)\n'
+                                        '1. 이용자가 이 약관 및 커뮤니티 이용규칙에서 이 조항 적용이 명시된 금지행위 및 이에 준하는 행위를 할 경우, 회사는 서비스 보호를 위해 다음과 같은 조치를 영구적으로 취할 수 있습니다.\n'
+                                        'ㆍ 회원의 서비스 이용권한, 자격, 혜택 제한 및 회수\n'
+                                        'ㆍ 회원과 체결된 이용계약의 해지\n'
+                                        'ㆍ 회원가입 거부',
                                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                   )),
                             ],
@@ -827,7 +334,73 @@ class _ServiceScreenState extends State<ServiceScreen> {
                             children: <Widget>[
                               ListTile(
                                   title: Text(
-                                    '개인정보 제 3자 제공 내용 쭈르르르ㅡㄱ',
+                                    '1. 개인정보 처리방침\n'
+                                        '개인정보 처리방침은 우물 서비스(이하 “회사”라고 합니다)가 특정한 가입절차를 거친 이용자들만 이용 가능한 폐쇄형 서비스를 제공함에 있어, 개인정보를 어떻게 수집, 이용, 보관, 파기하는지에 대한 정보를 담은 방침을 의미합니다. 개인정보 처리방침은 개인정보보호법 등 국내 개인정보 보호 법령을 모두 준수하고 있습니다. 본 개인정보 처리방침에서 정하지 않은 용어의 정의는 서비스 이용약관을 따릅니다.\n\n'
+                                        '2. 수집하는 개인정보의 항목\n'
+                                        '회사는 서비스 제공을 위해 다음 항목 중 최소한의 개인정보를 수집합니다.\n'
+                                        '1) 이메일, 닉네임, 생년월일, 성별, 연계정보(CI, DI)\n'
+                                        '2) 별도로 수집되는 개인정보\n'
+                                        ' 1. 프로필 사진을 지정할 경우\n'
+                                        '   * 프로필 사진\n'
+                                        ' 2. 이벤트, 행사 참여를 할 경우\n'
+                                        '   * 이름, 전화번호, 주소, 타 서비스 고유번호\n'
+                                        ' 3. 문의를 할 경우\n'
+                                        '   * 이메일, 이메일, 회원정보, 기기정보, 문의내용에 포함된 개인정보\n'
+                                        ' 4. 제휴, 광고, 게시 요청을 할 경우\n'
+                                        '   * 단체명, 대표자, 담당자 정보(이름, 이메일, 전화번호, 직책)\n\n'
+                                        '※ 각 항목 또는 추가적으로 수집이 필요한 개인정보 및 개인정보를 포함한 자료는 이용자 응대 과정과 서비스 내부 알림 수단 등을 통해 별도의 동의 절차를 거쳐 요청.수집 될 수 있습니다.\n'
+                                        '※ 서비스 이용 과정에서 기기 정보(유저 에이전트), 이용 기록, 로그 기록(IP 주소, 접속 시간)이 자동으로 수집될 수 있습니다.\n\n'
+                                        '3. 수집한 개인정보의 처리 목적\n'
+                                        '수집된 개인정보는 다음의 목적에 한해 이용됩니다.\n'
+                                        '  1. 가입 및 탈퇴 의사 확인, 회원 식별 등 회원 관리\n'
+                                        '  2. 이용자맞춤형 서비스 제공(서비스 내부 광고 포함) 및 기존.신규 시스템 개발.유지.개선\n'
+                                        '  3. 불법.약관 위반 게시물 게시 등 부정행위 방지를 위한 운영 시스템 개발.유지.개선\n'
+                                        '  4. 문의, 제휴 문의, 광고 문의, 게시 요청 등 관련 응대 및 처리\n\n'
+                                        '4. 개인정보의 제3자 제공\n'
+                                        '회사는 회원의 개인정보를 제3자에게 제공하지 않습니다. 단, 다음의 사유가 있을 경우 제공할 수 있습니다.\n'
+                                        '  1. 회원이 제휴사의 서비스를 이용하기 위해 개인정보 제공을 회사에 요청할 경우\n'
+                                        '  2. 이용자의 생명이나 안전에 급박한 위험이 확인되어 이를 해소하기 위한 경우\n'
+                                        '  3. 관련법에 따른 규정에 의한 경우\n'
+                                        '  4. 영업의 양수 등\n\n'
+                                        '5. 개인정보 처리의 위탁\n'
+                                        '회사는 원활한 개인정보 업무처리와 보안성 높은 서비스 제공을 위하여, 신뢰도가 검증된 다음 회사 및 서비스에 개인정보 관련 업무 처리를 위탁하고 있습니다. 위탁계약 체결 시 회사는 기술적.관리적 보호조치 등 수탁자에 대한 관리.감독을 하고 있습니다.\n'
+                                        '1) 국내\n'
+                                        '  1. 구글 파이어베이스: 데이터 관리 및 보관\n'
+                                        '   * 이전항목 : 회원 데이터 자료\n'
+                                        '   * 이전국가 : 미국\n'
+                                        '   * 이전일시 및 이전방법 : 회원가입 시 네트워크를 이용한 전송\n'
+                                        '   * 보유 및 이용기간 : 회원 탈퇴 시까지\n\n'
+                                        '6. 수집한 개인정보의 보관 및 파기\n'
+                                        '회사는 서비스를 제공하는 동안 개인정보 처리방침 및 관련법에 의거하여 회원의 개인정보를 지속적으로 관리 및 보관합니다. 탈퇴 등 개인정보 수집 및 이용목적이 달성될 경우, 수집된 개인정보는 즉시 또는 다음과 같이 일정 기간 이후 파기됩니다.\n'
+                                        '  1. 가입 시 수집된 개인정보: 탈퇴 후 14일\n'
+                                        '  2. 제휴.광고.이벤트 관련 요청 응대 및 처리 자료: 3개월\n'
+                                        '  3. 게시요청 관리자 정보: 마지막 접속일로부터 2년\n'
+                                        '  4. 기기 정보 및 로그 기록: 최대 1년\n'
+                                        '  5. 문의 및 응대 기록: 3년\n'
+                                        '* 위 항에도 불구하고 법령에 의해 개인정보를 보존해야 하는 경우, 해당 개인정보는 물리적.논리적으로 분리하여 해당 법령에서 정한 기간에 따라 저장합니다.\n'
+                                        '* 회원 탈퇴, 보관 기한 만료 등 파기 사유가 발생한 개인정보는 재생이 불가능한 방법으로 파기됩니다. 전자적 파일 형태로 기록.저장된 개인정보는 기록을 재생할 수 없도록 파기하며, 종이 문서에 기록.저장된 개인정보는 분쇄기로 분쇄하거나 소각하여 파기합니다.\n\n'
+                                        '7. 정보주체의 권리, 의무 및 행사\n'
+                                        '회원은 언제든지 서비스 내부 [내 정보] 또는 에브리타임 정보보호팀 이메일(woomul.offical@google.com)을 통해 자신의 개인정보를 조회하거나 수정, 삭제, 탈퇴를 할 수 있습니다.\n\n'
+                                        '8. 개인정보의 기술적·관리적 안전성 확보조치\n'
+                                        '회사는 회원의 개인정보를 처리함에 있어 개인정보가 분실, 도난, 유출, 변조 또는 훼손되지 않도록 안전성 확보를 위해 기술적, 관리적 대책을 마련하고 있습니다.\n'
+                                        '①기술적 대책\n'
+                                        '가. 회사는 암호화 통신을 통하여 네트워크 상에서 개인정보를 안전하게 전송할 수 있도록 하고 있습니다.\n'
+                                        '나. 회사는 해킹이나 컴퓨터바이러스 등에 의해 회원의 개인정보가 유출되거나 훼손되는 것을 막기 위해 최선을 다하고 있습니다.\n'
+                                        '다. 회사는 개인정보의 훼손에 대비하여 자료를 수시로 백업하고 있고, 최신 백식프로그램을 이용하여 컴퓨터바이러스에 의한 피해를 방지하기 위한 조치를 취하고 있습니다.\n'
+                                        '라. 회사는 시스템에 대한 접근통제, 권한 관리, 취약점 점검 등의 조치를 통해 보안성이 강화될 수 있도록 지속적으로 노력하고 있습니다.\n'
+                                        '② 관리적 대책\n'
+                                        '가. 회사는 회원의 개인정보에 대한 접근권한을 최소한의 인원으로 제한하고 있습니다.\n'
+                                        '나. 회사는 개인정보처리자를 대상으로 개인정보 보호 의무 등에 관해 정기적인 교육을 실시하고 있습니다.\n'
+                                        '다. 회사는 개인정보보호 업무를 전담하는 부서에서 개인정보처리방침 및 내부 규정 준수여부를 확인하여 문제가 발견될 경우, 즉시 바로 잡을 수 있도록 노력하고 있습니다.\n'
+                                        '라. 회원 본인의 부주의나 회사가 관리하지 않는 영역에서의 사고 등 회사의 귀책에 기인하지 않은 손해에 대해서는 회사는 책임을 지지 않습니다.\n\n'
+                                        '9. 개인정보에 관한 책임자 및 서비스\n'
+                                        '회사는 회원의 개인정보를 보호하고 개인정보와 관련한 불만을 처리하기 위하여 담음과 같이 개인정보보호책임자 및 담당자를 두고 있습니다.\n'
+                                        '□ 개인정보 보호책임자\n'
+                                        '성명: 문현민\n'
+                                        '이메일: hyeonmin0177@gmail.com\n'
+                                        '전화번호: 010-2943-0177\n\n'
+                                        '10. 기타\n'
+                                        '이 개인정보 처리방침은 2023년 01월 18일에 개정되었습니다.\n',
                                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                   )),
                             ],
@@ -852,7 +425,161 @@ class _ServiceScreenState extends State<ServiceScreen> {
                             children: <Widget>[
                               ListTile(
                                   title: Text(
-                                    '상품정보 및 혜택 수신 동의 내용 쭈르르르ㅡㄱ',
+                                    '커뮤니티 이용규칙은 누구나 기분 좋게 참여할 수 있는 커뮤니티를 만들기 위해 제정되었습니다. 서비스 내 모든 커뮤니티는 커뮤니티 이용규칙에 의해 운영되므로, 이용자는 커뮤니티 이용 전 반드시 모든 내용을 숙지하여야 합니다.\n'
+                                        '방송통신심의위원회의 정보통신에 관한 심의규정, 현행 법률, 서비스 이용약관 및 커뮤니티 이용규칙을 위반하거나, 사회 통념 및 관련 법령을 기준으로 타 이용자에게 악영향을 끼치는 경우, 게시물이 삭제되고 서비스 이용이 영구적으로 제한될 수 있습니다.\n'
+                                        '커뮤니티 이용규칙은 불법 행위, 각종 차별 및 혐오, 사회적 갈등 조장, 타인의 권리 침해, 다른 이용자에게 불쾌감을 주는 행위, 커뮤니티 유출 행위, 시스템 장애를 유발하는 비정상 행위 등 커뮤니티 분위기 형성과 운영에 악영향을 미치는 행위들을 제한하기 위해 지속적으로 개정됩니다. 중대한 변경 사항이 있는 경우에는 공지사항을 통해 고지하므로 반드시 확인해주시기 바랍니다.\n'
+                                        '커뮤니티 이용규칙에서 사용된 용어의 정의는 서비스 이용약관을 따릅니다.\n\n'
+                                        '커뮤니티 운영 시스템\n'
+                                        '커뮤니티 운영 시스템은 서비스 이용약관 및 커뮤니티 이용규칙 위반을 빠르게 감지하고 조치하기 위해 도입되었습니다. 또한 현행 법률에 따른 청소년유해매체물, 권리 침해, 비정상적인 이용 등의 규칙 위반 행위에 대해 선제적으로 필터링하여 대응할 수 있도록, AI를 기반으로 시스템을 지속적으로 발전시키고 있습니다.\n'
+                                        '방송통신심의위원회의 정보통신에 관한 심의규정, 현행 법률, 서비스 이용약관 및 커뮤니티 이용규칙 위반이 확인될 경우, 게시물이 삭제되고 서비스 이용이 영구적으로 제한됩니다.\n'
+                                        '또한, 생명 경시 행위, 가족 및 고인 모독 행위, 성적 도의관념에 반하는 행위, 비정상적 서비스 이용과 같이 중대한 커뮤니티 이용규칙 및 현행 법률 위반 행위가 적발될 경우도 즉시 서비스 이용이 제한됩니다. 또는 노출 및 음란물 게시 행위, 범죄 및 불법 행위, 계정 판매 및 대리 게시 행위, 홍보/판매 행위와 같이 서비스 이용약관 제12조 및 심각한 현행 법률 위반 행위가 적발될 경우, 서비스 보호 및 안정적인 커뮤니티 운영을 위해 서비스 이용약관 13조에 따라 영구적으로 서비스 이용계약이 해지되며 더 이상 서비스를 이용하실 수 없습니다.\n'
+                                        '영구적으로 서비스 이용계약이 제한된 경우 개인정보 처리방침에 따른 기간 동안 관련 개인정보 및 로그가 수집되어 보존됩니다.\n'
+                                        '서비스 이용 중 서비스 이용 약관 및 커뮤니티 이용규칙에 어긋난다고 판단되는 게시물 작성, 1:1 대화 발송, 닉네임 및 프로필 사진 지정, 악용 행위를 발견하셨을 경우, 원활하고 신속한 처리를 위해 신고해주시기 바랍니다. 신고 시 게시물 처리 및 시스템 운영을 위해 최소한의 로그가 수집 및 보관되며, 1:1 대화에 대한 신고가 접수된 경우에는 추가적으로 대화 내용 일부가 일시적으로 저장될 수 있습니다.\n\n'
+                                        '금지 행위\n'
+                                        '이용자 보호 및 원활한 서비스 제공을 위해 다음에 해당하는 게시물 작성, 1:1대화 발송, 닉네임 및 프로필 사진 지정, 악용 행위를 금지하고 있습니다. 본 커뮤니티 이용규칙은 방송통신심의위원회의 정보통신에 관한 심의규정에 따른 심의기준을 기반으로 합니다.\n'
+                                        '일반 금지 행위\n'
+                                        '1. 국제 평화, 국제 질서 및 국가 간의 우의를 현저히 해할 우려가 있는 행위\n'
+                                        'ㆍ인종차별, 테러 등 국제 평화 및 국제질서를 현저히 해할 우려가 있는 행위\n'
+                                        'ㆍ외국의 국기, 국장 등을 모독함으로써 국익에 반하거나 국가 간의 우의를 현저히 해할 우려기 있는 행위\n'
+                                        'ㆍ그 밖에 외국의 정치, 종교, 문화, 사회에 대한 비방, 비하, 멸시 등 국가 간의 우의를 현저히 해할 우려가 있는 행위\n'
+                                        '2. 헌법에 위배되거나 국가의 존립을 해하는 행위\n'
+                                        'ㆍ국가의 존립, 안전이나 자유민주적 기본질서를 현저히 위태롭게 할 우려가 있는 행위\n'
+                                        'ㆍ헌법을 부정하거나 국가기관을 마비시킬 우려가 현저한 행위\n'
+                                        'ㆍ법령에 따라 분류된 비밀 등 국가기밀을 누설하는 행위\n'
+                                        'ㆍ「국가보안법」에서 금지하는 행위를 수행하는 행위\n'
+                                        'ㆍ헌법에 반하여 역사적 사실을 현저히 왜곡하는 행위'
+                                        '3. 범죄 기타 법령에 위반되는 행위\n'
+                                        'ㆍ범죄를 목적으로 하거나 예비, 음모, 교사, 방조할 우려가 현저한 행위\n'
+                                        'ㆍ범죄의 수단이나 방법 또는 범죄에 이르는 과정이나 결과를 구체적으로 묘사하여 범죄를 조장할 우려가 있는 행위\n'
+                                        'ㆍ범죄, 범죄인 또는 범죄단체 등을 미화하여 범죄를 정당하다고 보이게 할 우려가 있는 행위\n'
+                                        'ㆍ그 밖에 범죄 및 범령에 위반되는 위법행위를 조장하여 건전한 법질서를 현저히 해할 우려가 있는 행위\n'
+                                        '4. 사회 통념상 일반인의 성욕을 자극하여 성적 흥분을 유발하고 정상적인 성적 수치심을 해하여 성적 도의관념에 반하는 행위\n'
+                                        'ㆍ 신체 부위 또는 성적 행위를 노골적으로 표현 또는 묘사하는 행위\n'
+                                        'ㆍ 자극적이고 혐오스런 성적표현 및 남녀 신체에 관한 은어 및 비속어를 사용하여 성행위를 구체적으로 묘사하는 행위\n'
+                                        'ㆍ 성폭력행위를 노골적으로 묘사하는 행위\n'
+                                        'ㆍ 성행위와 관련된 신음소리 등을 극히 자극적으로 묘사하는 행위\n'
+                                        'ㆍ 신체의 일부 또는 도구를 이용한 유사성교행위를 노골적으로 묘사하는 행위\n'
+                                        'ㆍ 자위행위 및 전희를 구체적으로 묘사하는 행위\n'
+                                        'ㆍ 수간, 시간, 혼음, 근친상간, 가학성, 피학성 음란증, 관음증 등 비정상적인 행위를 구체적으로 묘사한 행위\n'
+                                        'ㆍ 아동 또는 청소년을 성적 유히의 대상으로 직접적이고 구체적으로 묘사한 행위\n'
+                                        'ㆍ 불건전한 모임, 대화, 통화 등 온, 오프라인 만남 행위\n'
+                                        'ㆍ 유흥 관련 정보 공유, 매매,알선 행위 등 불법 행위\n'
+                                        'ㆍ 그 밖에 일반인의 성적 수치심을 현저히 해할 우려가 있는 행위\n'
+                                        '5. 폭력성, 잔혹성, 혐오성 등이 심각한 행위\n'
+                                        'ㆍ 장애인, 노인, 임산부, 아동 등 사회적인 약자 또는 부모, 스승 등에 대한 살상, 폭행, 협박, 학대행위 등을 구체적으로 묘사하는 행위\n'
+                                        'ㆍ 오물, 신체 분비물 등을 구체적, 사실적으로 묘사하여 혐오감을 불러일으키는 행위\n'
+                                        'ㆍ 수술 장면 등 의료행위를 지나치게 상세히 표현하여 혐오감을 불러일으키는 행위\n'
+                                        'ㆍ 흉기 그 밖의 위험한 물건 등을 사용하여 과도하게 신체 또는 시체를 손상하는 등 생명을 경시하는 잔혹한 행위\n'
+                                        'ㆍ 동물에 대한 학대, 사체, 포식 등을 구체적으로 표현하여 잔혹감 또는 혐오감을 주는 행위\n'
+                                        'ㆍ 과도한 욕설 등 저속한 언어 등을 사용하여 혐오감 또는 불쾌감을 주는 행위\n'
+                                        'ㆍ 그 밖에 사람 또는 동물 등에 대한 육체적, 정신적 고통 등을 사실적, 구체적으로 표현하여 잔혹 또는 혐오감을 주는 행위\n'
+                                        '6. 사회통합 및 사회질서를 저해하는 행위\n'
+                                        'ㆍ 고인에 대한 별명, 농담, 밈(Meme), 자료, 특수문자, 이모티콘 등 비난, 희화적 표현 등 고인 모독 행위\n'
+                                        'ㆍ 도박 등 사행심을 조장하는 행위\n'
+                                        'ㆍ 미신숭배 등 비과학적인 생활태도를 조장하거나 정당화하는 행위\n'
+                                        'ㆍ 특정 종교, 종파 또는 종교의식을 비방, 왜곡하거나 교리를 설파 및 전도, 포교하는 행위\n'
+                                        'ㆍ 장애인, 노약자 등 사회적인 소외계층을 비하하는 행위\n'
+                                        'ㆍ 학교교육 등 교육을 왜곡하여 현저히 교육기풍을 해하는 행위\n'
+                                        'ㆍ 합리적 이유없이 성별, 종교, 장애, 나이, 사회적 신분, 출신, 인종, 지역, 직업 등을 차별하거나 이에 대한 편견을 조장하는 행위\n'
+                                        'ㆍ 자살을 목적으로 하거나 이를 미화, 방조 또는 권유하여 자살 충동을 일으킬 우려가 있는 행위\n'
+                                        'ㆍ 정당한 사유 없이 정보통신시스템, 데이터 또는 프로그램 등을 훼손, 멸실, 변경, 위조하거나 그 운용을 방해하는 내용의 행위\n'
+                                        'ㆍ 「청소년 보호법」에 따른 청소년유해매체물로서 상대방의 연령 확인, 표시의무 등 법령에 따른 의무를 이행하지 아니하고 영리를 목적으로 제공하는 내용의 행위\n'
+                                        'ㆍ 성매매를 알선, 유도, 조장, 방조하는 행위\n'
+                                        'ㆍ 분란 및 갈등을 유도하거나 조장하는 행위\n'
+                                        'ㆍ 그 밖에 사회적 혼란을 현저히 야기할 우려가 있는 행위\n'
+                                        '7. 타인의 권리를 침해하는 행위\n'
+                                        'ㆍ 다른 이용자에게 불쾌감이나 불편함을 주는 행위\n'
+                                        'ㆍ 개인정보 유포 등 사생활의 비밀과 자유를 침해할 우려가 현저한 행위\n'
+                                        'ㆍ 정당한 권한 없이 타인의 사진, 영상 등을 게재하여 타인의 인격권을 현저히 침해하는 행위\n'
+                                        'ㆍ 사람을 비방할 목적으로 공공연하게 타인을 모욕하거나 사실 또는 거짓의 사실을 드러내어 타인의 명예를 훼손하는 행위\n'
+                                        'ㆍ 공포심이나 불안감을 유발하는 부호, 문언, 음향, 화상 또는 영상을 반복적으로 상대방에게 도달하도록 하는 행위\n'
+                                        'ㆍ 정당한 권한없이 타인의 상표 또는 저작물 등을 사용, 실시 또는 매개하는 등 특허권, 상표권, 디자인권, 저작권 등 지적재산권을 침해하는 행위\n'
+                                        'ㆍ 내용, 결말을 발설하거나, 혐오를 불러일으키거나, 속이거나, 놀라게 하는 행위\n'
+                                        'ㆍ 그 밖에 정당한 권한없이 타인의 권리를 침해하는 행위\n'
+                                        '8. 자살예방법에 반하는 자살 및 자해 유발정보 유통 행위\n'
+                                        'ㆍ 자살 및 자해 동반자 모집 정보\n'
+                                        'ㆍ 자살 및 자해에 대한 구체적인 방법을 제시하는 정보\n'
+                                        'ㆍ 자살 및 자해를 실행하거나 유도하는 내용을 담은 문서, 사진 또는 동영상 등의 정보\n'
+                                        'ㆍ 자살위해물건의 판매 또는 활용에 관한 정보\n'
+                                        'ㆍ 기타 명백히 자살 및 자해 유발을 목적으로 하는 정보\n'
+                                        '9. 의료법, 약사법, 관세법, 전파법, 외국환거래법 등 법률에 반하는 거래 불가능 품목 거래 행위\n'
+                                        'ㆍ 주류, 담배, 마약류\n'
+                                        'ㆍ 안경, 콘택트렌즈, 의약품, 헌혈증, 건강기능식품, 의료기기\n'
+                                        'ㆍ 이미테이션 제품, 저작물 복사본\n'
+                                        'ㆍ 청소년유해매체물\n'
+                                        'ㆍ 2,000불 이상의 달러/외화\n'
+                                        'ㆍ 암표 등 수익 목적의 재판매 행위\n'
+                                        'ㆍ 그 외 관련법에 의해 거래가 금지되거나, 온라인을 통해 거래가 금지된 물품\n'
+                                        '10. 악용/오용 행위\n'
+                                        'ㆍ 익명을 이용한 여론 조작 행위\n'
+                                        'ㆍ 신고, 공감, 스크랩 유도 및 악용 행위\n'
+                                        'ㆍ 내용 없는 외부 링크 게시, 외부 서비스 이용 강제, 유도 등 서비스 이탈 유도 행위\n'
+                                        'ㆍ 동일하거나 유사한 문자 및 문구를 하나의 게시물에 반복적으로 입력하는 행위\n'
+                                        'ㆍ 동일하거나 유사한 주제의 게시물을 하나 이상의 커뮤니티에 반복적으로 게시하는 행위\n'
+                                        'ㆍ 다수의 이용자가 동일하거나 유사한 주제의 게시물을 집단으로 게시하는 행위\n'
+                                        'ㆍ 게시판/커뮤니티의 주제에 어울리지 않거나 내부 규칙에 어긋나는 게시물 작성 행위\n'
+                                        'ㆍ 각 서비스의 운영 목적 및 성격에 부합하지 않는 게시물 작성 행위\n'
+                                        'ㆍ 회사 또는 이에 준하는 자격을 사칭하여 권한을 행사하거나 어떠한 정보를 발설하는 행위\n'
+                                        '11. 비정상적 시스템 이용 행위\n'
+                                        'ㆍ 오류를 발생시키는 특수문자 및 제목 및 내용이 없는 게시물 작성 행위\n'
+                                        'ㆍ 커뮤니티 유출, 시스템 해킹, 게시물 크롤링 등 서비스에 악영향을 주는 행위\n'
+                                        '12. 기타\n'
+                                        'ㆍ 위 행위를 간접적으로 또는 유추 가능하도록 행하는 행위\n'
+                                        'ㆍ 위 행위를 파일, 이미지, 동영상으로 첨부하는 행위\n'
+                                        'ㆍ 본인 또는 타인이 행한 금지행위를 인용하는 행위\n'
+                                        'ㆍ 타인으로 하여금 위 행위를 행하도록 간접적으로 돕거나 독려하는 행위\n'
+                                        'ㆍ 기타 위 행위와 비슷한 목적을 달성하기 위한 행위 일체\n\n'
+                                        '정치, 사회 관련 금지 행위\n'
+                                        '1. 자유 게시판 금지 행위\n'
+                                        'ㆍ 언론, 시민단체 등 관련 단체 옹호, 추천, 반대, 비하 행위\n'
+                                        'ㆍ 특정 정당, 후보에 대한 지지, 비방, 투표 독려 행위\n'
+                                        'ㆍ 다른 이용자를 특정 정치 단체 관련자 및 특정 이념 옹호자로 몰아가는 행위\n'
+                                        'ㆍ 다양한 의견을 배척하고 여론을 하나로 수렴하는 행위\n'
+                                        'ㆍ 기타 정치, 사회 관련 갈등을 조장할 수 있는 행위 일체\n'
+                                        '2. 자유 외 게시판 금지 행위\n'
+                                        'ㆍ 국가기관(정부, 공무원), 정치 관련 단체(정치인, 정당, 시민단체), 언론, 시민 단체에 대한 언급 혹은 이와 관련한 행위\n'
+                                        'ㆍ 정책, 외교 또는 정치, 정파에 대한 의견, 주장 및 이념, 가치관을 드러내는 행위\n'
+                                        'ㆍ 성별, 종교, 인종, 출신, 지역, 직업, 이념 등 사회적 이슈에 대한 언급 혹은 이와 관련한 행위\n'
+                                        'ㆍ 위와 같은 내용으로 유추될 수 있는 비유, 은어 사용 행위\n\n'
+                                        '홍보 및 판매 관련 금지 행위\n'
+                                        '1. 홍보게시물 금지 행위\n'
+                                        'ㆍ 커뮤니티 이용규칙이 적용되는 서비스 및 기능과 동일하거나 유사한 서비스 및 기능에 대한 직, 간접적 홍보\n'
+                                        'ㆍ 바이럴을 목적으로 대외활동, 대리 게시 요청, 계정 공유 등을 통해 다발적으로 게시되는 동일한 주제에 대한 홍보\n'
+                                        'ㆍ 신용카드, 보험, 의료 광고\n'
+                                        'ㆍ 성인, 도박, 베팅 사이트 홍보\n'
+                                        'ㆍ 계정 판매/공유/양도\n'
+                                        '2. 그 외 게시판 금지 행위\n'
+                                        'ㆍ 공모전, 대외활동, 채용, 서포터즈, 이벤트, 아카데미, 공연, 영화 홍보\n'
+                                        'ㆍ 교육, 의료, 식당, 부동산, 배달, 공유 사업 홍보\n'
+                                        'ㆍ 애플리케이션, 웹사이트, SNS, 블로그, 카페, 스토어, 서비스 홍보\n'
+                                        'ㆍ 채팅, 사진 교환, 동호회, 소개팅, 만남, 주선 홍보\n'
+                                        'ㆍ 구독, 좋아요, 학우 참여, 모집, 링크 클릭, 추천인 입력, 앱 설치, 설문조사, 회원가입 요청\n'
+                                        'ㆍ 서비스 및 재화 판매, 공동구매, 편딩, 후원, 모금, 기부금품 요청\n'
+                                        'ㆍ 계정 공유 및 판매 요청 홍보, 소개 요청, 바이럴 이벤트 등 게시물 대리 작성\n'
+                                        'ㆍ 그 밖에 영리 여부와 관계없이 사업체, 기관, 단체, 개인에게 직간접적으로 영향을 줄 수 있는 게시물 작성 행위\n'
+                                        'ㆍ 위와 관련된 것으로 의심되거나 예상될 수 있는 바이럴 홍보 및 명칭, 단어 언급 행위\n'
+                                        '5. 게시물 작성, 수정, 삭제 규칙\n'
+                                        '   1. 게시물 수정 및 삭제\n'
+                                        '   2. HOT 게시물 선정\n'
+                                        '    ㆍ 한달 기준 댓글 누적 숫자로 높은 순서부터 50개의 게시글이 선정됩니다.\n'
+                                        '   3. BEST 게시물 선정\n'
+                                        '    ㆍ 한달 기준 공감 누적 숫자로 높은 순서부터 50개의 게시글이 선정됩니다.\n\n'
+                                        '게시판 관리자 제도\n'
+                                        '1. 게시판 관리자는 자신이 관리중인 게시판에 올라오는 게시물을 공지로 지정하거나 삭제, 경고할 수 있습니다.\n'
+                                        '2. 게시판 관리자는 에브리타임 계정을 탈퇴할 수 없습니다. 탈퇴를 위해서는 자신이 관리중인 게시판을 삭제하거나 다른 회원에게 관리자 권한을 양도해야 합니다. 단, 게시판 개설 혹은 마지막 게시물 게시 이후, 14일 동안 활동이 없는 게시판만 삭제할 수 있습니다.\n\n'
+                                        '허위사실 유포 및 명예훼손 게시물에 대한 게시 중단 요청\n'
+                                        '1. 모든 게시물은 AI 커뮤니티 운영 시스템에 의해 처리되며, 요청에 의해 사전 검토되거나 임의로 처리되지 않습니다.\n'
+                                        '2. 게시물로 인해 저작권 침해, 명예훼손, 기타 권리 침해를 당했다고 판단되실 경우, 추가적인 권리 침해를 방지하기 위해 우물 공식 이메일 (woomul.official@gmail.com) 로 해당 게시물에 대한 게시 중단 요청을 할 수 있습니다.\n'
+                                        '3. 이후 담당자의 확인을 통해 게시 중단 조치가 이루어집니다.\n\n'
+                                        '전기통신사업법에 따른 불법촬영물 유통 금지\n'
+                                        '1. 회사는 전기통신사업법, 방송통신심의위원회의 정보통신에 관한 심의규정에 따른 불법촬영물 등 유해정보를 차단하기 위한 기술적, 관리적 조치를 취하고 있습니다.\n'
+                                        '2. 관련 법령에 따라 시스템에 의해 불법촬영물 등 유해정보로 식별되는 자료는 즉시 삭제 또는 블라인드 되고, 해당 게시물 작성자는 영구적으로 이용이 제한될 수 있습니다.\n'
+                                        '3. 실제 불법촬영물 등 유해정보를 게재할 경우 전기통신사업법에 따라 게시물 삭제 조치 및 회원 자격이 영구적으로 해지되며, 관련 법률에 따라 처벌받을 수 있습니다.\n'
+                                        '4. 불법촬영물, 허위영상물, 아동, 청소년 성착취물 등 불법촬영물 등으로 의심되는 게시물을 발견하셨을 경우, 우물 공식 이메일 (woomul.official@gmail.com) 로 신고해주시기 바랍니다.\n\n'
+                                        '기타\n'
+                                        '커뮤니티 이용규칙은 쾌적한 서비스 운영을 위해 주기적으로 업데이트됩니다.\n'
+                                        '회사는 이용자가 커뮤니티 운영 시스템, 금지 행위, 게시물 작성, 수정, 삭제 규칙 등 커뮤니티 이용규칙을 숙지하지 않아 발생하는 피해에 대하여 회사의 고의 또는 중대한 과실이 없는 한 어떠한 책임도 지지 않습니다.\n'
+                                        '이 커뮤니티 이용규칙은 2023년 1월 22일에 개정되었습니다.',
                                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                   )),
                             ],
@@ -877,7 +604,10 @@ class _ServiceScreenState extends State<ServiceScreen> {
                             children: <Widget>[
                               ListTile(
                                   title: Text(
-                                    '상품정보 및 혜택 수신 동의 내용 쭈르르르ㅡㄱ',
+                                    '영화/전시 초대 이벤트, 대학생 특별 할인 혜택 등 다양한 이벤트 및 정보를 서비스에서 만나보실 수 있습니다.\ㅜ'
+                                        '1. 항목: 마케팅 수신 동의\n'
+                                        '2. 목적: 서비스 및 이벤트 정보 안내\n'
+                                        '3. 기간: 탈퇴 후 최대 1년',
                                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
                                   )),
                             ],
@@ -898,7 +628,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '에브리타임은 국내 대학생을 위한 서비스이며,\n'
+                          'WOOMUL은 국내 유저들을 위한 서비스이며,\n'
                               '본인 인증을 통해 만 14세 이상만 가입할 수 있습니다.',
                           style: TextStyle(
                             fontSize: 12

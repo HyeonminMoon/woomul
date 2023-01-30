@@ -53,6 +53,9 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
     final boardService = context.read<BoardService>();
     final commentService = context.read<CommentService>();
 
+    final mbti = userData.mbti;
+    final ss = userData.sex == 'man' ? 'M' : 'F';
+
     var phoneSize = MediaQuery.of(context).size;
 
     return FutureBuilder<dynamic>(
@@ -97,7 +100,10 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                 preferredSize: Size.fromHeight(phoneSize.height * 0.12),
                 child: Column(
                   children: [
-                    Placeholder(fallbackHeight: 120),
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                      radius: 60,
+                    ),
                     SizedBox(height: phoneSize.height*0.03,),
                     Text(
                       userData.name,
