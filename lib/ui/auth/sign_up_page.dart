@@ -7,7 +7,8 @@ import 'package:woomul/ui/board/bottombar_page.dart';
 import '../../provider/auth_service.dart';
 import 'mbti_test_page.dart';
 
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+//import 'package:flutter_localizations/flutter_localizations.dart';
+//import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 
 import '../../routes.dart';
 
@@ -481,7 +482,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: phoneSize.height * 0.01),
 
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         //달력 picker 켜지기
                         Future<DateTime?> future = showDatePicker(
                           context: context,

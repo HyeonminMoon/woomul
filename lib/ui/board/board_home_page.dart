@@ -154,13 +154,33 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                 ),
               ),
 
-              Container(
-                padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
-                child: Text(
-                  '월간 HOT 게시물',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18
+              SizedBox(height: phoneSize.height * 0.02,),
+
+              GestureDetector(
+                onTap: (){
+                  //HOT 게시판으로 이동
+                },
+                child: Container(
+                  padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
+                  child: Row(
+                    children: [
+                      Image(
+                        image: AssetImage('assets/images/board/Hotmenu.png'),
+                        width: 25,
+                      ),
+                      SizedBox(width: phoneSize.width * 0.02,),
+                      Text(
+                        'HOT 게시물',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18
+                        ),
+                      ),
+                      SizedBox(width: phoneSize.width * 0.05,),
+                      Icon(
+                        Icons.keyboard_arrow_right
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -355,13 +375,31 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
 
                       SizedBox(height: phoneSize.height * 0.03,),
 
-                      Container(
-                        padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
-                        child: Text(
-                          '월간 BEST 게시물',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18
+                      GestureDetector(
+                        onTap: (){
+                          //BEST 게시판으로 이동
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
+                          child: Row(
+                            children: [
+                              Image(
+                                image: AssetImage('assets/images/board/Bestmenu.png'),
+                                width: 25,
+                              ),
+                              SizedBox(width: phoneSize.width * 0.02,),
+                              Text(
+                                'BEST 게시물',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18
+                                ),
+                              ),
+                              SizedBox(width: phoneSize.width * 0.05,),
+                              Icon(
+                                  Icons.keyboard_arrow_right
+                              )
+                            ],
                           ),
                         ),
                       ),
