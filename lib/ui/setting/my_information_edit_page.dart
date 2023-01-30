@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:woomul/provider/auth_service.dart';
 
+import 'package:woomul/provider/auth_service.dart';
+import 'package:woomul/main.dart';
+import 'package:woomul/ui/auth/login_home_page.dart';
+
+import '../../provider/auth_service.dart';
 import '../../routes.dart';
 
 class MyPageEditScreen extends StatefulWidget {
@@ -59,6 +63,10 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
   @override
   Widget build(BuildContext context) {
 
+
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.white,
@@ -102,12 +110,12 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
       key: _scaffoldKey,
       body: Align(
         alignment: Alignment.center,
-        child: _buildForm(context),
+        child: _buildForm(context, authService),
       ),
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, AuthService authService) {
     var phoneSize = MediaQuery.of(context).size;
     final userData = context.read<UserData>();
     final mbti = userData.mbti;
@@ -380,6 +388,11 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                     GestureDetector(
                       onTap: (){
                         //회원 정보 삭제
+                        authService.deleteUser();
+
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => LoginScreen()));
+
                       },
                       child: Container(
                         padding: EdgeInsets.only(left:10.0, right:10.0),

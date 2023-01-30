@@ -195,6 +195,9 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
         String name = doc.get("name");
         DateTime createDate = doc.get("createDate").toDate();
         String content = doc.get("content");
+        String title = doc.get("title");
+        String likeNum = doc.get("likeNum").toString();
+        String commentNum = doc.get("commentNum").toString();
 
         return Form(
             child: SingleChildScrollView(
@@ -209,7 +212,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  DetailBoardScreen(boardType, doc.get("key"))));
+                                  DetailBoardScreen(boardType, doc.get("key"), doc.id, doc.get('userUid'))));
                     },
                     child: Container(
                       height: phoneSize.height*0.3,
@@ -243,7 +246,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          '여기는 제목 불러와야 함!',
+                                          title,
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 13
@@ -307,8 +310,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                                 children: [
                                   IconButton(
                                       onPressed: (){
-                                        //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                        //횟수 증가 되도록
+                                        print('기능');
                                       },
                                       icon: Icon(
                                           Icons.favorite_border,
@@ -316,7 +318,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                                       )
                                   ),
                                   Text(
-                                      '좋아요 수',
+                                      likeNum,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -338,7 +340,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                                       )
                                   ),
                                   Text(
-                                      '댓글 수',
+                                      commentNum,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
@@ -384,7 +386,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    DetailBoardScreen(value, doc.get("contentKey"))));
+                                    DetailBoardScreen(value, doc.get("contentKey"), doc.id, doc.get('userUid'))));
                       });
 
                       //해당 게시글로 이동될려나?

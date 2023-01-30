@@ -13,6 +13,17 @@ class CommentService extends ChangeNotifier {
         .get(); // return 값 미구현 에러
   }
 
+  Future<int> readNum(String contentKey) async {
+    // 내 bucketList 가져오기
+    var data = bucketCollection
+        .where('contentKey', isEqualTo: contentKey);
+
+    var querySnapshot = await data.get();
+    var totalNum = await querySnapshot.docs.length;
+
+    return totalNum;
+  }
+
   Future<QuerySnapshot> readAll(String uid) async {
     return bucketCollection
         .where('uid', isEqualTo: uid)
@@ -41,7 +52,6 @@ class CommentService extends ChangeNotifier {
       'createDate': createDate,
       'likeNum': likeNum,
     });
-
     notifyListeners();
   }
 

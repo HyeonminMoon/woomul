@@ -66,6 +66,7 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           onPressed: () {
             //뒤로가기
+            //context.read<AuthService>().signOut();
           },
         ),
       ),
@@ -115,7 +116,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                       Text('|'),
                                       SizedBox(width: 10),
                                       Text(
-                                        'mbti 뜻', //이것도 값 가져와야 함!
+                                        userData.mbtiMean, //이것도 값 가져와야 함!
                                         style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
                                       )
                                     ],
@@ -237,64 +238,6 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
-
-                    /*
-          GestureDetector(
-            onTap: () {
-              //게시판 설정 이동
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => BoardSettingScreen()));
-            },
-            child: Container(
-              width: phoneSize.width * 0.8,
-              height: phoneSize.height * 0.1,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 8,
-                    offset: Offset(0, 10),
-                  )
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(left: 12, right: 12.0),
-                        child: Icon(
-                          Icons.article_outlined,
-                          color: Color(0xff466FFF),
-                        ),
-                      ),
-                      Text(
-                        '게시판 설정',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Color(0xffD0D3E5),
-                      size: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),*/
-
                     GestureDetector(
                       onTap: () {
                         //이용안내 이동

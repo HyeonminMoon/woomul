@@ -14,6 +14,17 @@ class LikeService extends ChangeNotifier {
     return bucketCollection.where('userUid', isEqualTo: userUid).where('contentKey', isEqualTo: contentKey).get();// return 값 미구현 에러
   }
 
+  Future<int> readNum(String contentKey) async {
+    // 내 bucketList 가져오기
+    var data = bucketCollection
+        .where('contentKey', isEqualTo: contentKey);
+
+    var querySnapshot = await data.get();
+    var totalNum = await querySnapshot.docs.length;
+
+    return totalNum;
+  }
+
   void create({
     required String name,
     required String userUid,

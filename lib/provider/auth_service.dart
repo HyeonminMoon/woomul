@@ -102,6 +102,7 @@ class AuthService extends ChangeNotifier {
       required int birth,
       required String mbti,
       required String mbtiMean,
+      required bool marketingPush,
       required DateTime signupDate,
       required DateTime? deleteDate}) async {
     final pushToken = await FirebaseMessaging.instance.getToken();
@@ -115,17 +116,18 @@ class AuthService extends ChangeNotifier {
       'mbti': mbti,
       'isPushAlarmTurnOn': true,
       'mbtiMean': mbtiMean,
+      'marketingPush': marketingPush,
       'signupDate': signupDate,
-      'deleteDate': deleteDate
+      'deleteDate': deleteDate,
     });
 
     notifyListeners();
   }
 
-  void deleteUser({
-    required String uid, // 이메일
-  }) async {
-    await currentUser()!.delete();
+  void deleteUser() async {
+    await FirebaseAuth.instance.currentUser!.delete();
+    notifyListeners();
+    //user.delete();
   }
 
   Future<bool> doubleCheck(String email) async {
