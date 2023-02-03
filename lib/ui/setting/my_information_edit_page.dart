@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:woomul/provider/auth_service.dart';
 import 'package:woomul/main.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
+import 'package:woomul/ui/board/bottombar_page.dart';
+import 'package:woomul/ui/setting/main_setting_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -87,7 +89,8 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BoardScreen()));
             },
           ),
           actions: [
@@ -308,7 +311,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                         children: [
                           Expanded(
                             child: textFieldForm(
-                                _passwordController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
+                                _passwordController, "비밀번호를 입력해주세요.", "비밀번호를 확인해주세요", false),
                           ),
                           Container(
                             padding: EdgeInsets.only(right : 16.0),

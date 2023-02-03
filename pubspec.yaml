@@ -48,5 +48,6 @@ flutter:
 
   assets:
     - assets/
+    - assets/images/
     - assets/images/chara/
     - assets/images/board/
