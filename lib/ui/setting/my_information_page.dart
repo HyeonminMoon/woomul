@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/ui/setting/my_information_edit_page.dart';
+import 'package:woomul/ui/setting/password_check_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -86,7 +87,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
             onPressed: () {
               //수정하기 page 로 이동
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyPageEditScreen()));
+                  MaterialPageRoute(builder: (context) => PasswordCheckScreen()));
             },
             child: Text(
                 '수정하기',

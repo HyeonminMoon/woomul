@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:woomul/provider/auth_service.dart';
 import 'package:woomul/main.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
+import 'package:woomul/ui/board/bottombar_page.dart';
+import 'package:woomul/ui/setting/main_setting_page.dart';
+import 'package:woomul/ui/setting/password_rewrite_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -87,7 +90,8 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BoardScreen()));
             },
           ),
           actions: [
@@ -111,6 +115,144 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
       body: Align(
         alignment: Alignment.center,
         child: _buildForm(context, authService),
+      ),
+    );
+  }
+
+  void MBTIDialog() {
+    var phoneSize = MediaQuery.of(context).size;
+    List<String> mbtiList = [
+      'ISTJ',
+      'ISFJ',
+      'INFJ',
+      'INTJ',
+      'ISTP',
+      'ISFP',
+      'INFP',
+      'INTP',
+      'ESTJ',
+      'ESFJ',
+      'ENFJ',
+      'ENTJ',
+      'ESTP',
+      'ESFP',
+      'ENFP',
+      'ENTP'
+    ];
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            //Dialog Main Title
+            title: Text(
+                "내 MBTI 수정하기",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600
+              ),
+            ),
+            content: Container(
+              width: phoneSize.width,
+              height: phoneSize.height * 0.26,
+              child: _MBTI2(context, mbtiList)
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actionsPadding: EdgeInsets.all(0),
+            actions: <Widget>[
+              Container(
+                width: phoneSize.width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Color.fromRGBO(74, 84, 255, 0.9),
+                    Color.fromRGBO(0, 102, 255, 0.6)
+                  ]),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                ),
+                child: TextButton(
+                  child: Text(
+                      "확인",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Color(0xffFCFCFC)
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget _MBTI2(BuildContext context, List mbti) {
+    var phoneSize = MediaQuery.of(context).size;
+    return SingleChildScrollView(
+      //height: phoneSize.height*0.3,
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          mainAxisSpacing: 7,
+          crossAxisSpacing: 11,
+          childAspectRatio: 2 / 1.4,
+        ),
+        shrinkWrap: true,
+        itemCount: mbti.length,
+        itemBuilder: (context, index) => InkWell(
+          onTap: () {
+            //색 바뀌게 하고, 해당 정보 값 저장하기
+          },
+          child: Container(
+              width: 71,
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white, //선택되면 색 바뀌어야함!
+                border: Border.all(
+                  width: 1,
+                  color: Color(0xffB1C7FF),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${mbti[index]}',
+                    style: TextStyle(
+                        color: Color(0xff4E4B66), //선택되면 색 바껴야 함!
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              )
+            /*ElevatedButton(
+              onPressed: () {
+                //색 바뀌게 하고, 해당 정보 값 저장하기
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  side: BorderSide(color: Color(0xffB1C7FF))
+              ),
+              child: Text(
+                '${mbti[index]}',
+                style: TextStyle(
+                    color: Color(0xff4E4B66),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
+            ),*/
+          ),
+        ),
       ),
     );
   }
@@ -195,82 +337,40 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                       ),
                     ),
                     SizedBox(height: phoneSize.height * 0.01),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          )
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: textFieldForm(
-                                _mbtiController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(right : 16.0),
-                            child: Icon(
-                              Icons.edit_outlined,
-                              color: Color(0xff466FFF),
+                    GestureDetector(
+                      onTap: (){
+                        MBTIDialog();
+                      },
+                      child: Container(
+                        height: phoneSize.height * 0.08,
+                        padding: EdgeInsets.only(left:10.0, right:10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'MBTI 값 가져와야함!'
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: phoneSize.height * 0.04),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '이메일',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14
-                      ),
-                    ),
-                    SizedBox(height: phoneSize.height * 0.01),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          )
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: textFieldForm(
-                                _emailController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(right : 16.0),
-                            child: Icon(
-                              Icons.edit_outlined,
-                              color: Color(0xff466FFF),
+                            Container(
+                              padding: EdgeInsets.only(right : 16.0),
+                              child: Icon(
+                                Icons.edit_outlined,
+                                color: Color(0xff466FFF),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -289,35 +389,41 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                       ),
                     ),
                     SizedBox(height: phoneSize.height * 0.01),
-                    Container(
-                      height: phoneSize.height * 0.08,
-                      padding: EdgeInsets.only(left:10.0, right:10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          )
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: textFieldForm(
-                                _passwordController, "아이디를 입력해주세요.", "아이디를 확인해주세요", false),
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(right : 16.0),
-                            child: Icon(
-                              Icons.edit_outlined,
-                              color: Color(0xff466FFF),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => PassWordEditScreen()));
+                      },
+                      child: Container(
+                        height: phoneSize.height * 0.08,
+                        padding: EdgeInsets.only(left:10.0, right:10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '**********비밀번호 불러와야함'
                             ),
-                          ),
-                        ],
+                            Container(
+                              padding: EdgeInsets.only(right : 16.0),
+                              child: Icon(
+                                Icons.edit_outlined,
+                                color: Color(0xff466FFF),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -415,7 +521,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                               padding: EdgeInsets.only(right : 16.0),
                               child: Icon(
                                 Icons.mood_bad,
-                                color: Color(0xff466FFF),
+                                color: Color(0xffA0A3BD),
                               ),
                             ),
                             Text(
