@@ -10,6 +10,7 @@ import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import 'package:woomul/ui/setting/main_setting_page.dart';
 import 'package:woomul/ui/setting/password_rewrite_page.dart';
+import 'package:woomul/ui/setting/secession_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -494,10 +495,10 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                     GestureDetector(
                       onTap: (){
                         //회원 정보 삭제
-                        authService.deleteUser();
+                        //authService.deleteUser();
 
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LoginScreen()));
+                            MaterialPageRoute(builder: (context) => SecessionScreen()));
 
                       },
                       child: Container(

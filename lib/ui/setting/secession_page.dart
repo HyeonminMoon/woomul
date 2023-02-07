@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import '../../provider/auth_service.dart';
 
@@ -89,6 +90,15 @@ class _SecessionScreenState extends State<SecessionScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: true,
+          title: Text(
+            '탈퇴하기',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff484848)
+            ),
+          ),
+          centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -121,113 +131,30 @@ class _SecessionScreenState extends State<SecessionScreen> {
             color: (term1 == true && term2 == true && term3 == true && term4 == true)
                 ? Color(0xff4D64F3)
                 : Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
-            child: SizedBox(
-              height: kToolbarHeight,
-              width: double.infinity,
-              child: Center(
-                child: Text(
-                  '다음',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            child: InkWell(
+              onTap: (){
+                if(term1 == true && term2 == true && term3 == true && term4 == true){
+                  authService.deleteUser();
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                }
+              },
+              child: SizedBox(
+                height: kToolbarHeight,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    '다음',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
                 ),
               ),
             )),
       );
     });
   }
-
-  Widget _buildForm1(BuildContext context, AuthService authService) {
-    var phoneSize = MediaQuery.of(context).size;
-    return Form(
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '이메일 입력',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24, color: Color(0xff14142B)),
-                ),
-                SizedBox(height: phoneSize.height * 0.01),
-                Text(
-                  '안녕하세요!\n'
-                      '이메일(아이디) 인증 후 회원가입을 진행해주세요.',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff4E4B66)),
-                ),
-
-                SizedBox(height: phoneSize.height * 0.07),
-
-                Text(
-                  '이메일',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                ),
-
-                textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요", false, false, 1),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // 여기 체크해봐야함! [ERROR]
-                        if (await authService.doubleCheck(_emailController.text) == true) {
-                          emailDoubleChecked = false;
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("이미 있는 아이디입니다"),
-                          ));
-                        } else {
-                          emailDoubleChecked = true;
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xffECF1FF),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(54)),
-                      ),
-                      child: Text(
-                        '중복 확인',
-                        style: TextStyle(
-                            color: Color(0xff466FFF), fontSize: 13, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-
-                //중복 이메일 체크 기능 추가하시면 여기 확인 해주세여!
-                emailDoubleChecked == true
-                    ? Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '비밀번호',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                    ),
-
-                    textFieldForm(_passwordController, "비밀번호를 입력해주세요.", "", true, false, 1),
-
-                    Text(
-                      '비밀번호 확인',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                    ),
-
-                    //비번 일치 하지 않으면 일치 하지 않다고 알려주는 기능 추가 해야함
-                    textFieldForm(_passwordCheckController, "비밀번호를 입력해주세요", "비밀번호가 일치하지 않습니다.",
-                        true, false, 1),
-                  ],
-                )
-                    : Container()
-              ],
-            ),
-          ),
-        ));
-  }
-
-
+  
   Widget _buildForm3(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
     return Form(
@@ -239,14 +166,15 @@ class _SecessionScreenState extends State<SecessionScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(height: phoneSize.height * 0.04,),
                 Text(
-                  '약관동의',
+                  'WOOMUL 탈퇴 안내',
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24, color: Color(0xff14142B)),
                 ),
                 SizedBox(height: phoneSize.height * 0.03),
                 Text(
-                  'WOOMUL 서비스를 이용하시려면\n'
-                      '필수 약관에 동의가 필요합니다.',
+                  '지금까지 WOOMUL 서비스를 이용해주셔서 감사합니다.\n'
+                      '다음에 다시 만나요.',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff4E4B66)),
                 ),
                 SizedBox(height: phoneSize.height * 0.04),
@@ -255,6 +183,7 @@ class _SecessionScreenState extends State<SecessionScreen> {
                     Checkbox(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       checkColor: Colors.white,
+                      activeColor: Color(0xff466FFF),
                       value: isChecked,
                       onChanged: (bool? value) {
                         setState(() {
