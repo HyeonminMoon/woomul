@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/ui/board/board_search_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import 'package:woomul/ui/board/detail_board_page.dart';
 import 'package:woomul/ui/board/edit_board_page.dart';
@@ -30,6 +31,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
   final ScrollController _pageController = ScrollController();
   bool isMoreData = true;
 
+  var errorCheck;
+
+  late TextEditingController _keywordController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,11 +47,17 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
         paginatedData(widget.name);
       }
     });
+
+    _keywordController = TextEditingController(text: "");
+
+    errorCheck = false;
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    _keywordController.dispose();
   }
 
   void paginatedData(String boardType) async {
@@ -170,6 +181,45 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 8,
+                        offset: Offset(0, 3),
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: textFieldForm(_keywordController, "찾고싶은 키워드를 검색하세요", "아이디를 확인해주세요", false),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(right: 3.0),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.search,
+                            color: Color(0xff828796),
+                          ),
+                          onPressed: () {
+                            //검색 결과 페이지로 이동
+                            //검색어가 입력 됐을 경우(비어 있으면 검색 안 눌리게 하나욤? 일단 대애충 해놨슴미다)
+                            if (_keywordController.toString() != '') {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResultScreen(_keywordController.text)));
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 //얘를 여러 개 불러오도록 하면 됨
                 if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
                   _board1(context, boardService, user!.uid),
@@ -589,6 +639,52 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                 ],
               );
             }));
+  }
+
+  Widget textFieldForm(TextEditingController controller, String labelText, String errorText,
+      bool obscure) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        onTap: () {
+          //scontroller.animateTo(120.0, duration: Duration(milliseconds: 500), curve: Curves.ease);
+        },
+        obscureText: obscure,
+        controller: controller,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Color(0xffA0A3BD)),
+        cursorColor: Color(0xffA0A3BD),
+        validator: (value) {
+          if (value!.isEmpty) {
+            setState(() {
+              errorCheck = true;
+            });
+            return errorText;
+          } else {
+            setState(() {
+              errorCheck = false;
+            });
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            labelText: labelText,
+            labelStyle: TextStyle(color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
+            ),
+            hintStyle: TextStyle(
+                color: Color(0xff828796),
+                fontSize: 14,
+                fontWeight: FontWeight.w500
+            ),
+            hintText: labelText,
+            enabledBorder: OutlineInputBorder(
+              borderSide:
+              BorderSide(color: Color(0xFF0000) /*Theme.of(context).colorScheme.surface*/),
+            ),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF0000))),
+            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffFF6868)))),
+      ),
+    );
   }
 
 }
