@@ -302,8 +302,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     bool likeBool = false;
     final String boardWriteUid = docs[0].get('userUid');
 
-    final mbti = userData.mbti;
-    final ss = userData.sex == 'man' ? 'M' : 'F';
+    final mbti = docs[0].get('userMbti');
 
     return Expanded(
         child: Column(
@@ -333,10 +332,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
-                        radius: 20,
-                      ),
+                      Placeholder(fallbackHeight: 20, fallbackWidth: 20),
                       SizedBox(width: phoneSize.width * 0.03),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
