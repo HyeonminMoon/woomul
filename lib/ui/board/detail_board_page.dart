@@ -70,6 +70,92 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     _commentController.dispose();
   }
 
+  void DeleteDialog() {
+    var phoneSize = MediaQuery.of(context).size;
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.0)),
+            //Dialog Main Title
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+                Text(
+                  "게시글 삭제",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+              ],
+            ),
+            content: Container(
+                width: phoneSize.width,
+                height: phoneSize.height * 0.07,
+                child: Text(
+                  '작성한 게시글을 삭제할까요?\n'
+                      '작성된 내용은 저장되지 않습니다.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actionsPadding: EdgeInsets.all(0),
+            actions: <Widget>[
+              Column(
+                children: [
+                  Container(
+                    width: phoneSize.width * 0.43,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(74, 84, 255, 0.9),
+                        Color.fromRGBO(0, 102, 255, 0.6)
+                      ]),
+                      borderRadius: BorderRadius.circular(54),
+                    ),
+                    child: TextButton(
+                      child: Text(
+                        "확인",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Color(0xffFCFCFC)
+                        ),
+                      ),
+                      onPressed: () {
+                        //Navigator.pop(context);
+                        //삭제 기능 넣어야함!!!
+                      },
+                    ),
+                  ),
+                  SizedBox(height: phoneSize.height * 0.04,)
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
 
@@ -216,6 +302,8 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     bool likeBool = false;
     final String boardWriteUid = docs[0].get('userUid');
 
+    final mbti = docs[0].get('userMbti');
+
     return Expanded(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,6 +327,109 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Placeholder(fallbackHeight: 20, fallbackWidth: 20),
+                      SizedBox(width: phoneSize.width * 0.03),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (widget.name != '비밀게시판')
+                            Row(
+                              children: [
+                                Text(
+                                  docs[0].get('name'),
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                )],
+                            ),
+                          if (widget.name == '비밀게시판')
+                            Row(
+                              children: [
+                                Text(
+                                  "익명",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                )],
+                            ),
+                          Row(
+                            children: [
+                              Text(
+                                docs[0].get('userMbti'),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                    color: Color(0xffA0A3BD)
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                '|',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xffA0A3BD)
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                docs[0].get('userMbtiMean'),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                    color: Color(0xffA0A3BD)
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  if (uid == boardWriteUid)
+                    IconButton(
+                      icon: Icon(
+                          Icons.delete_outline,
+                        color: Color(0xffA0A3BD),
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        //게시판 삭제 기능 추가
+                        DeleteDialog();
+                      },
+                    ),
+
+                ],
+              ),
+              SizedBox(height: phoneSize.height * 0.01,),
+
+              Text(
+                docs[0].get('title'),
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  fontSize: 15
+                ),
+              ),
+              SizedBox(height: phoneSize.height * 0.02),
+              Text(
+                  docs[0].get('content'),
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
+
+              SizedBox(height: phoneSize.height * 0.02,),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -278,109 +469,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                   SizedBox(width: phoneSize.width * 0.01,),
 
                   Text(
-                      docs3.length.toString(),
+                    docs3.length.toString(),
                     style: TextStyle(
-                      color: Color(0xffA0A3BD)
+                        color: Color(0xffA0A3BD),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14
                     ),
                   ),
-                  SizedBox(width: phoneSize.width * 0.01,),
-                  if (uid == boardWriteUid)
-                  Icon(
-                    Icons.more_horiz,
-                    color: Color(0xff6E7191),
-                  )
                 ],
-              ),
-              Row(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Placeholder(fallbackHeight: 20, fallbackWidth: 20),
-                          SizedBox(width: phoneSize.width * 0.03),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (widget.name != '비밀게시판')
-                                Row(
-                                  children: [
-                                    Text(
-                                      docs[0].get('name'),
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                    )],
-                                ),
-                              if (widget.name == '비밀게시판')
-                                Row(
-                                  children: [
-                                    Text(
-                                      "익명",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                    )],
-                                ),
-                              Row(
-                                children: [
-                                  Text(
-                                    docs[0].get('userMbti'),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 13,
-                                        color: Color(0xffA0A3BD)
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '|',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xffA0A3BD)
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    docs[0].get('userMbtiMean'),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 13,
-                                        color: Color(0xffA0A3BD)
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-
-
-                    ],
-                  ), //프로필 사진
-
-                ],
-              ),
-              Text(
-                docs[0].get('title'),
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  fontSize: 15
-                ),
-              ),
-              SizedBox(height: phoneSize.height * 0.02),
-              Text(
-                  docs[0].get('content'),
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400
-                ),
               ),
 
             ],

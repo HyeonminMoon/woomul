@@ -92,6 +92,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               //Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
                               CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                                radius: 20,
                               ),
                               SizedBox(width: phoneSize.width * 0.03),
                               Column(
