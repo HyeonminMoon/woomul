@@ -70,6 +70,92 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     _commentController.dispose();
   }
 
+  void DeleteDialog() {
+    var phoneSize = MediaQuery.of(context).size;
+
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.0)),
+            //Dialog Main Title
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+                Text(
+                  "게시글 삭제",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700
+                  ),
+                ),
+              ],
+            ),
+            content: Container(
+                width: phoneSize.width,
+                height: phoneSize.height * 0.07,
+                child: Text(
+                  '작성한 게시글을 삭제할까요?\n'
+                      '작성된 내용은 저장되지 않습니다.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actionsPadding: EdgeInsets.all(0),
+            actions: <Widget>[
+              Column(
+                children: [
+                  Container(
+                    width: phoneSize.width * 0.43,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(74, 84, 255, 0.9),
+                        Color.fromRGBO(0, 102, 255, 0.6)
+                      ]),
+                      borderRadius: BorderRadius.circular(54),
+                    ),
+                    child: TextButton(
+                      child: Text(
+                        "확인",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Color(0xffFCFCFC)
+                        ),
+                      ),
+                      onPressed: () {
+                        //Navigator.pop(context);
+                        //삭제 기능 넣어야함!!!
+                      },
+                    ),
+                  ),
+                  SizedBox(height: phoneSize.height * 0.04,)
+                ],
+              ),
+            ],
+          );
+        });
+  }
+
   Widget build(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
 
@@ -322,6 +408,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       ),
                       onPressed: () {
                         //게시판 삭제 기능 추가
+                        DeleteDialog();
                       },
                     ),
 
