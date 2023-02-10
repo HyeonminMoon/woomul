@@ -258,6 +258,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                   int likeNum = doc.get('likeNum');
                   int commentNum = doc.get('commentNum');
                   String userUid = doc.get('userUid');
+                  String mbti = doc.get('userMbti');
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

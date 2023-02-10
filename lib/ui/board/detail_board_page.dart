@@ -216,6 +216,9 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     bool likeBool = false;
     final String boardWriteUid = docs[0].get('userUid');
 
+    final mbti = userData.mbti;
+    final ss = userData.sex == 'man' ? 'M' : 'F';
+
     return Expanded(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,6 +242,111 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                        radius: 20,
+                      ),
+                      SizedBox(width: phoneSize.width * 0.03),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (widget.name != '비밀게시판')
+                            Row(
+                              children: [
+                                Text(
+                                  docs[0].get('name'),
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                )],
+                            ),
+                          if (widget.name == '비밀게시판')
+                            Row(
+                              children: [
+                                Text(
+                                  "익명",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                )],
+                            ),
+                          Row(
+                            children: [
+                              Text(
+                                docs[0].get('userMbti'),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                    color: Color(0xffA0A3BD)
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                '|',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xffA0A3BD)
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                docs[0].get('userMbtiMean'),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                    color: Color(0xffA0A3BD)
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  if (uid == boardWriteUid)
+                    IconButton(
+                      icon: Icon(
+                          Icons.delete_outline,
+                        color: Color(0xffA0A3BD),
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        //게시판 삭제 기능 추가
+                      },
+                    ),
+
+                ],
+              ),
+              SizedBox(height: phoneSize.height * 0.01,),
+
+              Text(
+                docs[0].get('title'),
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  fontSize: 15
+                ),
+              ),
+              SizedBox(height: phoneSize.height * 0.02),
+              Text(
+                  docs[0].get('content'),
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400
+                ),
+              ),
+
+              SizedBox(height: phoneSize.height * 0.02,),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -278,109 +386,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                   SizedBox(width: phoneSize.width * 0.01,),
 
                   Text(
-                      docs3.length.toString(),
+                    docs3.length.toString(),
                     style: TextStyle(
-                      color: Color(0xffA0A3BD)
+                        color: Color(0xffA0A3BD),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14
                     ),
                   ),
-                  SizedBox(width: phoneSize.width * 0.01,),
-                  if (uid == boardWriteUid)
-                  Icon(
-                    Icons.more_horiz,
-                    color: Color(0xff6E7191),
-                  )
                 ],
-              ),
-              Row(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Placeholder(fallbackHeight: 20, fallbackWidth: 20),
-                          SizedBox(width: phoneSize.width * 0.03),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (widget.name != '비밀게시판')
-                                Row(
-                                  children: [
-                                    Text(
-                                      docs[0].get('name'),
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                    )],
-                                ),
-                              if (widget.name == '비밀게시판')
-                                Row(
-                                  children: [
-                                    Text(
-                                      "익명",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                    )],
-                                ),
-                              Row(
-                                children: [
-                                  Text(
-                                    docs[0].get('userMbti'),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 13,
-                                        color: Color(0xffA0A3BD)
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '|',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xffA0A3BD)
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    docs[0].get('userMbtiMean'),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 13,
-                                        color: Color(0xffA0A3BD)
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-
-
-                    ],
-                  ), //프로필 사진
-
-                ],
-              ),
-              Text(
-                docs[0].get('title'),
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  fontSize: 15
-                ),
-              ),
-              SizedBox(height: phoneSize.height * 0.02),
-              Text(
-                  docs[0].get('content'),
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400
-                ),
               ),
 
             ],
