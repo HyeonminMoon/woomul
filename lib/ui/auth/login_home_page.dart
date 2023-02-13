@@ -19,9 +19,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Align(
-        alignment: Alignment.center,
-        child: _buildForm(context),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/splash_image.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: _buildForm(context),
+        ),
       ),
     );
   }
@@ -35,10 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  width: phoneSize.width*1,
-                  height: phoneSize.height*0.3,
-                  //child: Image.asset("assets/images/login.png"), -> 이미지 값 넣기
+                Image(
+                  image: AssetImage('assets/images/loginImage.png')
                 ),
                 Text(
                   'WOOMUL',
