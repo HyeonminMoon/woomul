@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
+import 'package:woomul/ui/setting/password_rewrite_page.dart';
 
 import '../../provider/auth_service.dart';
 import '../../routes.dart';
@@ -59,12 +60,21 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthService, UserData>(builder: (context, authService, userData, child) {
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        key: _scaffoldKey,
-        body: Align(
-          alignment: Alignment.center,
-          child: _buildForm(context, authService, userData),
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/splash_image.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Colors.transparent,
+          key: _scaffoldKey,
+          body: Align(
+            alignment: Alignment.center,
+            child: _buildForm(context, authService, userData),
+          ),
         ),
       );
     });
@@ -85,9 +95,12 @@ class _SignInScreenState extends State<SignInScreen> {
             child: Column(
               children: <Widget>[
                 SizedBox(
+                  height: phoneSize.width * 0.2,
+                ),
+                SizedBox(
                   width: phoneSize.width * 1,
-                  height: phoneSize.width * 0.4,
-                  //child: Image.asset("assets/images/login.png"), -> 이미지 값 넣기
+                  height: phoneSize.width * 0.5,
+                  child: Image.asset("assets/images/loginImage.png"),
                 ),
                 Text(
                   'WOOMUL',
@@ -102,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   style: TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xff6E7191)),
                 ),
-                SizedBox(height: phoneSize.height * 0.2),
+                SizedBox(height: phoneSize.height * 0.12),
                 Container(
                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   decoration: BoxDecoration(
@@ -156,11 +169,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: TextButton(
                       onPressed: () {
                         //비밀번호 찾기 기능 추가
-                        print(userData2.name);
-                        print(userData2.mbti);
-                        if (user != null) {
-                          print(user.uid);
-                        }
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => PassWordEditScreen()));
                       },
                       style: TextButton.styleFrom(
                           //foregroundColor: Colors.black,
@@ -246,6 +256,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ],
                 ),
+
+                SizedBox(
+                  height: phoneSize.height * 0.02,
+                ),
+
               ],
             ),
           ),
