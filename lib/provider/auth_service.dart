@@ -142,6 +142,18 @@ class AuthService extends ChangeNotifier {
     return data;
   }
 
+  Future<bool> doubleCheck2(String name) async {
+    bool data = false;
+    await bucketCollection.where('name', isEqualTo: name).get().then((value) {
+      if (value.docs.isEmpty) {
+        data = false;
+      } else {
+        data = true;
+      }
+    });
+    return data;
+  }
+
   Future<QuerySnapshot> getUserDate(String uid) async {
     return bucketCollection.where('uid', isEqualTo: uid).get();
   }

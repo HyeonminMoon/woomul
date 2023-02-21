@@ -15,6 +15,7 @@ class PasswordCheckScreen extends StatefulWidget {
 }
 
 class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
+
   late TextEditingController _nameController;
   late TextEditingController _mbtiController;
   late TextEditingController _emailController;
@@ -59,6 +60,11 @@ class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
+    final userData = context.read<UserData>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -89,10 +95,17 @@ class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
               onTap: () {
                 setState(() {
                   //비밀번호가 일치하는지 확인 후, 수정하기 page 로 이동되도록!
-                  if(_passwordController.text != ''){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyPageEditScreen()));
-                  }
+                  authService.signIn(email: userData.email,
+                      password: _passwordController.text,
+                      onSuccess: (){
+                        if(_passwordController.text != ''){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => MyPageEditScreen()));
+                        }
+                      },
+                      onError: (err){
+                    print("비밀번호가 틀렸습니다");
+                      });
                 });
               },
               child: SizedBox(
@@ -192,7 +205,7 @@ class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
                               ],
                             ),
                             child: textFieldForm(
-                                _passwordController, "비밀번호를 입력해주세요.", "비밀번호가 일치하지 않습니다.", false),
+                                _passwordController, "비밀번호를 입력해주세요.", "비밀번호가 일치하지 않습니다.", true),
                           ),
                         ],
                       ),
@@ -296,7 +309,6 @@ class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
             ),
             filled: true,
             fillColor: Color(0xffFFFFFF),
-
             //비밀번호 확인 기능 추가 후 활성화 해야함!
             /*
             errorText: errorText,

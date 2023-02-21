@@ -70,6 +70,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
 
     final authService = context.read<AuthService>();
     final user = authService.currentUser();
+    final userData = context.read<UserData>();
 
     return Scaffold(
       appBar: AppBar(
@@ -361,7 +362,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'MBTI 값 가져와야함!'
+                              userData.mbti
                             ),
                             Container(
                               padding: EdgeInsets.only(right : 16.0),
@@ -414,7 +415,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '**********비밀번호 불러와야함'
+                              '**********'
                             ),
                             Container(
                               padding: EdgeInsets.only(right : 16.0),

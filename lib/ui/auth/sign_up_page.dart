@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import '../../provider/auth_service.dart';
 import 'mbti_test_page.dart';
+import 'package:intl/intl.dart';
 
 //import 'package:flutter_localizations/flutter_localizations.dart';
 //import 'package:flutter_rounded_date_picker/rounded_picker.dart';
@@ -26,6 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController _birthController;
   late TextEditingController _passwordController;
   late TextEditingController _passwordCheckController;
+
+  DateTime? selectedDate;
 
   var errorCheck;
 
@@ -79,6 +82,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordCheckController.dispose();
     //index.dispose(); int 값을 dispose() 했을떄 오류 발생함 221228 현민
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(1900),
+    lastDate: DateTime(DateTime.now().year + 1),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        print(selectedDate.toString());
+      });
+    }
   }
 
   @override
@@ -198,7 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 index == 0
                     ? _buildForm1(context, authService)
                     : index == 1
-                        ? _buildForm2(context)
+                        ? _buildForm2(context, authService)
                         : index == 2
                             ? _buildForm3(context)
                             : _buildForm4(context),
@@ -274,7 +292,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             email: _emailController.text,
                                             name: _nameController.text,
                                             sex: dropdownValue,
-                                            birth: int.parse(_birthController.text),
+                                            birth: int.parse(DateFormat("yyyyMMdd").format(selectedDate!)),
                                             mbti: mbti,
                                             mbtiMean: meanMBTI(mbti)!,
                                             marketingPush: term5,
@@ -417,7 +435,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ));
   }
 
-  Widget _buildForm2(BuildContext context) {
+  Widget _buildForm2(BuildContext context, AuthService authService) {
     var phoneSize = MediaQuery.of(context).size;
     return Form(
         child: SingleChildScrollView(
@@ -454,6 +472,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     // 닉네임 중복 기능 추가
+                    if (await authService.doubleCheck2(_nameController.text) == true) {
+                      nameChecked = false;
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("이미 있는 닉네임입니다"),
+                      ));
+                    } else {
+                      nameChecked = true;
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffECF1FF),
@@ -491,12 +517,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     GestureDetector(
                       onTap: () {
                         //달력 picker 켜지기
-                        Future<DateTime?> future = showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(DateTime.now().year + 1),
-                        );
+
+                        _selectDate(context);
                       },
                       child: Container(
                         width: phoneSize.width * 0.56,
@@ -518,14 +540,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                              '생년월일 (YYYYMMDD)',//나중에 picker 로 값 가져오면 텍스트 바뀌도록 해야함
-                                style: TextStyle(
-                                  color: Color(0xffA0A3BD),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500
+                              if (selectedDate == null)
+                                Text(
+                                '생년월일 (YYYYMMDD)',//나중에 picker 로 값 가져오면 텍스트 바뀌도록 해야함
+                                  style: TextStyle(
+                                    color: Color(0xffA0A3BD),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500
+                                  ),
                                 ),
-                              ),
+                              if (selectedDate != null)
+                                Text(
+                                  DateFormat("yyyyMMdd").format(selectedDate!),//나중에 picker 로 값 가져오면 텍스트 바뀌도록 해야함
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500
+                                  ),
+                                ),
 
                               Icon(
                                 Icons.calendar_month,

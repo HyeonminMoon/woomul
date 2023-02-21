@@ -159,6 +159,10 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
               GestureDetector(
                 onTap: (){
                   //HOT 게시판으로 이동
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FreeBoardScreen('HOT 게시판')));
                 },
                 child: Container(
                   padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
@@ -378,6 +382,10 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                       GestureDetector(
                         onTap: (){
                           //BEST 게시판으로 이동
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FreeBoardScreen('BEST 게시판')));
                         },
                         child: Container(
                           padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
