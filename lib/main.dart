@@ -15,16 +15,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 // 스몰아이즈 //
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description: 'This channel is used for important notifications.', // description
+  'high_importance_channel',
+  'High Importance Notifications',
+  description: 'This channel is used for important notifications.',
   importance: Importance.max,
 );
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.messageId}');
-}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 // 스몰아이즈 //
 
 void main() async {
