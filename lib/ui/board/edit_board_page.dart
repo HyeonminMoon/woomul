@@ -233,6 +233,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                             key: key,
                             userUid: user!.uid,
                             name: userData.name,
+                            sex: userData.sex,
                             firstPicUrl: null,
                             ageNum: _currentSliderValue,
                             ageRange: [
