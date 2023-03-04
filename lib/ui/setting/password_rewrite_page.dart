@@ -113,26 +113,28 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /*
                 index == 0
                     ? _buildForm1(context, authService)
                     : index == 1
                     ?_buildForm3(context, authService)
-                    :_buildForm4(context),
+                    :_buildForm4(context),*/
+                index == 0
+                  ? _buildForm3(context, authService)
+                    : _buildForm4(context)
               ],
             ),
           ),
         ),
         bottomNavigationBar: Material(
-            color: (index == 0 && _emailController.text != '')||
-                (index == 1 && _passwordController.text != '' && _passwordCheckController.text != '') || index == 2
+            color: (index == 0 && _passwordController.text != '' && _passwordCheckController.text != '') || index == 2
                 ? Color(0xff4D64F3)
                 : Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
-            child: (index == 0 && _emailController.text != '') ||
-                (index == 1 && _passwordController.text != '' && _passwordCheckController.text != '')
+            child: (index == 0 && _passwordController.text != '' && _passwordCheckController.text != '')
                 ? InkWell(
               onTap: () {
                 setState(() {
-                  if (index == 1) {
+                  if (index == 0) {
                     if (_passwordController.text != _passwordCheckController.text) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("비밀번호가 일치하지 않습니다."),
@@ -147,20 +149,6 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
                         index++;
                       }
                     }
-                  } else if (index == 0) { // 이 부분 기능이 제대로 안 되어 있는건가용..?(회원가입 때 기능 가져왔는데 작동이 제대로 안 되는듯)
-                    if (authService.doubleCheck(_emailController.text) == true) {
-                      emailDoubleChecked = false;
-                      //index ++;
-                    } else {
-                          emailDoubleChecked = true;
-                          index ++;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("가입되지 않은 아이디입니다"),
-                              )
-                          );
-                    }
-
                   }
                 });
               },
@@ -257,9 +245,7 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
                 SizedBox(height: phoneSize.height * 0.07),
 
 
-                //중복 이메일 체크 기능 추가하시면 여기 확인 해주세여!
-                emailDoubleChecked == true
-                    ? Column(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -284,7 +270,6 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
                         true, false, 1),
                   ],
                 )
-                    : Container()
               ],
             ),
           ),

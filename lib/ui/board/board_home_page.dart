@@ -99,7 +99,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: phoneSize.height*0.08,),
+              SizedBox(height: phoneSize.height*0.04,),
 
               Container(
                 padding: EdgeInsets.only(left: 20),
@@ -132,7 +132,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: textFieldForm(_keywordController, "찾고싶은 키워드를 검색하세요", "아이디를 확인해주세요", false),
+                      child: textFieldForm(_keywordController, "찾고싶은 키워드를 검색하세요", "검색어를 확인해주세요", false),
                     ),
                     Container(
                       padding: EdgeInsets.only(right: 3.0),
@@ -158,32 +158,24 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
 
               GestureDetector(
                 onTap: (){
-                  //HOT 게시판으로 이동
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FreeBoardScreen('HOT 게시판')));
+                  //이동 안해도 됨
                 },
                 child: Container(
                   padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
                   child: Row(
                     children: [
                       Image(
-                        image: AssetImage('assets/images/board/Hotmenu.png'),
+                        image: AssetImage('assets/images/board/newBoard.png'),
                         width: 25,
                       ),
                       SizedBox(width: phoneSize.width * 0.02,),
                       Text(
-                        'HOT 게시물',
+                        '최신 게시물',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 18
                         ),
                       ),
-                      SizedBox(width: phoneSize.width * 0.05,),
-                      Icon(
-                        Icons.keyboard_arrow_right
-                      )
                     ],
                   ),
                 ),
@@ -379,205 +371,6 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
 
                       SizedBox(height: phoneSize.height * 0.03,),
 
-                      GestureDetector(
-                        onTap: (){
-                          //BEST 게시판으로 이동
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FreeBoardScreen('BEST 게시판')));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(left: 20, top: 10, bottom: 15),
-                          child: Row(
-                            children: [
-                              Image(
-                                image: AssetImage('assets/images/board/Bestmenu.png'),
-                                width: 25,
-                              ),
-                              SizedBox(width: phoneSize.width * 0.02,),
-                              Text(
-                                'BEST 게시물',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18
-                                ),
-                              ),
-                              SizedBox(width: phoneSize.width * 0.05,),
-                              Icon(
-                                  Icons.keyboard_arrow_right
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DetailBoardScreen(
-                                        'BEST 게시판', docs2[0].get('key'), docs2[0].id, docs2[0].get('userUid'))));
-                          },
-                          child: Container(
-                            height: phoneSize.height*0.25,
-                            //margin: EdgeInsets.only(top: 10, bottom: 12),
-                            padding: EdgeInsets.only(left: 15,top:10,right: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 8,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Placeholder(
-                                        fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
-                                    SizedBox(width: phoneSize.width * 0.03),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            if (docs[0].get('title').length > 40)
-                                              Text(
-                                                docs[0].get('title').substring(0, 40) + '...',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14
-                                                ),
-                                              ),
-                                            if (docs[0].get('title').length <= 40)
-                                              Text(
-                                                docs[0].get('title'),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14),
-                                              ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              docs[0].get('name'),
-                                              style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(0xffA0A3BD)
-                                              ),
-                                            ),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              '.',
-                                              style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(0xffA0A3BD)
-                                              ),
-                                            ),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              docs[0].get('userMbti'),
-                                              style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(0xffA0A3BD)
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-
-                                if (docs[0].get('content').length > 50)
-                                  Text(
-                                    docs[0].get('content').substring(0, 40) + '...',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14
-                                    ),
-                                  ),
-                                if (docs[0].get('content').length <= 50)
-                                  Text(
-                                    docs[0].get('content'),
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400
-                                    ),
-                                  ),
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              //클릭 되면, 색 채워지고(user 데이터 불러와야 할듯)
-                                              //횟수 증가 되도록
-                                            },
-                                            icon: Icon(
-                                              Icons.favorite_border,
-                                              color: Color(0xffA0A3BD),
-                                              size: 15,
-                                            )
-                                        ),
-                                        Text(
-                                            docs[0].get('likeNum').toString(),
-                                          //likeNum.toString(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: Color(0xffA0A3BD),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.forum_outlined,
-                                              color: Color(0xffA0A3BD),
-                                              size: 15,
-                                            )
-                                        ),
-                                        Text(
-                                          //commentNum.toString(),
-                                          docs[0].get('commentNum').toString(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: Color(0xffA0A3BD),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )
-
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
                     ],
                   );
                 },

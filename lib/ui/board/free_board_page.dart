@@ -181,45 +181,6 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  margin: EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      )
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: textFieldForm(_keywordController, "찾고싶은 키워드를 검색하세요", "아이디를 확인해주세요", false),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(right: 3.0),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.search,
-                            color: Color(0xff828796),
-                          ),
-                          onPressed: () {
-                            //검색 결과 페이지로 이동
-                            //검색어가 입력 됐을 경우(비어 있으면 검색 안 눌리게 하나욤? 일단 대애충 해놨슴미다)
-                            if (_keywordController.toString() != '') {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchResultScreen(_keywordController.text)));
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 //얘를 여러 개 불러오도록 하면 됨
                 if (widget.name != 'HOT 게시판' && widget.name != 'BEST 게시판')
                   _board1(context, boardService, user!.uid),

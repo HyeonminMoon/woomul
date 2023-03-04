@@ -372,36 +372,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
               style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
             ),
 
-            textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요", false, false, 1),
+            //textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요", false, false, 1),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              //mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    // 여기 체크해봐야함! [ERROR]
-                    if (await authService.doubleCheck(_emailController.text) == true) {
-                      emailDoubleChecked = false;
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("이미 있는 아이디입니다"),
-                      ));
-                    } else {
-                      emailDoubleChecked = true;
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xffECF1FF),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(54)),
-                  ),
-                  child: Text(
-                    '중복 확인',
-                    style: TextStyle(
-                        color: Color(0xff466FFF), fontSize: 13, fontWeight: FontWeight.w600),
+                Container(
+                  width: phoneSize.width * 0.6,
+                    child: textFieldForm(_emailController, "가입하실 이메일을 입력해주세요.", "이메일을 확인해주세요", false, false, 1)),
+                SizedBox(width: phoneSize.width * 0.03,),
+                Container(
+                  height: phoneSize.height * 0.06,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      // 여기 체크해봐야함! [ERROR]
+                      if (await authService.doubleCheck(_emailController.text) == true) {
+                        emailDoubleChecked = false;
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("이미 있는 아이디입니다"),
+                        ));
+                      } else {
+                        emailDoubleChecked = true;
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffECF1FF),
+                      side: BorderSide(
+                        color: Color(0xffB1C7FF)
+                      ),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(
+                      '중복 확인',
+                      style: TextStyle(
+                          color: Color(0xff466FFF), fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ],
             ),
+
+            _emailController.text != '' && emailDoubleChecked == false ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  '이미 가입된 이메일입니다.',
+                  style: TextStyle(
+                    color: Color(0xffFF6868)
+                  ),
+                )
+              ],
+            ) : _emailController.text != '' && emailDoubleChecked == true ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  '가입이 가능한 이메일입니다.',
+                  style: TextStyle(
+                      color: Color(0xff3462FF)
+                  ),
+                )
+              ],
+            ):Container(),
 
             //중복 이메일 체크 기능 추가하시면 여기 확인 해주세여!
             emailDoubleChecked == true
