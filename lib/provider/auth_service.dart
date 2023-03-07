@@ -163,6 +163,15 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
     // 로그아웃
   }
+
+  void changePW(String password) {
+    FirebaseAuth.instance.currentUser!.updatePassword(password);
+  }
+
+  Future<void> resetPW(String email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
+
 }
 
 class MbtiService extends ChangeNotifier {

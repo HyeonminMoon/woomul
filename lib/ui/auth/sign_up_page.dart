@@ -227,12 +227,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         bottomNavigationBar: Material(
             color: (index == 0 && _emailController.text != '' && emailDoubleChecked == true
                 && _passwordController.text != '' && _passwordCheckController.text != '') ||
-                    (index == 1 && _nameController.text != '' && _birthController.text != '') ||
+                    (index == 1 && _nameController.text != '' && selectedDate != null) ||
                     (index == 2 && term1 == true && term2 == true && term3 == true && term4 == true)
                 ? Color(0xff4D64F3)
                 : Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
             child: (index == 0 && _emailController.text != '') ||
-                    (index == 1 && _nameController.text != '' && _birthController.text != '') ||
+                    (index == 1 && _nameController.text != '' && selectedDate != null) ||
                     (index == 2 && term1 == true && term2 == true && term3 == true && term4 == true)
                 ? InkWell(
                     onTap: () {
@@ -388,9 +388,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       // 여기 체크해봐야함! [ERROR]
                       if (await authService.doubleCheck(_emailController.text) == true) {
                         emailDoubleChecked = false;
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("이미 있는 아이디입니다"),
-                        ));
                       } else {
                         emailDoubleChecked = true;
                       }

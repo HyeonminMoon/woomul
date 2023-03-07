@@ -65,6 +65,8 @@ class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
     final user = authService.currentUser();
     final userData = context.read<UserData>();
 
+    final userName = userData.name;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +17,14 @@ import '../../provider/auth_service.dart';
 import '../../routes.dart';
 
 class MyPageEditScreen extends StatefulWidget {
+
   @override
   _MyPageEditScreenState createState() => _MyPageEditScreenState();
+
 }
 
 class _MyPageEditScreenState extends State<MyPageEditScreen> {
+
   late TextEditingController _nameController;
   late TextEditingController _mbtiController;
   late TextEditingController _emailController;
@@ -32,6 +36,45 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
   late bool _showAppleSignIn;
 
   bool isSwitched = false;
+  String tempMymbti = '';
+  String mymbti = '';
+
+  List<String> mbtiList = [
+    'ISTJ',
+    'ISFJ',
+    'INFJ',
+    'INTJ',
+    'ISTP',
+    'ISFP',
+    'INFP',
+    'INTP',
+    'ESTJ',
+    'ESFJ',
+    'ENFJ',
+    'ENTJ',
+    'ESTP',
+    'ESFP',
+    'ENFP',
+    'ENTP'
+  ];
+  List<bool> mbtiBoolList = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
 
 
   @override
@@ -67,10 +110,10 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
   @override
   Widget build(BuildContext context) {
 
-
     final authService = context.read<AuthService>();
     final user = authService.currentUser();
     final userData = context.read<UserData>();
+    final mbti = userData.mbti;
 
     return Scaffold(
       appBar: AppBar(
@@ -116,31 +159,14 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
       key: _scaffoldKey,
       body: Align(
         alignment: Alignment.center,
-        child: _buildForm(context, authService),
+        child: _buildForm(context, authService, mbti),
       ),
     );
   }
 
   void MBTIDialog() {
     var phoneSize = MediaQuery.of(context).size;
-    List<String> mbtiList = [
-      'ISTJ',
-      'ISFJ',
-      'INFJ',
-      'INTJ',
-      'ISTP',
-      'ISFP',
-      'INFP',
-      'INTP',
-      'ESTJ',
-      'ESFJ',
-      'ENFJ',
-      'ENTJ',
-      'ESTP',
-      'ESFP',
-      'ENFP',
-      'ENTP'
-    ];
+
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -159,8 +185,8 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
             ),
             content: Container(
               width: phoneSize.width,
-              height: phoneSize.height * 0.26,
-              child: _MBTI2(context, mbtiList)
+              height: phoneSize.height * 0.29,
+              child: _MBTI2(context)
             ),
             actionsAlignment: MainAxisAlignment.center,
             actionsPadding: EdgeInsets.all(0),
@@ -184,6 +210,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                     ),
                   ),
                   onPressed: () {
+                    mymbti = tempMymbti;
                     Navigator.pop(context);
                   },
                 ),
@@ -193,7 +220,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
         });
   }
 
-  Widget _MBTI2(BuildContext context, List mbti) {
+  Widget _MBTI2(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
       //height: phoneSize.height*0.3,
@@ -205,17 +232,27 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
           childAspectRatio: 2 / 1.4,
         ),
         shrinkWrap: true,
-        itemCount: mbti.length,
+        itemCount: mbtiList.length,
         itemBuilder: (context, index) => InkWell(
           onTap: () {
             //색 바뀌게 하고, 해당 정보 값 저장하기
+            setState(() {
+              if (mbtiBoolList[index] == false){
+                mbtiBoolList = List.filled(mbtiBoolList.length, false);
+                mbtiBoolList[index] = true;
+                tempMymbti = mbtiList[index];
+              } else {
+                mbtiBoolList[index] = false;
+                tempMymbti = '';
+              }
+            });
           },
           child: Container(
               width: 71,
               height: 48,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.white, //선택되면 색 바뀌어야함!
+                color: mbtiBoolList[index] == false ? Colors.white : Color(0xffB1C7FF), //선택되면 색 바뀌어야함!
                 border: Border.all(
                   width: 1,
                   color: Color(0xffB1C7FF),
@@ -225,7 +262,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${mbti[index]}',
+                    mbtiList[index],
                     style: TextStyle(
                         color: Color(0xff4E4B66), //선택되면 색 바껴야 함!
                         fontSize: 16,
@@ -259,11 +296,11 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
     );
   }
 
-  Widget _buildForm(BuildContext context, AuthService authService) {
+  Widget _buildForm(BuildContext context, AuthService authService, String mbti) {
     var phoneSize = MediaQuery.of(context).size;
     final userData = context.read<UserData>();
-    final mbti = userData.mbti;
     final ss = userData.sex == 'man' ? 'M' : 'F';
+    final userName = userData.name;
 
     return Form(
         key: _formKey,
@@ -362,7 +399,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              userData.mbti
+                              mymbti == '' ? userData.mbti : mymbti
                             ),
                             Container(
                               padding: EdgeInsets.only(right : 16.0),
@@ -415,7 +452,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '**********'
+                              '●●●●●●●●●●'
                             ),
                             Container(
                               padding: EdgeInsets.only(right : 16.0),
@@ -556,7 +593,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
         obscureText: obscure,
-        controller: controller,
+        controller: _nameController,
         cursorColor: Color(0xffA0A3BD),
         style: Theme.of(context)
             .textTheme

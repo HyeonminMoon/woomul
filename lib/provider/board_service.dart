@@ -51,6 +51,12 @@ class BoardService extends ChangeNotifier {
         .get();
   }
 
+  Future<QuerySnapshot> searchAll(String word) async {
+    return bucketCollection
+        .where('content', arrayContains: word)
+        .get();
+  }
+
   void create(
       {required String key,
       required String userUid,

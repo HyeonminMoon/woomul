@@ -21,60 +21,29 @@ class PassWordEditScreen extends StatefulWidget {
 
 class _PassWordEditScreenState extends State<PassWordEditScreen> {
   var index;
-  late TextEditingController _emailController;
-  late TextEditingController _nameController;
-  late TextEditingController _birthController;
   late TextEditingController _passwordController;
   late TextEditingController _passwordCheckController;
-
   var errorCheck;
 
-  var tmpPW = 'testpassword1';
-  var tmpSEX = 'man';
-
-  String dropdownValue = listSex.first;
-
-  bool mbti1 = false;
-  bool mbti2 = false;
-  bool mbti3 = false;
-  bool mbti4 = false;
 
   bool emailChecked = false;
   bool emailDoubleChecked = false;
-  bool nameChecked = false;
-  bool birthChecked = false;
-
   bool isChecked = false;
 
-  bool term1 = false;
-  bool term2 = false;
-  bool term3 = false;
-  bool term4 = false;
-  bool term5 = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     index = 0;
-    _emailController = TextEditingController(text: "");
-    _nameController = TextEditingController(text: "");
-    _birthController = TextEditingController(text: "");
     _passwordController = TextEditingController(text: "");
     _passwordCheckController = TextEditingController(text: "");
     errorCheck = false;
-    mbti1 = false;
-    mbti2 = false;
-    mbti3 = false;
-    mbti4 = false;
     isChecked = false;
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _nameController.dispose();
-    _birthController.dispose();
     _passwordController.dispose();
     _passwordCheckController.dispose();
     //index.dispose(); int 값을 dispose() 했을떄 오류 발생함 221228 현민
@@ -96,14 +65,7 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
               color: Colors.black,
             ),
             onPressed: () {
-              setState(() {
-                if (index == 0) {
-                  Navigator.pop(context);
-                }
-                if (index > 0) {
-                  index--;
-                }
-              });
+              Navigator.pop(context);
             },
           ),
         ),
@@ -113,12 +75,6 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*
-                index == 0
-                    ? _buildForm1(context, authService)
-                    : index == 1
-                    ?_buildForm3(context, authService)
-                    :_buildForm4(context),*/
                 index == 0
                   ? _buildForm3(context, authService)
                     : _buildForm4(context)
@@ -127,7 +83,7 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
           ),
         ),
         bottomNavigationBar: Material(
-            color: (index == 0 && _passwordController.text != '' && _passwordCheckController.text != '') || index == 2
+            color: (index == 0 && _passwordController.text != '' && _passwordCheckController.text != '')
                 ? Color(0xff4D64F3)
                 : Color(0xffD0D3E5), //1번 페이지의 경우, 이메일 인증 후에 색 바뀔 수 있도록
             child: (index == 0 && _passwordController.text != '' && _passwordCheckController.text != '')
@@ -146,6 +102,7 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
                           content: Text("비밀번호 길이는 8자 이상, 20자 이하로 설정해주세요"),
                         ));
                       } else {
+                        authService.changePW(_passwordCheckController.text);
                         index++;
                       }
                     }
@@ -157,7 +114,7 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
                 width: double.infinity,
                 child: Center(
                   child: Text(
-                    index != 0 ? '확인' : '댜음',
+                    index != 0 ? '확인' : '다음',
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
@@ -182,43 +139,6 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
       );
     });
   }
-
-  Widget _buildForm1(BuildContext context, AuthService authService) {
-    var phoneSize = MediaQuery.of(context).size;
-    return Form(
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '비밀번호 재설정',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24, color: Color(0xff14142B)),
-                ),
-                SizedBox(height: phoneSize.height * 0.01),
-                Text(
-                  '가입하신 이메일(아이디)를 입력해주세요.',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xff4E4B66)),
-                ),
-
-                SizedBox(height: phoneSize.height * 0.07),
-
-                Text(
-                  '이메일',
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Color(0xff4E4B66)),
-                ),
-
-                textFieldForm(_emailController, "가입하신 이메일을 입력해주세요.", "가입하지 않은 이메일입니다.", false, false, 1),
-
-              ],
-            ),
-          ),
-        ));
-  }
-
 
 
   Widget _buildForm3(BuildContext context, AuthService authService) {

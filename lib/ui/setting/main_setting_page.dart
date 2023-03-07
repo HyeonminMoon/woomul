@@ -59,16 +59,7 @@ class _SettingScreenState extends State<SettingScreen> {
           '설정',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 16),
         ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            //뒤로가기
-            //context.read<AuthService>().signOut();
-          },
-        ),
+
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -79,56 +70,62 @@ class _SettingScreenState extends State<SettingScreen> {
               children: [
                 //_profile(context, userData, authService),
                 //_board1(context),
-                FutureBuilder<void>(
-                    future: userData.getUserData(user!.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container();
-                      }
-                      return Column(
-                        children: [
-                          Row(
+                Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
+                      radius: 20,
+                    ),
+                    FutureBuilder<void>(
+                        future: userData.getUserData(user!.uid),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container();
+                          }
+                          return Column(
                             children: [
-                              //Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
-                              CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
-                                radius: 20,
-                              ),
-                              SizedBox(width: phoneSize.width * 0.03),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
                                 children: [
-                                  Row(
+                                  //Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
+
+                                  SizedBox(width: phoneSize.width * 0.03),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        userData.name,
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            userData.name,
+                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            userData.mbti,
+                                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text('|'),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            userData.mbtiMean, //이것도 값 가져와야 함!
+                                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                          )
+                                        ],
                                       )
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        userData.mbti,
-                                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text('|'),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        userData.mbtiMean, //이것도 값 가져와야 함!
-                                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
-                                      )
-                                    ],
-                                  )
                                 ],
                               ),
                             ],
-                          ),
-                        ],
-                      );
-                    }),
+                          );
+                        }),
+                  ],
+                ),
+
 
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

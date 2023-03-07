@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/board_service.dart';
+import 'detail_board_page.dart';
+import 'package:intl/intl.dart';
 
 
 class SearchResultScreen extends StatefulWidget {
@@ -38,6 +44,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final boardService = context.read<BoardService>();
+
     var phoneSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -106,8 +115,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               _buildForm3(context),
 
               //검색어에 해당되는 게시물이 있는지 확인하고, _board0 or _board1 불러오도록 해야함!
-              _board0(context)
-              //_board1(context,) //이거 리스트 불러오는 코드! 작업 할 때 주석 처리 해제 하시면 됨!
+              //_board0(context)
+              _board1(context, boardService) //이거 리스트 불러오는 코드! 작업 할 때 주석 처리 해제 하시면 됨!
             ],
           ),
         ),
@@ -128,9 +137,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           alignment: Alignment.center,
           child: Image.asset("assets/images/noSearch.png"),
         ),
-
         SizedBox(height: phonSize.height * 0.03,),
-
         Text(
           '해당하는 검색 결과가 없습니다.',
           style: TextStyle(
@@ -143,21 +150,22 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     );
   }
 
-  //이거 리스트 불러오는 코드! 작업하실 때 주석 처리 해제 하시고 하시면 됩니당
-  /*
+
   Widget _board1(BuildContext context, BoardService boardService) {
     var phoneSize = MediaQuery.of(context).size;
     return Expanded(
       child: FutureBuilder<QuerySnapshot>(
-          future: boardService.read(widget.name),
+          future: boardService.searchAll(_keywordController.text),
           builder: (context, snapshot) {
             final docs = snapshot.data?.docs ?? [];
             return ListView.builder(
                 itemCount: docs.length,
                 itemBuilder: (context, index) {
                   final doc = docs[index];
+                  String boardType = doc.get('boardType');
                   String title = doc.get('title');
                   String userName = doc.get('name');
+                  String userUid = doc.get('userUid');
                   DateTime date = doc.get('createDate').toDate();
                   String formattedDate = DateFormat('yyyy-MM-dd').format(date);
                   String content = doc.get('content');
@@ -173,11 +181,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DetailBoardScreen(
-                                      widget.name, contentKey)));
-                        },
+                                  builder: (context) => DetailBoardScreen(boardType, contentKey, docs[index].id, userUid))); },
                         child: Container(
-                          //height: phoneSize.height*0.25,
                           height: phoneSize.height*0.25,
                           margin: EdgeInsets.only(top: 10, bottom: 12),
                           padding: EdgeInsets.only(left: 15,top:20,right: 15),
@@ -230,7 +235,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                             ),
                                           Row(
                                             children: [
-                                              if (widget.name != '비밀게시판')
+                                              if (boardType != '비밀게시판')
                                                 Text(
                                                   userName,
                                                   style: TextStyle(
@@ -239,7 +244,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                       color: Color(0xffA0A3BD)
                                                   ),
                                                 ),
-                                              if (widget.name == '비밀게시판')
+                                              if (boardType == '비밀게시판')
                                                 Text(
                                                   "익명",
                                                   style: TextStyle(
@@ -351,7 +356,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 });
           }),
     );
-  } */
+  }
 
   Widget _buildForm3(BuildContext context) {
     var phoneSize = MediaQuery.of(context).size;

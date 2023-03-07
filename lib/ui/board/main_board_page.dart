@@ -58,13 +58,7 @@ class _MainBoardScreenState extends State<MainBoardScreen> {
             fontWeight: FontWeight.w700
           ),
         ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {},
-        ),
+
       ),
       body: SingleChildScrollView(
         child: Padding(
