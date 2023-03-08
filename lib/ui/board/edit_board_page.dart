@@ -25,16 +25,14 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
 
   var errorCheck;
   late TextEditingController _ContentController =
-      TextEditingController(text: "");
-  late TextEditingController _TitleController = TextEditingController(text: "");
-
-  //List<String> board = <String>['자유게시판', '연애게시판', '고민게시판', '비밀게시판'];
+      TextEditingController(text: '');
+  late TextEditingController _TitleController = TextEditingController(text: '');
 
   String dropdownValue = board.first;
 
-  String _chars =
+  final String _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  Random _rnd = Random();
+  final Random _rnd = Random();
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
@@ -260,7 +258,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
-                      color: Color(0xff4975FF) //이거 text 가 차 있으면 색깔 바뀌게 해야함!
+                      color: (_TitleController.text != '' && _ContentController.text != '') ? Color(0xff4975FF) : Colors.grey //이거 text 가 차 있으면 색깔 바뀌게 해야함!
                     ),
                   ),
                 )
@@ -432,7 +430,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                     borderRadius: BorderRadius.circular(12)),
                 side: BorderSide(color: Color(0xffB1C7FF))),
             child: Text(
-              '${mbtiList[index]}',
+              mbtiList[index],
               style: TextStyle(
                   color:
                       mbtiValue[index] == false ? Colors.blue : Colors.white),
@@ -546,9 +544,13 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
             return null;
           }
         },
+        onChanged: (text){
+          setState(() {});
+        },
         decoration: InputDecoration(
             contentPadding:
                 EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
             labelText: labelText,
             labelStyle: TextStyle(
                 color: Color(0xFF0000) //Theme.of(context).colorScheme.primary,
@@ -580,6 +582,9 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: TextFormField(
+        onChanged: (txt){
+          setState(() {});
+        },
         obscureText: obscure,
         controller: controller,
         minLines: 100, // any number you need (It works as the rows for the textarea)
@@ -603,6 +608,7 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
           }
         },
         decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.always,
             contentPadding:
             EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
             labelText: labelText,

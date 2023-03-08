@@ -44,7 +44,6 @@ class _SettingScreenState extends State<SettingScreen> {
     final authService = context.read<AuthService>();
     final userData = context.read<UserData>();
 
-    final mbti = userData.mbti;
     final ss = userData.sex == 'man' ? 'M' : 'F';
 
     final user = authService.currentUser();
@@ -57,9 +56,9 @@ class _SettingScreenState extends State<SettingScreen> {
         centerTitle: true,
         title: Text(
           '설정',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 16),
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.w700, fontSize: 16),
         ),
-
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -68,21 +67,21 @@ class _SettingScreenState extends State<SettingScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //_profile(context, userData, authService),
-                //_board1(context),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/chara/$mbti$ss.png'),
-                      radius: 20,
-                    ),
-                    FutureBuilder<void>(
-                        future: userData.getUserData(user!.uid),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Container();
-                          }
-                          return Column(
+                FutureBuilder<void>(
+                    future: userData.getUserData(user!.uid),
+                    builder: (context, snapshot) {
+                      final mbti = userData.mbti;
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      }
+                      return Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/chara/$mbti$ss.png'),
+                            radius: 20,
+                          ),
+                          Column(
                             children: [
                               Row(
                                 children: [
@@ -91,13 +90,16 @@ class _SettingScreenState extends State<SettingScreen> {
                                   SizedBox(width: phoneSize.width * 0.03),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           Text(
                                             userData.name,
-                                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
                                           )
                                         ],
                                       ),
@@ -105,14 +107,18 @@ class _SettingScreenState extends State<SettingScreen> {
                                         children: [
                                           Text(
                                             userData.mbti,
-                                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14),
                                           ),
                                           SizedBox(width: 10),
                                           Text('|'),
                                           SizedBox(width: 10),
                                           Text(
                                             userData.mbtiMean, //이것도 값 가져와야 함!
-                                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14),
                                           )
                                         ],
                                       )
@@ -121,12 +127,10 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ],
                               ),
                             ],
-                          );
-                        }),
-                  ],
-                ),
-
-
+                          )
+                        ],
+                      );
+                    }),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -135,18 +139,23 @@ class _SettingScreenState extends State<SettingScreen> {
                     GestureDetector(
                       onTap: () {
                         //내 정보 이동
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyPageScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyPageScreen()));
                       },
                       child: Container(
                         width: phoneSize.width * 0.8,
                         height: phoneSize.height * 0.1,
                         decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12)),
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              color: Color.fromRGBO(110, 113, 145, 0.12)
+                                  .withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 8,
                               offset: Offset(0, 3),
@@ -160,7 +169,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12.0),
+                                  padding:
+                                      EdgeInsets.only(left: 12, right: 12.0),
                                   child: Icon(
                                     Icons.account_circle_outlined,
                                     color: Color(0xff466FFF),
@@ -168,7 +178,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                                 Text(
                                   '내 정보',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ],
                             ),
@@ -188,7 +200,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     GestureDetector(
                       onTap: () {
                         //내 활동 이동
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyActivityScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyActivityScreen()));
                       },
                       child: Container(
                         width: phoneSize.width * 0.8,
@@ -197,7 +212,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              color: Color.fromRGBO(110, 113, 145, 0.12)
+                                  .withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 8,
                               offset: Offset(0, 10),
@@ -211,7 +227,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12.0),
+                                  padding:
+                                      EdgeInsets.only(left: 12, right: 12.0),
                                   child: Icon(
                                     Icons.public,
                                     color: Color(0xff466FFF),
@@ -219,7 +236,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                                 Text(
                                   '내 활동',
-                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
                                 ),
                               ],
                             ),
@@ -239,7 +258,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     GestureDetector(
                       onTap: () {
                         //이용안내 이동
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ServiceScreen()));
                       },
                       child: Container(
                         width: phoneSize.width * 0.8,
@@ -248,7 +270,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              color: Color.fromRGBO(110, 113, 145, 0.12)
+                                  .withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 8,
                               offset: Offset(0, 10),
@@ -262,7 +285,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12.0),
+                                  padding:
+                                      EdgeInsets.only(left: 12, right: 12.0),
                                   child: Icon(
                                     Icons.info_outline,
                                     color: Color(0xff466FFF),
@@ -270,7 +294,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                                 Text(
                                   '이용안내',
-                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
                                 ),
                               ],
                             ),
@@ -298,7 +324,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              color: Color.fromRGBO(110, 113, 145, 0.12)
+                                  .withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 8,
                               offset: Offset(0, 10),
@@ -312,7 +339,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12.0),
+                                  padding:
+                                      EdgeInsets.only(left: 12, right: 12.0),
                                   child: Icon(
                                     Icons.notifications_outlined,
                                     color: Color(0xff466FFF),
@@ -320,7 +348,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                                 Text(
                                   '알람설정',
-                                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
                                 ),
                               ],
                             ),
@@ -328,7 +358,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             StreamBuilder<QuerySnapshot>(
                                 stream: FirebaseFirestore.instance
                                     .collection('user')
-                                    .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                                    .where('uid',
+                                        isEqualTo: FirebaseAuth
+                                            .instance.currentUser!.uid)
                                     .snapshots(),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
@@ -345,8 +377,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                         if (!snapshot.hasData) {
                                           return SizedBox();
                                         }
-                                        final bool isPushAlarmTurnOn =
-                                        snapshot.data!.get('isPushAlarmTurnOn');
+                                        final bool isPushAlarmTurnOn = snapshot
+                                            .data!
+                                            .get('isPushAlarmTurnOn');
                                         return SizedBox(
                                           width: 48,
                                           height: 40,
@@ -361,7 +394,10 @@ class _SettingScreenState extends State<SettingScreen> {
                                                     .collection('user')
                                                     .doc(myDocId)
                                                     .update({
-                                                  'isPushAlarmTurnOn': isPushAlarmTurnOn ? false : true
+                                                  'isPushAlarmTurnOn':
+                                                      isPushAlarmTurnOn
+                                                          ? false
+                                                          : true
                                                 });
                                               },
                                             ),
@@ -378,18 +414,23 @@ class _SettingScreenState extends State<SettingScreen> {
                       onTap: () {
                         //로그아웃 이동
                         context.read<AuthService>().signOut();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
                       },
                       child: Container(
                         width: phoneSize.width * 0.8,
                         height: phoneSize.height * 0.1,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                              bottomLeft: Radius.circular(12),
+                              bottomRight: Radius.circular(12)),
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
+                              color: Color.fromRGBO(110, 113, 145, 0.12)
+                                  .withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 8,
                               offset: Offset(0, 10),
@@ -403,7 +444,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(left: 12, right: 12.0),
+                                  padding:
+                                      EdgeInsets.only(left: 12, right: 12.0),
                                   child: Icon(
                                     Icons.logout,
                                     color: Color(0xff466FFF),
@@ -424,9 +466,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                   ],
                 ),
-
-                SizedBox(height: phoneSize.height * 0.05,),
-
+                SizedBox(
+                  height: phoneSize.height * 0.05,
+                ),
                 Container(
                   height: phoneSize.height * 0.2,
                   color: Colors.grey,
@@ -440,7 +482,8 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   //user 기본 프로필
-  Widget _profile(BuildContext context, UserData userData, AuthService authService) {
+  Widget _profile(
+      BuildContext context, UserData userData, AuthService authService) {
     var phoneSize = MediaQuery.of(context).size;
     final user = authService.currentUser();
     return FutureBuilder<void>(
@@ -453,7 +496,8 @@ class _SettingScreenState extends State<SettingScreen> {
             children: [
               Row(
                 children: [
-                  Placeholder(fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
+                  Placeholder(
+                      fallbackHeight: 15, fallbackWidth: 15), //프로필 사진 불러오기
                   SizedBox(width: phoneSize.width * 0.03),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -463,7 +507,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         children: [
                           Text(
                             userData.name,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
                           )
                         ],
                       ),
@@ -471,14 +516,16 @@ class _SettingScreenState extends State<SettingScreen> {
                         children: [
                           Text(
                             userData.mbti,
-                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 14),
                           ),
                           SizedBox(width: 10),
                           Text('|'),
                           SizedBox(width: 10),
                           Text(
                             'mbti 뜻', //이것도 값 가져와야 함!
-                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 14),
                           )
                         ],
                       )
@@ -502,14 +549,16 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //내 정보 이동
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyPageScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyPageScreen()));
             },
             child: Container(
               width: phoneSize.width * 0.8,
               height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12)),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
@@ -535,7 +584,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         '내 정보',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w400),
                       ),
                     ],
                   ),
@@ -555,7 +605,8 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //내 활동 이동
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyActivityScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyActivityScreen()));
             },
             child: Container(
               width: phoneSize.width * 0.8,
@@ -586,7 +637,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         '내 활동',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 14),
                       ),
                     ],
                   ),
@@ -664,7 +716,8 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               //이용안내 이동
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ServiceScreen()));
             },
             child: Container(
               width: phoneSize.width * 0.8,
@@ -695,7 +748,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         '이용안내',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 14),
                       ),
                     ],
                   ),
@@ -745,7 +799,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         '알람설정',
-                        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 14),
                       ),
                     ],
                   ),
@@ -753,7 +808,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('user')
-                          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                          .where('uid',
+                              isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
@@ -786,7 +842,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                           .collection('user')
                                           .doc(myDocId)
                                           .update({
-                                        'isPushAlarmTurnOn': isPushAlarmTurnOn ? false : true
+                                        'isPushAlarmTurnOn':
+                                            isPushAlarmTurnOn ? false : true
                                       });
                                     },
                                   ),
@@ -803,14 +860,16 @@ class _SettingScreenState extends State<SettingScreen> {
             onTap: () {
               //로그아웃 이동
               context.read<AuthService>().signOut();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()));
             },
             child: Container(
               width: phoneSize.width * 0.8,
               height: phoneSize.height * 0.1,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12)),
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(

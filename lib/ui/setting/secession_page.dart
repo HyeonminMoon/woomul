@@ -36,11 +36,6 @@ class _SecessionScreenState extends State<SecessionScreen> {
 
   String dropdownValue = listSex.first;
 
-  bool mbti1 = false;
-  bool mbti2 = false;
-  bool mbti3 = false;
-  bool mbti4 = false;
-
   bool emailChecked = false;
   bool emailDoubleChecked = false;
   bool nameChecked = false;
@@ -65,10 +60,6 @@ class _SecessionScreenState extends State<SecessionScreen> {
     _passwordController = TextEditingController(text: "");
     _passwordCheckController = TextEditingController(text: "");
     errorCheck = false;
-    mbti1 = false;
-    mbti2 = false;
-    mbti3 = false;
-    mbti4 = false;
     isChecked = false;
   }
 
@@ -101,7 +92,9 @@ class _SecessionScreenState extends State<SecessionScreen> {
             ),
           ),
           centerTitle: true,
-          leading: IconButton(
+          leading:
+              index != 2 ?
+          IconButton(
             icon: Icon(
               Icons.arrow_back,
               color: Colors.black,
@@ -116,7 +109,7 @@ class _SecessionScreenState extends State<SecessionScreen> {
                 }
               });
             },
-          ),
+          ) : Container()
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -282,58 +275,10 @@ class _SecessionScreenState extends State<SecessionScreen> {
                         ],
                       ),
                       child: textFieldForm(
-                          _passwordController, "비밀번호를 입력해주세요.", "비밀번호가 일치하지 않습니다.", false),
+                          _passwordController, "비밀번호를 입력해주세요.", "비밀번호가 일치하지 않습니다.", true),
                     ),
                   ],
                 ),
-
-                /*
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            //여기선 그냥 터치 안 되도록
-                            authService.deleteUser(uid: user!.uid);
-                          },
-                          child: Container(
-                            height: phoneSize.height * 0.08,
-                            padding: EdgeInsets.only(left:10.0, right:10.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(110, 113, 145, 0.12).withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 8,
-                                  offset: Offset(0, 3),
-                                )
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(right : 16.0),
-                                  child: Icon(
-                                    Icons.mood_bad,
-                                    color: Color(0xffA0A3BD),
-                                  ),
-                                ),
-                                Text(
-                                  '탈퇴하기',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: Color(0xffA0A3BD)
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),*/
 
                 SizedBox(height: phoneSize.height * 0.04),
 

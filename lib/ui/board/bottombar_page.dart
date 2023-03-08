@@ -93,28 +93,6 @@ class _BoardScreenState extends State<BoardScreen> {
       Expanded(child: SettingScreen()),
     ];
     return Scaffold(
-      /*
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: Text(
-          '게시판',
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-
-          },
-        ),
-      ),*/
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

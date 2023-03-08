@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 
 import '../../routes.dart';
 
-List<String> listSex = <String>['선택', '여', '남'];
+List<String> listSex = <String>['여', '남'];
 
 class SignUpScreen extends StatefulWidget {
   @override

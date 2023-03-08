@@ -100,9 +100,10 @@ class _PasswordCheckScreenState extends State<PasswordCheckScreen> {
                   authService.signIn(email: userData.email,
                       password: _passwordController.text,
                       onSuccess: (){
+                    String name = userData.name;
                         if(_passwordController.text != ''){
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => MyPageEditScreen()));
+                              MaterialPageRoute(builder: (context) => MyPageEditScreen(name)));
                         }
                       },
                       onError: (err){

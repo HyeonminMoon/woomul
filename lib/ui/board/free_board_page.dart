@@ -144,7 +144,7 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
           automaticallyImplyLeading: true,
           centerTitle: true,
           title: Text(
-            '${widget.name}',
+            widget.name,
             style: TextStyle(
               color: Colors.black,
               fontSize: 16,

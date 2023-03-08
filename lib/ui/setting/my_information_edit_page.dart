@@ -18,6 +18,10 @@ import '../../routes.dart';
 
 class MyPageEditScreen extends StatefulWidget {
 
+  final String name;
+
+  const MyPageEditScreen(this.name, {super.key});
+
   @override
   _MyPageEditScreenState createState() => _MyPageEditScreenState();
 
@@ -88,7 +92,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
       _showAppleSignIn = false;
     }
 
-    _nameController = TextEditingController(text: "");
+    _nameController = TextEditingController(text: widget.name);
     _mbtiController = TextEditingController(text: "");
     _emailController = TextEditingController(text: "");
     _passwordController = TextEditingController(text: "");
@@ -210,7 +214,9 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                     ),
                   ),
                   onPressed: () {
-                    mymbti = tempMymbti;
+                    setState(() {
+                      mymbti = tempMymbti;
+                    });
                     Navigator.pop(context);
                   },
                 ),
@@ -218,6 +224,14 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
             ],
           );
         });
+  }
+
+  _mbtiChecker (index){
+    setState(() {
+      mbtiBoolList = List.filled(mbtiBoolList.length, false);
+      mbtiBoolList[index] = true;
+      tempMymbti = mbtiList[index];
+    });
   }
 
   Widget _MBTI2(BuildContext context) {
@@ -236,16 +250,7 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
         itemBuilder: (context, index) => InkWell(
           onTap: () {
             //색 바뀌게 하고, 해당 정보 값 저장하기
-            setState(() {
-              if (mbtiBoolList[index] == false){
-                mbtiBoolList = List.filled(mbtiBoolList.length, false);
-                mbtiBoolList[index] = true;
-                tempMymbti = mbtiList[index];
-              } else {
-                mbtiBoolList[index] = false;
-                tempMymbti = '';
-              }
-            });
+            _mbtiChecker(index);
           },
           child: Container(
               width: 71,
@@ -271,25 +276,6 @@ class _MyPageEditScreenState extends State<MyPageEditScreen> {
                   ),
                 ],
               )
-            /*ElevatedButton(
-              onPressed: () {
-                //색 바뀌게 하고, 해당 정보 값 저장하기
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  side: BorderSide(color: Color(0xffB1C7FF))
-              ),
-              child: Text(
-                '${mbti[index]}',
-                style: TextStyle(
-                    color: Color(0xff4E4B66),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400
-                ),
-              ),
-            ),*/
           ),
         ),
       ),

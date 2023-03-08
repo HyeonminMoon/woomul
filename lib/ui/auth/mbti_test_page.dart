@@ -320,6 +320,8 @@ class _MBTITestScreenState extends State<MBTITestScreen> {
   }
 
   Widget _buildForm2(BuildContext context) {
+    final userData = context.read<UserData>();
+    final mbtiMean = userData.mbtiMean;
     var phoneSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
@@ -329,14 +331,14 @@ class _MBTITestScreenState extends State<MBTITestScreen> {
           Placeholder(fallbackHeight: 150,),//MBTI 캐릭터 프로필 집어넣기
           SizedBox(height: phoneSize.height*0.03,),
           Text(
-            '$mbti',
+            mbti,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700
             ),
           ),
           Text(
-            'MBTI 이름(재기발랄 활동가 이런거 가져오기)',
+            '$mbti ($mbtiMean)',
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16
