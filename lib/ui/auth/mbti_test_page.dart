@@ -249,7 +249,8 @@ class _MBTITestScreenState extends State<MBTITestScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            option1,
+                            option1.replaceAll( "\\n", "\n" ),
+                            //option1,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: first == true ? Colors.white : Colors.black,
@@ -300,7 +301,7 @@ class _MBTITestScreenState extends State<MBTITestScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            option2,
+                            option2.replaceAll( "\\n", "\n" ),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: second == true ? Colors.white : Colors.black,

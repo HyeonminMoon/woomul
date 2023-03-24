@@ -467,16 +467,19 @@ class _EditBoardScreenState extends State<EditBoardScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    //width: phoneSize.width*0.2,
-                    padding: EdgeInsets.only(left: 15.0, right: 10),
+                    width: phoneSize.width*0.29,
+                    height: phoneSize.height * 0.05,
+                    padding: EdgeInsets.only(left: 15.0, right: 15),
                     decoration: BoxDecoration(
                         color: Color(0xffECF1FF),
                         borderRadius: BorderRadius.circular(54)
                     ),
                     child: DropdownButton<String>(
+                      isExpanded: true,
                       value: dropdownValue,
                       icon: Icon(
                           Icons.keyboard_arrow_down,
+                        size: 16,
                         color: Color(0xff3462FF),
                       ),
                       elevation: 16,

@@ -153,7 +153,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
 
   Widget _board1(BuildContext context, BoardService boardService) {
     var phoneSize = MediaQuery.of(context).size;
-    return Expanded(
+    return SizedBox(
+      height: phoneSize.height,
       child: FutureBuilder<QuerySnapshot>(
           future: boardService.searchAll(_keywordController.text),
           builder: (context, snapshot) {
@@ -389,7 +390,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 ),
 
                 Text(
-                  '검색 게시글 수건',
+                  '검색 게시글 N건',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
