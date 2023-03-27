@@ -257,17 +257,17 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                         Text(
                                             docs[0].get('name'),
                                         ),*/
-                                                  if (docs[0].get('title').length > 40)
+                                                  if (title.length > 40)
                                                     Text(
-                                                      docs[0].get('title').substring(0, 40) + '...',
+                                                      '${title.substring(0, 40)}...',
                                                       style: TextStyle(
                                                           fontWeight: FontWeight.w600,
                                                           fontSize: 14
                                                       ),
                                                     ),
-                                                  if (docs[0].get('title').length <= 40)
+                                                  if (title.length <= 40)
                                                     Text(
-                                                      docs[0].get('title'),
+                                                      title,
                                                       style: TextStyle(
                                                           fontWeight: FontWeight.w600,
                                                           fontSize: 14),
@@ -277,7 +277,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    docs[0].get('name'),
+                                                    userName,
                                                     style: TextStyle(
                                                         fontSize: 13,
                                                         fontWeight: FontWeight.w400,
@@ -295,7 +295,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                                   ),
                                                   SizedBox(width: 5),
                                                   Text(
-                                                    docs[0].get('userMbti'),
+                                                    mbti,
                                                     style: TextStyle(
                                                         fontSize: 13,
                                                         fontWeight: FontWeight.w400,
@@ -311,17 +311,17 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                       ),
 
 
-                                      if (docs[0].get('content').length > 50)
+                                      if (content.length > 50)
                                         Text(
-                                          docs[0].get('content').substring(0, 40) + '...',
+                                          '${content.substring(0, 40)}...',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontSize: 14
                                           ),
                                         ),
-                                      if (docs[0].get('content').length <= 50)
+                                      if (content.length <= 50)
                                         Text(
-                                          docs[0].get('content'),
+                                          content,
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400
@@ -345,7 +345,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                                   )
                                               ),
                                               Text(
-                                                docs[0].get('likeNum').toString(),
+                                                likeNum.toString(),
                                                 //likeNum.toString(),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
@@ -367,7 +367,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                               ),
                                               Text(
                                                 //commentNum.toString(),
-                                                docs[0].get('commentNum').toString(),
+                                                commentNum.toString(),
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 12,

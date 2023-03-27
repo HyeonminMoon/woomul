@@ -47,6 +47,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool nameChecked = false;
   bool birthChecked = false;
 
+  bool emptyEmail = false;
+  bool wrongEmail = false;
+
   bool isChecked = false;
 
   bool term1 = false;
@@ -386,10 +389,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       // 여기 체크해봐야함! [ERROR]
-                      if (await authService.doubleCheck(_emailController.text) == true) {
-                        emailDoubleChecked = false;
+
+                      if (_emailController.text == ''){
+                        emptyEmail = true;
                       } else {
-                        emailDoubleChecked = true;
+                        emptyEmail = false;
+
+                        if (!RegExp(
+                            r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                            .hasMatch(_emailController.text)){
+                          wrongEmail = true;
+                        } else {
+                          wrongEmail = false;
+
+                          if (await authService.doubleCheck(_emailController.text) == true) {
+                            emailDoubleChecked = false;
+                          } else {
+                            emailDoubleChecked = true;
+                          }
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -410,7 +428,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
 
-            _emailController.text != '' && emailDoubleChecked == false ?
+            emptyEmail == true ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  '이메일을 입력해주세요.',
+                  style: TextStyle(
+                      color: Color(0xffFF6868)
+                  ),
+                )
+              ],
+            ) : wrongEmail == true ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  '이메일 형식을 확인해주세요',
+                  style: TextStyle(
+                      color: Color(0xffFF6868)
+                  ),
+                )
+              ],
+            ) : _emailController.text != '' && emailDoubleChecked == false ?
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
