@@ -12,6 +12,7 @@ import 'package:woomul/provider/like_service.dart';
 import 'package:woomul/ui/auth/login_home_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:woomul/ui/splash_sreen.dart';
 
 // 스몰아이즈 //
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
@@ -56,16 +57,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthService>().currentUser();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
         primarySwatch: Colors.blue,
       ),
-      home: user == null
-          ? LoginScreen()
-          : BoardScreen(), //const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: splashScreen()//LoginScreen()
     );
   }
 }

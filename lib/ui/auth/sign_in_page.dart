@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:woomul/ui/auth/pw_find_page.dart';
 import 'package:woomul/ui/auth/sign_up_page.dart';
 import 'package:woomul/ui/board/bottombar_page.dart';
 import 'package:woomul/ui/setting/password_rewrite_page.dart';
@@ -170,7 +171,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       onPressed: () {
                         //비밀번호 찾기 기능 추가
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => PassWordEditScreen()));
+                            MaterialPageRoute(builder: (context) => pwFindScreen()));
                       },
                       style: TextButton.styleFrom(
                           //foregroundColor: Colors.black,

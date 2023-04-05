@@ -235,6 +235,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                                 uid: user!.uid,
                                 name: userData.name,
                                 mbti: userData.mbti,
+                                sex: userData.sex,
                                 comment: _commentController.text,
                                 contentKey: widget.contentKey,
                                 commentKey: key,
@@ -284,7 +285,22 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
     bool likeBool = false;
     final String boardWriteUid = docs[0].get('userUid');
 
-    final mbti = docs[0].get('userMbti');
+    final doc = docs[0];
+    String title = doc.get('title');
+    String userName = doc.get('name');
+    String boardType = doc.get('boardType');
+    DateTime date = doc.get('createDate').toDate();
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    String content = doc.get('content');
+    String contentKey = doc.get('key');
+    int likeNum = doc.get('likeNum');
+    int commentNum = doc.get('commentNum');
+    String userUid = doc.get('userUid');
+    String mbti = doc.get('userMbti');
+    String mbtiMean = doc.get('userMbtiMean');
+    String sex = doc.get('sex');
+
+    String sexData = sex == "남" ? "M" : "F";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,7 +329,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 children: [
                   Row(
                     children: [
-                      Placeholder(fallbackHeight: 20, fallbackWidth: 20),
+                      Container(
+                        height: 25,
+                        width: 25,
+                        alignment: Alignment.center,
+                        child: Image.asset("assets/images/chara/$mbti$sexData.png"),
+                      ),
                       SizedBox(width: phoneSize.width * 0.03),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -340,7 +361,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                           Row(
                             children: [
                               Text(
-                                docs[0].get('userMbti'),
+                                mbti,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 13,
@@ -356,7 +377,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                docs[0].get('userMbtiMean'),
+                                mbtiMean,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 13,
@@ -368,7 +389,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       ),
                     ],
                   ),
-                  if (uid == boardWriteUid)
+                  if (uid == userUid)
                     IconButton(
                       icon: Icon(
                         Icons.delete_outline,
@@ -386,12 +407,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                 height: phoneSize.height * 0.01,
               ),
               Text(
-                docs[0].get('title'),
+                title,
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
               SizedBox(height: phoneSize.height * 0.02),
               Text(
-                docs[0].get('content'),
+                content,
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
               ),
               SizedBox(
@@ -424,7 +445,7 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                           await fcmService.sendMessageNotification(
                             name: userData.name,
                             message: '좋아요를 눌렀습니다',
-                            boardWriterUid: boardWriteUid,
+                            boardWriterUid: userUid,
                           );
                         }
                       },
@@ -489,11 +510,14 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
           final doc = docs[index];
           String name = doc.get('name');
           String mbti = doc.get('mbti');
+          String sex = doc.get('sex');
           DateTime createDate = doc.get('createDate').toDate();
           String formattedDate = DateFormat('yyyy-MM-dd').format(createDate);
           String comment = doc.get('comment');
           int likeNum = doc.get('likeNum');
           String userUid = doc.get('uid');
+
+          String sexData = sex == "남" ? "M" : "F";
 
           return Column(
             children: [
@@ -512,7 +536,12 @@ class _DetailBoardScreenState extends State<DetailBoardScreen> {
                       children: [
                         Row(
                           children: [
-                            Placeholder(fallbackHeight: 20, fallbackWidth: 20),
+                            Container(
+                              height: 25,
+                              width: 25,
+                              alignment: Alignment.center,
+                              child: Image.asset("assets/images/chara/$mbti$sexData.png"),
+                            ),
                             SizedBox(width: phoneSize.width * 0.03),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,

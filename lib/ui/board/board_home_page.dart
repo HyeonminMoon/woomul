@@ -113,7 +113,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
               ),
 
               SizedBox(height: phoneSize.height * 0.05,),
-
+              /*
               Container(
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
                 margin: EdgeInsets.only(left : 20, right : 20, bottom: 10),
@@ -154,6 +154,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                 ),
               ),
 
+               */
               SizedBox(height: phoneSize.height * 0.02,),
 
               GestureDetector(
@@ -199,6 +200,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                         final doc = docs[index];
                         String title = doc.get('title');
                         String userName = doc.get('name');
+                        String boardType = doc.get('boardType');
                         DateTime date = doc.get('createDate').toDate();
                         String formattedDate = DateFormat('yyyy-MM-dd').format(date);
                         String content = doc.get('content');
@@ -207,6 +209,10 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                         int commentNum = doc.get('commentNum');
                         String userUid = doc.get('userUid');
                         String mbti = doc.get('userMbti');
+                        String sex = doc.get('sex');
+
+                        String sexData = sex == "남" ? "M" : "F";
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -220,7 +226,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => DetailBoardScreen(
-                                              'HOT 게시판', docs[0].get('key'), docs[0].id, docs[0].get('userUid'))));
+                                              boardType, contentKey, docs[0].id, userUid)));
                                 },
                                 child: Container(
                                   height: phoneSize.height*0.25,
@@ -244,8 +250,12 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                     children: [
                                       Row(
                                         children: [
-                                          Placeholder(
-                                              fallbackHeight: 15, fallbackWidth: 15), //프로필 사진
+                                          Container(
+                                            height: 25,
+                                            width: 25,
+                                            alignment: Alignment.center,
+                                            child: Image.asset("assets/images/chara/$mbti$sexData.png"),
+                                          ),
                                           SizedBox(width: phoneSize.width * 0.03),
                                           Column(
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -253,10 +263,7 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                             children: [
                                               Row(
                                                 children: [
-                                                  /*
-                                        Text(
-                                            docs[0].get('name'),
-                                        ),*/
+
                                                   if (title.length > 40)
                                                     Text(
                                                       '${title.substring(0, 40)}...',
@@ -302,7 +309,6 @@ class _HomeBoardScreenState extends State<HomeBoardScreen> {
                                                         color: Color(0xffA0A3BD)
                                                     ),
                                                   ),
-                                                  //Text(docs[0].get('userMbtiMean'))
                                                 ],
                                               )
                                             ],

@@ -220,6 +220,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                   int commentNum = doc.get('commentNum');
                   String userUid = doc.get('userUid');
                   String mbti = doc.get('userMbti');
+                  String sex = doc.get('sex');
+
+                  String sexData = sex == "남" ? "M" : "F";
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -258,9 +262,12 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                                 children: [
                                   Row(
                                     children: [
-                                      Placeholder(
-                                          fallbackHeight: 20,
-                                          fallbackWidth: 20),//프로필 사진 들어가야 함~
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        alignment: Alignment.center,
+                                        child: Image.asset("assets/images/chara/$mbti$sexData.png"),
+                                      ),//프로필 사진 들어가야 함~
                                       SizedBox(width: phoneSize.width * 0.03),
                                       Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
@@ -427,6 +434,10 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
               int likeNum = doc['likeNum'];
               int commentNum = doc['commentNum'];
               String userUid = doc['userUid'];
+              String mbti = doc['userMbti'];
+              String sex = doc['sex'];
+
+              String sexData = sex == "남" ? "M" : "F";
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -465,9 +476,12 @@ class _FreeBoardScreenState extends State<FreeBoardScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Placeholder(
-                                        fallbackHeight: 20,
-                                        fallbackWidth: 20),
+                                    Container(
+                                      height: 25,
+                                      width: 25,
+                                      alignment: Alignment.center,
+                                      child: Image.asset("assets/images/chara/$mbti$sexData.png"),
+                                    ),
                                     SizedBox(width: phoneSize.width * 0.03),
                                     Column(
                                       mainAxisAlignment: MainAxisAlignment.start,

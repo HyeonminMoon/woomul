@@ -25,11 +25,9 @@ class _PassWordEditScreenState extends State<PassWordEditScreen> {
   late TextEditingController _passwordCheckController;
   var errorCheck;
 
-
   bool emailChecked = false;
   bool emailDoubleChecked = false;
   bool isChecked = false;
-
 
   @override
   void initState() {

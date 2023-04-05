@@ -198,6 +198,12 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
         String title = doc.get("title");
         String likeNum = doc.get("likeNum").toString();
         String commentNum = doc.get("commentNum").toString();
+        String key = doc.get("key");
+        String userUid = doc.get('userUid');
+        String mbti = doc.get('userMbti');
+        String sex = doc.get('sex');
+
+        String sexData = sex == "남" ? "M" : "F";
 
         return Form(
             child: SingleChildScrollView(
@@ -212,7 +218,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  DetailBoardScreen(boardType, doc.get("key"), doc.id, doc.get('userUid'))));
+                                  DetailBoardScreen(boardType, key, doc.id, userUid)));
                     },
                     child: Container(
                       height: phoneSize.height*0.3,
@@ -239,7 +245,12 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Placeholder(fallbackHeight: 15,fallbackWidth: 15),
+                                  Container(
+                                    height: 25,
+                                    width: 25,
+                                    alignment: Alignment.center,
+                                    child: Image.asset("assets/images/chara/$mbti$sexData.png"),
+                                  ),
                                   SizedBox(width: phoneSize.width *0.03),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -371,6 +382,8 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
         final doc = docs[index];
         String comment = doc.get("comment");
         String name = doc.get("name");
+        String contextKey = doc.get("contentKey");
+        String userUid = doc.get('uid');
         DateTime createDate = doc.get("createDate").toDate();
 
         return Form(
@@ -386,7 +399,7 @@ class _MyActivityScreenState extends State<MyActivityScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    DetailBoardScreen(value, doc.get("contentKey"), doc.id, doc.get('userUid'))));
+                                    DetailBoardScreen(value, contextKey, doc.id, userUid)));
                       });
 
                       //해당 게시글로 이동될려나?

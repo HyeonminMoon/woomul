@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,10 +6,6 @@ import '../../provider/auth_service.dart';
 import 'mbti_test_page.dart';
 import 'package:intl/intl.dart';
 
-//import 'package:flutter_localizations/flutter_localizations.dart';
-//import 'package:flutter_rounded_date_picker/rounded_picker.dart';
-
-import '../../routes.dart';
 
 List<String> listSex = <String>['여', '남'];
 
